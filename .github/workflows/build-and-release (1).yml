@@ -1,0 +1,288 @@
+name: Build and Release
+
+run-name: >-
+  ${{ github.event_name == 'workflow_dispatch'
+      && format('Build {0} · workflow run #{1}', inputs.version, github.run_number)
+      || format('Canary · workflow run #{0} · {1}', github.run_number, github.ref_name) }}
+
+on:
+  push:
+    branches:
+      - dev
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Product version without the v prefix (X.Y.Z)
+        required: true
+        type: string
+      release:
+        description: GitHub Release behavior after all builds succeed
+        required: true
+        default: draft
+        type: choice
+        options:
+          - none
+          - draft
+          - publish
+      release_notes:
+        description: Optional short text prepended to generated release notes
+        required: false
+        type: string
+      version_lyrics:
+        description: 版本歌词
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'workflow_dispatch' && 'release' || github.run_id }}
+  queue: max
+
+jobs:
+  # ── version resolution ──────────────────────────────────────────────────────
+  prepare:
+    name: Resolve and validate version
+    runs-on: ubuntu-latest
+    outputs:
+      version:      ${{ steps.version.outputs.version }}
+      tag:          ${{ steps.version.outputs.tag }}
+      build_number: ${{ steps.version.outputs.build_number }}
+      has_keystore: ${{ steps.version.outputs.has_keystore }}
+    steps:
+      - name: Checkout complete history and tags
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+          persist-credentials: false
+
+      - name: Resolve version
+        id: version
+        shell: bash
+        env:
+          EVENT_NAME:        ${{ github.event_name }}
+          REQUESTED_VERSION: ${{ inputs.version }}
+          RUN_NUMBER:        ${{ github.run_number }}
+          HAS_KEYSTORE:      ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
+        run: |
+          set -euo pipefail
+          export LC_ALL=C
+
+          BUILD_NUMBER=$((RUN_NUMBER + 20000))
+
+          latest_release_tag() {
+            git tag --list 'v*' --sort=-version:refname |
+              grep -E '^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$' |
+              head -n 1 || true
+          }
+
+          version_is_greater() {
+            local candidate="$1" current="$2" highest
+            highest="$(printf '%s\n%s\n' "$current" "$candidate" | sort -V | tail -n 1)"
+            [ "$highest" = "$candidate" ] && [ "$candidate" != "$current" ]
+          }
+
+          LATEST_TAG="$(latest_release_tag)"
+
+          if [ "$EVENT_NAME" = "push" ]; then
+            TAG="$LATEST_TAG"
+            if [ -z "$TAG" ]; then
+              echo "::error::No vX.Y.Z tag found. Run a full workflow_dispatch build first to create one."
+              exit 1
+            fi
+            BASE_VERSION="${TAG#v}"
+            VERSION="${BASE_VERSION}-Canary.${BUILD_NUMBER}"
+          else
+            if [[ ! "$REQUESTED_VERSION" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]; then
+              echo "::error::Version must be X.Y.Z with no leading zeros and no leading 'v'."
+              exit 1
+            fi
+            VERSION="$REQUESTED_VERSION"
+            TAG="v${REQUESTED_VERSION}"
+            if git show-ref --verify --quiet "refs/tags/$TAG"; then
+              echo "::error::Tag $TAG already exists; refusing to overwrite."
+              exit 1
+            fi
+            if [ -n "$LATEST_TAG" ]; then
+              LATEST_VERSION="${LATEST_TAG#v}"
+              if ! version_is_greater "$REQUESTED_VERSION" "$LATEST_VERSION"; then
+                echo "::error::New version $REQUESTED_VERSION must be greater than current $LATEST_VERSION."
+                exit 1
+              fi
+            fi
+          fi
+
+          echo "version=$VERSION"           >> "$GITHUB_OUTPUT"
+          echo "tag=$TAG"                   >> "$GITHUB_OUTPUT"
+          echo "build_number=$BUILD_NUMBER" >> "$GITHUB_OUTPUT"
+          echo "has_keystore=$HAS_KEYSTORE" >> "$GITHUB_OUTPUT"
+          echo "Resolved: $VERSION  tag: $TAG  build: $BUILD_NUMBER  keystore: $HAS_KEYSTORE"
+
+  # ── generate a debug keystore when no release keystore is configured ────────
+  make-debug-keystore:
+    name: Generate debug keystore
+    if: >-
+      github.event_name == 'push' &&
+      needs.prepare.outputs.has_keystore == 'false'
+    needs: prepare
+    runs-on: ubuntu-latest
+    outputs:
+      keystore_b64: ${{ steps.gen.outputs.keystore_b64 }}
+      password:     android
+      alias:        androiddebugkey
+    steps:
+      - name: Generate keystore
+        id: gen
+        shell: bash
+        run: |
+          keytool -genkey -v \
+            -keystore debug.keystore \
+            -alias androiddebugkey \
+            -keyalg RSA -keysize 2048 \
+            -validity 10000 \
+            -storepass android \
+            -keypass android \
+            -dname "CN=Android Debug,O=Android,C=US"
+          B64="$(base64 -w 0 debug.keystore)"
+          echo "keystore_b64=$B64" >> "$GITHUB_OUTPUT"
+
+  # ── canary android build ────────────────────────────────────────────────────
+  android-canary:
+    name: Android ARM64 Canary
+    if: github.event_name == 'push'
+    needs:
+      - prepare
+      - make-debug-keystore
+    permissions:
+      contents: read
+    uses: ./.github/workflows/build-android.yml
+    with:
+      version:      ${{ needs.prepare.outputs.version }}
+      build_number: ${{ fromJSON(needs.prepare.outputs.build_number) }}
+      source_sha:   ${{ github.sha }}
+      action_run_id: ${{ github.run_id }}
+      arch:         arm64
+      rid:          android-arm64
+      version_lyrics: ''
+      # Pass real keystore flag so the reusable workflow can decide signing mode
+      release_signing: ${{ needs.prepare.outputs.has_keystore == 'true' }}
+    secrets:
+      ANDROID_KEYSTORE_BASE64: >-
+        ${{ needs.prepare.outputs.has_keystore == 'true'
+            && secrets.ANDROID_KEYSTORE_BASE64
+            || needs.make-debug-keystore.outputs.keystore_b64 }}
+      ANDROID_KEYSTORE_PASSWORD: >-
+        ${{ needs.prepare.outputs.has_keystore == 'true'
+            && secrets.ANDROID_KEYSTORE_PASSWORD
+            || 'android' }}
+      ANDROID_KEY_ALIAS: >-
+        ${{ needs.prepare.outputs.has_keystore == 'true'
+            && secrets.ANDROID_KEY_ALIAS
+            || 'androiddebugkey' }}
+      ANDROID_KEY_PASSWORD: >-
+        ${{ needs.prepare.outputs.has_keystore == 'true'
+            && secrets.ANDROID_KEY_PASSWORD
+            || 'android' }}
+
+  # ── canary ios build ────────────────────────────────────────────────────────
+  ios-canary:
+    name: iOS ARM64 Mono AOT Canary
+    if: github.event_name == 'push'
+    needs: prepare
+    permissions:
+      contents: read
+    uses: ./.github/workflows/build-ios.yml
+    with:
+      version:       ${{ needs.prepare.outputs.version }}
+      build_number:  ${{ fromJSON(needs.prepare.outputs.build_number) }}
+      source_sha:    ${{ github.sha }}
+      action_run_id: ${{ github.run_id }}
+      version_lyrics: ''
+
+  # ── full release build (workflow_dispatch only) ─────────────────────────────
+  all-platforms:
+    name: Full platform build
+    if: github.event_name == 'workflow_dispatch'
+    needs: prepare
+    permissions:
+      contents: read
+    uses: ./.github/workflows/build-all-platforms.yml
+    with:
+      version:       ${{ needs.prepare.outputs.version }}
+      build_number:  ${{ fromJSON(needs.prepare.outputs.build_number) }}
+      source_sha:    ${{ github.sha }}
+      action_run_id: ${{ github.run_id }}
+      version_lyrics: ${{ inputs.version_lyrics }}
+    secrets: inherit
+
+  # ── tag + release ───────────────────────────────────────────────────────────
+  tag-and-release:
+    name: Release transaction
+    if: github.event_name == 'workflow_dispatch'
+    needs:
+      - prepare
+      - all-platforms
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN:             ${{ github.token }}
+      TAG:                  ${{ needs.prepare.outputs.tag }}
+      SOURCE_SHA:           ${{ github.sha }}
+      RELEASE_RUN_ID:       ${{ github.run_id }}
+      RELEASE_RUN_ATTEMPT:  ${{ github.run_attempt }}
+    steps:
+      - name: Checkout the built commit
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Download release artifacts
+        if: inputs.release != 'none'
+        uses: actions/download-artifact@v8
+        with:
+          pattern: OpenUtauMobile-*
+          path: release-assets
+          merge-multiple: false
+
+      - name: Stage, upload serially and commit release
+        env:
+          BUILD_NUMBER:   ${{ needs.prepare.outputs.build_number }}
+          RELEASE_MODE:   ${{ inputs.release }}
+          CUSTOM_NOTES:   ${{ inputs.release_notes }}
+          VERSION_LYRICS: ${{ inputs.version_lyrics }}
+        run: python3 .github/scripts/release.py release
+
+  # ── rollback ────────────────────────────────────────────────────────────────
+  rollback-release:
+    name: Roll back interrupted release
+    if: >-
+      always() && github.event_name == 'workflow_dispatch' &&
+      needs.prepare.result == 'success' &&
+      (needs.tag-and-release.result == 'failure' || needs.tag-and-release.result == 'cancelled')
+    needs:
+      - prepare
+      - tag-and-release
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout the built commit
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Roll back resources owned by this attempt
+        env:
+          GH_TOKEN:            ${{ github.token }}
+          TAG:                 ${{ needs.prepare.outputs.tag }}
+          SOURCE_SHA:          ${{ github.sha }}
+          RELEASE_RUN_ID:      ${{ github.run_id }}
+          RELEASE_RUN_ATTEMPT: ${{ github.run_attempt }}
+        run: python3 .github/scripts/release.py rollback
