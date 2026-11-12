@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Reactive;
 using System.Threading.Tasks;
 using DynamicData.Binding;
@@ -41,7 +41,7 @@ public class SingerManagementViewModel : NavigateViewModelBase
     private async void OnAddSinger()
     {
         // 打开文件选择器，支持多种压缩包格式
-        string[] filters = new[] { "*.zip", "*.rar", "*.uar", "*.vogen" };
+        string[] filters = new[] { "*.zip", "*.rar", "*.uar", "*.vogen", "*.vcld" };
         string filePath = await FilePicker.PickSingleFileAsync(L.S("FilePicker.SelectSingerFile"), filters);
 
         if (string.IsNullOrEmpty(filePath))
@@ -56,6 +56,22 @@ public class SingerManagementViewModel : NavigateViewModelBase
         {
             // TODO: 导航到 VogenSingerSetupViewModel
             ToastService.Enqueue(L.S("SingerManagement.VogenNotImplemented"));
+        }
+        else if (extension == ".vcld")
+        {
+            // Install Vocaloid4 .vcld voicebank — copy to singers directory and rescan
+            string singersPath = OpenUtau.Core.PathManager.Inst.SingersPath;
+            string dest = System.IO.Path.Combine(singersPath, System.IO.Path.GetFileName(filePath));
+            try
+            {
+                System.IO.File.Copy(filePath, dest, overwrite: true);
+                OpenUtau.Core.SingerManager.Inst.SearchAllSingers();
+                ToastService.Enqueue(L.S("SingerManagement.VocaloidInstalled"));
+            }
+            catch (Exception ex)
+            {
+                ToastService.Enqueue(ex.Message);
+            }
         }
         else if (extension == ".zip" || extension == ".rar" || extension == ".uar")
         {
