@@ -38,7 +38,7 @@ namespace OpenUtau.Core.Render {
         static readonly string[] voicevoxRenderers = new[] { VOICEVOX };
         static readonly string[] neutrinoRenderers  = new[] { NEUTRINO };
         static readonly string[] vocaloid4Renderers = new[] { VOCALOID4 };
-        static readonly string[] noRenderers = new string[0];;
+        static readonly string[] noRenderers = new string[0];
         static readonly HashSet<string> builtinRendererNames = new HashSet<string> {
             CLASSIC,
             WORLDLINE_R,
