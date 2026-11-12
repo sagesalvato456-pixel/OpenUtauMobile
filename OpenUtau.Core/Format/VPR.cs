@@ -115,7 +115,7 @@ namespace OpenUtau.Core.Format {
 
         static UProject BuildProject(VprSequence seq, string sourcePath) {
             var project = new UProject();
-            OpenUtau.Core.Format.Ustx.AddDefaultExpressions(project);;
+            OpenUtau.Core.Format.Ustx.AddDefaultExpressions(project);
             project.FilePath = sourcePath;
             project.name = string.IsNullOrWhiteSpace(seq.Title)
                 ? Path.GetFileNameWithoutExtension(sourcePath)
