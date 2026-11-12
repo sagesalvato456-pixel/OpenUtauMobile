@@ -11,7 +11,7 @@ namespace OpenUtauMobile.Services.Tracks;
 public static class TrackImportService
 {
     public static readonly string[] FilePatterns =
-        ["*.ustx", "*.ust", "*.vsqx", "*.mid", "*.midi", "*.ufdata", "*.xml", "*.musicxml", "*.svp"];
+        ["*.ustx", "*.ust", "*.vsqx", "*.mid", "*.midi", "*.ufdata", "*.xml", "*.musicxml", "*.svp", "*.vpr"];
 
     // 逐个读取保留失败文件，避免静默导入批次中的一部分。
     public static IReadOnlyList<TrackImportSource> ReadFiles(IEnumerable<string> paths)
