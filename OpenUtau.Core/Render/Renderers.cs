@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,15 +28,17 @@ namespace OpenUtau.Core.Render {
         public const string VOGEN = "VOGEN";
         public const string DIFFSINGER = "DIFFSINGER";
         public const string VOICEVOX = "VOICEVOX";
-        public const string NEUTRINO = "NEUTRINO";
+        public const string NEUTRINO    = "NEUTRINO";
+        public const string VOCALOID4   = "VOCALOID4";
 
         static readonly string[] classicRenderers = new[] { WORLDLINE_R, WORLDLINE_R11, WORLDLINE_R2, CLASSIC };
         static readonly string[] enunuRenderers = new[] { ENUNU };
         static readonly string[] vogenRenderers = new[] { VOGEN };
         static readonly string[] diffSingerRenderers = new[] { DIFFSINGER };
         static readonly string[] voicevoxRenderers = new[] { VOICEVOX };
-        static readonly string[] neutrinoRenderers = new[] { NEUTRINO };
-        static readonly string[] noRenderers = new string[0];
+        static readonly string[] neutrinoRenderers  = new[] { NEUTRINO };
+        static readonly string[] vocaloid4Renderers = new[] { VOCALOID4 };
+        static readonly string[] noRenderers = new string[0];;
         static readonly HashSet<string> builtinRendererNames = new HashSet<string> {
             CLASSIC,
             WORLDLINE_R,
@@ -47,6 +49,7 @@ namespace OpenUtau.Core.Render {
             DIFFSINGER,
             VOICEVOX,
             NEUTRINO,
+            VOCALOID4,
         };
 
         sealed class RendererFactory {
@@ -92,6 +95,8 @@ namespace OpenUtau.Core.Render {
                     return voicevoxRenderers;
                 case USingerType.Neutrino:
                     return neutrinoRenderers;
+                case USingerType.Vocaloid4:
+                    return vocaloid4Renderers;
                 default:
                     return noRenderers;
             }
@@ -140,8 +145,10 @@ namespace OpenUtau.Core.Render {
                 return new DiffSinger.DiffSingerRenderer();
             } else if (renderer == VOICEVOX) {
                 return new Voicevox.VoicevoxRenderer();
-            } else if (renderer == NEUTRINO) {
+             } else if (renderer == NEUTRINO) {
                 return new Neutrino.NeutrinoRenderer();
+            } else if (renderer == VOCALOID4) {
+                return new Vocaloid.VocaloidRenderer();
             }
             return TryCreateExternalRenderer(renderer);
         }
