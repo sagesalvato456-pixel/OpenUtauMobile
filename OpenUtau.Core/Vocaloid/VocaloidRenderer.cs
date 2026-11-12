@@ -38,6 +38,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using NAudio.Wave;
+using OpenUtau.Core.Format;
 using OpenUtau.Core.Render;
 using OpenUtau.Core.Ustx;
 using Serilog;
@@ -55,12 +56,12 @@ namespace OpenUtau.Core.Vocaloid {
 
         // Expressions we handle
         private static readonly HashSet<string> supportedExp = new HashSet<string> {
-            Ustx.DYN,
-            Ustx.PITD,
-            Ustx.VEL,
-            Ustx.VOL,
-            Ustx.GENC,
-            Ustx.BREC,
+            Format.Ustx.DYN,
+            Format.Ustx.PITD,
+            Format.Ustx.VEL,
+            Format.Ustx.VOL,
+            Format.Ustx.GENC,
+            Format.Ustx.BREC,
         };
 
         public USingerType SingerType => USingerType.Vocaloid4;
