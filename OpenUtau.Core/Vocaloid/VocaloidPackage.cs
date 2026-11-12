@@ -1,332 +1,197 @@
+// OpenUtau.Core/Vocaloid/VocaloidPackage.cs
+// Lang: C# 10, Target: .NET 7 / Android (OpenUtau Mobile dev branch)
+// Parses a .vcld package (zip) and its package-config.json manifest.
+// Binary assets: .ddb (phoneme DB), .ddi (voice descriptor), .vvd (voice waveform data).
+
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using OpenUtau.Classic;
-using OpenUtau.Core.Ustx;
-using OpenUtau.Core.Util;
+using System.IO;
+using System.IO.Compression;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Serilog;
 
-namespace OpenUtau.Core.Render {
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public sealed class RendererAttribute : Attribute {
-        public RendererAttribute(string name, USingerType singerType) {
-            Name = name;
-            SingerType = singerType;
-        }
+namespace OpenUtau.Core.Vocaloid {
 
-        public string Name { get; }
-        public USingerType SingerType { get; }
+    // ── package-config.json schema ───────────────────────────────────────────
+
+    public class VocaloidPackageConfig {
+        [JsonPropertyName("id")]
+        public string Id { get; set; } = string.Empty;
+
+        [JsonPropertyName("version")]
+        public string Version { get; set; } = string.Empty;
+
+        [JsonPropertyName("name")]
+        public string Name { get; set; } = string.Empty;
+
+        // localized names map, e.g. { "ja-JP": "初音ミク" }
+        [JsonPropertyName("localizedNames")]
+        public Dictionary<string, string>? LocalizedNames { get; set; }
+
+        [JsonPropertyName("author")]
+        public string Author { get; set; } = string.Empty;
+
+        [JsonPropertyName("voice")]
+        public string Voice { get; set; } = string.Empty;
+
+        [JsonPropertyName("web")]
+        public string Web { get; set; } = string.Empty;
+
+        [JsonPropertyName("sample")]
+        public string Sample { get; set; } = string.Empty;
+
+        // relative path inside the .vcld zip to the avatar image
+        [JsonPropertyName("image")]
+        public string Image { get; set; } = "profile.png";
+
+        // relative path inside the .vcld zip to the portrait/background image
+        [JsonPropertyName("portrait")]
+        public string Portrait { get; set; } = "background.png";
+
+        [JsonPropertyName("portraitOpacity")]
+        public float PortraitOpacity { get; set; } = 0.67f;
+
+        // .ddb file path inside zip (phoneme database)
+        [JsonPropertyName("ddb")]
+        public string Ddb { get; set; } = string.Empty;
+
+        // .ddi file path inside zip (voice descriptor index)
+        [JsonPropertyName("ddi")]
+        public string Ddi { get; set; } = string.Empty;
+        // .vvd file path inside zip (voice waveform data)
+        [JsonPropertyName("vvd")]
+        public string Vvd { get; set; } = string.Empty;
+
+        // phonemizer type override, same convention as VoicebankConfig.DefaultPhonemizer
+        [JsonPropertyName("defaultPhonemizer")]
+        public string DefaultPhonemizer { get; set; } = string.Empty;
+
+        // search keywords
+        [JsonPropertyName("searchTerms")]
+        public List<string>? SearchTerms { get; set; }
     }
 
-    public static class Renderers {
-        public const string CLASSIC = "CLASSIC";
-        public const string WORLDLINE_R = "WORLDLINE-R";
-        public const string WORLDLINE_R2 = "WORLDLINE-R2";
-        public const string WORLDLINE_R11 = "WORLDLINE-R1.1";
-        public const string ENUNU = "ENUNU";
-        public const string VOGEN = "VOGEN";
-        public const string DIFFSINGER = "DIFFSINGER";
-        public const string VOICEVOX = "VOICEVOX";
-        public const string NEUTRINO    = "NEUTRINO";
-        public const string VOCALOID4   = "VOCALOID4";
+    // ── extracted / resolved package data ────────────────────────────────────
 
-        static readonly string[] classicRenderers = new[] { WORLDLINE_R, WORLDLINE_R11, WORLDLINE_R2, CLASSIC };
-        static readonly string[] enunuRenderers = new[] { ENUNU };
-        static readonly string[] vogenRenderers = new[] { VOGEN };
-        static readonly string[] diffSingerRenderers = new[] { DIFFSINGER };
-        static readonly string[] voicevoxRenderers = new[] { VOICEVOX };
-        static readonly string[] neutrinoRenderers  = new[] { NEUTRINO };
-        static readonly string[] vocaloid4Renderers = new[] { VOCALOID4 };
-        static readonly string[] noRenderers = new string[0];
-        static readonly HashSet<string> builtinRendererNames = new HashSet<string> {
-            CLASSIC,
-            WORLDLINE_R,
-            WORLDLINE_R2,
-            WORLDLINE_R11,
-            ENUNU,
-            VOGEN,
-            DIFFSINGER,
-            VOICEVOX,
-            NEUTRINO,
-            VOCALOID4,
+    /// <summary>
+    /// All data extracted from a .vcld archive. Extracted to a temp folder
+    /// under PathManager.Inst.CachePath on first load; avatar/portrait bytes
+    /// kept in memory after that.
+    /// </summary>
+    public class VocaloidPackageData {
+        public VocaloidPackageConfig Config { get; set; } = new();
+
+        // Absolute paths to the extracted binary assets
+        public string DdbPath  { get; set; } = string.Empty;
+        public string DdiPath  { get; set; } = string.Empty;
+        public string VvdPath  { get; set; } = string.Empty;
+
+        public byte[]? AvatarBytes   { get; set; }
+        public byte[]? PortraitBytes { get; set; }
+
+        public List<string> Errors { get; } = new();
+    }
+
+    // ── loader ────────────────────────────────────────────────────────────────
+
+    public static class VocaloidPackageLoader {
+        private static readonly JsonSerializerOptions _jsonOpts = new() {
+            PropertyNameCaseInsensitive = true,
+            ReadCommentHandling         = JsonCommentHandling.Skip,
+            AllowTrailingCommas         = true,
         };
 
-        sealed class RendererFactory {
-            public Type type;
-            public string name;
-            public USingerType singerType;
-
-            public IRenderer Create() {
-                return Activator.CreateInstance(type) as IRenderer;
-            }
-        }
-
-        static readonly object externalRenderersLock = new object();
-        static readonly Dictionary<string, RendererFactory> externalRendererFactories = new Dictionary<string, RendererFactory>(StringComparer.Ordinal);
-        static readonly Dictionary<USingerType, string[]> externalRenderersBySingerType = new Dictionary<USingerType, string[]>();
-        static readonly HashSet<string> registeredAssemblyKeys = new HashSet<string>(StringComparer.Ordinal);
-        static bool initialAssemblyScanCompleted;
-
-        static Renderers() {
-            AppDomain.CurrentDomain.AssemblyLoad += (_, args) => RegisterAssembly(args.LoadedAssembly);
-        }
-
-        public static string[] GetSupportedRenderers(USingerType singerType) {
-            var builtin = GetBuiltinSupportedRenderers(singerType);
-            var external = GetExternalSupportedRenderers(singerType);
-            if (external.Length == 0) {
-                return builtin;
-            }
-            return builtin.Concat(external).ToArray();
-        }
-
-        static string[] GetBuiltinSupportedRenderers(USingerType singerType) {
-            switch (singerType) {
-                case USingerType.Classic:
-                    return classicRenderers;
-                case USingerType.Enunu:
-                    return enunuRenderers;
-                case USingerType.Vogen:
-                    return vogenRenderers;
-                case USingerType.DiffSinger:
-                    return diffSingerRenderers;
-                case USingerType.Voicevox:
-                    return voicevoxRenderers;
-                case USingerType.Neutrino:
-                    return neutrinoRenderers;
-                case USingerType.Vocaloid4:
-                    return vocaloid4Renderers;
-                default:
-                    return noRenderers;
-            }
-        }
-
-        public static List<string> getRendererOptions() {
-            var options = new List<string> {
-                WORLDLINE_R,
-                WORLDLINE_R11,
-                WORLDLINE_R2,
-                CLASSIC
-            };
-            options.AddRange(GetExternalSupportedRenderers(USingerType.Classic));
-            return options;
-        }
-
-        public static string GetDefaultRenderer(USingerType singerType) {
-            if (singerType == USingerType.Classic && classicRenderers.Contains(Preferences.Default.DefaultRenderer)) {
-                return Preferences.Default.DefaultRenderer;
-            } else {
-                return GetSupportedRenderers(singerType)[0];
-            }
-        }
-
         /// <summary>
-        /// <see cref="IRenderer.ExpressionGraphSlot"/> of a renderer id; an unknown id is its own slot.
+        /// Opens a .vcld (zip) archive, reads package-config.json, extracts
+        /// .ddb/.ddi/.vvd to <paramref name="extractRoot"/> and returns the
+        /// fully populated <see cref="VocaloidPackageData"/>.
         /// </summary>
-        public static string GetExpressionGraphSlot(string renderer) =>
-            GetOrCreate(renderer)?.ExpressionGraphSlot ?? renderer;
+        public static VocaloidPackageData Load(string vcldPath, string extractRoot) {
+            var pkg = new VocaloidPackageData();
 
-        public static IRenderer CreateRenderer(string renderer) {
-            if (renderer == CLASSIC) {
-                return new ClassicRenderer();
-            } else if (renderer == WORLDLINE_R2) {
-                return new WorldlineRenderer(version: 20);
-            } else if (renderer == WORLDLINE_R11) {
-                // Before the prefix match below, which maps any WORLDLINE-* to R1.
-                return new WorldlineRenderer(version: 11);
-            } else if (renderer?.StartsWith(WORLDLINE_R.Substring(0, 9)) ?? false) {
-                return new WorldlineRenderer(version: 10);
-            } else if (renderer == ENUNU) {
-                return new Enunu.EnunuRenderer();
-            } else if (renderer == VOGEN) {
-                return new Vogen.VogenRenderer();
-            } else if (renderer == DIFFSINGER) {
-                return new DiffSinger.DiffSingerRenderer();
-            } else if (renderer == VOICEVOX) {
-                return new Voicevox.VoicevoxRenderer();
-             } else if (renderer == NEUTRINO) {
-                return new Neutrino.NeutrinoRenderer();
-            } else if (renderer == VOCALOID4) {
-                return new Vocaloid.VocaloidRenderer();
+            if (!File.Exists(vcldPath)) {
+                pkg.Errors.Add($"[vcld] file not found: {vcldPath}");
+                return pkg;
             }
-            return TryCreateExternalRenderer(renderer);
-        }
 
-        static string[] GetExternalSupportedRenderers(USingerType singerType) {
-            EnsureExternalRenderersLoaded();
-            lock (externalRenderersLock) {
-                if (externalRenderersBySingerType.TryGetValue(singerType, out var renderers)) {
-                    return renderers;
-                }
-            }
-            return noRenderers;
-        }
-
-        static IRenderer TryCreateExternalRenderer(string renderer) {
-            if (string.IsNullOrEmpty(renderer)) {
-                return null;
-            }
-            EnsureExternalRenderersLoaded();
-            lock (externalRenderersLock) {
-                if (!externalRendererFactories.TryGetValue(renderer, out var factory)) {
-                    return null;
-                }
-                try {
-                    return factory.Create();
-                } catch {
-                    return null;
-                }
-            }
-        }
-
-        static void EnsureExternalRenderersLoaded() {
-            lock (externalRenderersLock) {
-                if (initialAssemblyScanCompleted) {
-                    return;
-                }
-                RegisterAssembliesNoLock(AppDomain.CurrentDomain.GetAssemblies());
-                initialAssemblyScanCompleted = true;
-            }
-        }
-
-        static void RegisterAssembly(Assembly assembly) {
-            lock (externalRenderersLock) {
-                RegisterAssemblyNoLock(assembly);
-            }
-        }
-
-        static void RegisterAssembliesNoLock(IEnumerable<Assembly> assemblies) {
-            foreach (var assembly in assemblies) {
-                RegisterAssemblyNoLock(assembly);
-            }
-        }
-
-        static void RegisterAssemblyNoLock(Assembly assembly) {
-            if (assembly == null || assembly == typeof(Renderers).Assembly) {
-                return;
-            }
-            var assemblyKey = GetAssemblyKey(assembly);
-            if (string.IsNullOrEmpty(assemblyKey) || !registeredAssemblyKeys.Add(assemblyKey)) {
-                return;
-            }
-            bool changed = false;
-            foreach (var type in GetLoadableTypes(assembly)) {
-                changed |= TryRegisterExternalRendererNoLock(type);
-            }
-            if (changed) {
-                RebuildExternalRendererListsNoLock();
-            }
-        }
-
-        static bool TryRegisterExternalRendererNoLock(Type type) {
-            if (type.IsAbstract
-                || !typeof(IRenderer).IsAssignableFrom(type)
-                || type.GetConstructor(Type.EmptyTypes) == null) {
-                return false;
-            }
-            var attr = type.GetCustomAttribute<RendererAttribute>();
-            if (attr == null || string.IsNullOrWhiteSpace(attr.Name)) {
-                return false;
-            }
-            if (builtinRendererNames.Contains(attr.Name) || externalRendererFactories.ContainsKey(attr.Name)) {
-                return false;
-            }
-            externalRendererFactories[attr.Name] = new RendererFactory {
-                type = type,
-                name = attr.Name,
-                singerType = attr.SingerType,
-            };
-            return true;
-        }
-
-        static void RebuildExternalRendererListsNoLock() {
-            externalRenderersBySingerType.Clear();
-            foreach (var group in externalRendererFactories.Values.GroupBy(factory => factory.singerType)) {
-                externalRenderersBySingerType[group.Key] = group
-                    .Select(factory => factory.name)
-                    .OrderBy(name => name)
-                    .ToArray();
-            }
-        }
-
-        static string GetAssemblyKey(Assembly assembly) {
             try {
-                string location = string.Empty;
-                try {
-                    if (!assembly.IsDynamic) {
-                        location = assembly.Location ?? string.Empty;
-                    }
-                } catch {
+                using var zip = ZipFile.OpenRead(vcldPath);
+
+                // ── 1. parse package-config.json ──────────────────────────
+                var configEntry = zip.GetEntry("package-config.json");
+                if (configEntry == null) {
+                    pkg.Errors.Add($"[vcld] missing package-config.json in {vcldPath}");
+                    return pkg;
                 }
-                return $"{assembly.FullName}|{location}|{assembly.ManifestModule.ModuleVersionId}";
-            } catch {
-                return assembly.FullName;
-            }
-        }
-
-        static IEnumerable<Type> GetLoadableTypes(Assembly assembly) {
-            try {
-                return assembly.GetExportedTypes();
-            } catch (ReflectionTypeLoadException e) {
-                return e.Types.Where(type => type != null).Cast<Type>();
-            } catch {
-                return Enumerable.Empty<Type>();
-            }
-        }
-
-        // One instance per renderer id. Renderers are stateless or globally
-        // serialized (the static lockObj fields), so sharing an instance across
-        // tracks is behaviourally identical to today while an undo/redo that
-        // toggles the renderer no longer re-creates the pipeline object.
-        static readonly ConcurrentDictionary<string, IRenderer> rendererCache =
-            new ConcurrentDictionary<string, IRenderer>();
-
-        public static IRenderer GetOrCreate(string renderer) {
-            return rendererCache.GetOrAdd(renderer ?? string.Empty, CreateRenderer);
-        }
-
-        readonly static ConcurrentDictionary<string, object> cacheLockMap
-            = new ConcurrentDictionary<string, object>();
-
-        public static object GetCacheLock(string key) {
-            return cacheLockMap.GetOrAdd(key, _ => new object());
-        }
-
-        public static void ApplyDynamics(RenderPhrase phrase, RenderResult result) {
-            const int interval = 5;
-            if (phrase.dynamics == null) {
-                return;
-            }
-            int startTick = phrase.position - phrase.leading;
-            double startMs = result.positionMs - result.leadingMs;
-            int startSample = 0;
-            for (int i = 0; i < phrase.dynamics.Length; ++i) {
-                int endTick = startTick + interval;
-                double endMs = phrase.timeAxis.TickPosToMsPos(endTick);
-                int endSample = Math.Min((int)((endMs - startMs) / 1000 * 44100), result.samples.Length);
-                float a = phrase.dynamics[i];
-                float b = (i + 1) == phrase.dynamics.Length ? phrase.dynamics[i] : phrase.dynamics[i + 1];
-                for (int j = startSample; j < endSample; ++j) {
-                    result.samples[j] *= a + (b - a) * (j - startSample) / (endSample - startSample);
+                using (var stream = configEntry.Open()) {
+                    pkg.Config = JsonSerializer.Deserialize<VocaloidPackageConfig>(stream, _jsonOpts)
+                                 ?? new VocaloidPackageConfig();
                 }
-                startTick = endTick;
-                startSample = endSample;
+
+                // ── 2. derive extract dir name ────────────────────────────
+                string pkgId = SanitizeDirName(
+                    string.IsNullOrWhiteSpace(pkg.Config.Id)
+                        ? Path.GetFileNameWithoutExtension(vcldPath)
+                        : pkg.Config.Id);
+                string extractDir = Path.Combine(extractRoot, pkgId);
+                Directory.CreateDirectory(extractDir);
+
+                // ── 3. extract binary assets ──────────────────────────────
+                pkg.DdbPath = ExtractEntry(zip, pkg.Config.Ddb, extractDir, pkg.Errors);
+                pkg.DdiPath = ExtractEntry(zip, pkg.Config.Ddi, extractDir, pkg.Errors);
+                pkg.VvdPath = ExtractEntry(zip, pkg.Config.Vvd, extractDir, pkg.Errors);
+
+                // ── 4. load avatar / portrait into memory ─────────────────
+                pkg.AvatarBytes   = ReadEntryBytes(zip, pkg.Config.Image);
+                pkg.PortraitBytes = ReadEntryBytes(zip, pkg.Config.Portrait);
+
+            } catch (Exception ex) {
+                Log.Error(ex, $"[vcld] failed to load {vcldPath}");
+                pkg.Errors.Add($"[vcld] exception: {ex.Message}");
             }
+
+            return pkg;
         }
 
-        public static IReadOnlyList<IResampler> GetSupportedResamplers(IWavtool? wavtool) {
-            if (wavtool is SharpWavtool) {
-                return ToolsManager.Inst.Resamplers;
-            } else {
-                return ToolsManager.Inst.Resamplers
-                    .Where(r => !(r is WorldlineResampler))
-                    .ToArray();
+        // ── helpers ───────────────────────────────────────────────────────────
+
+        private static string ExtractEntry(ZipArchive zip, string entryPath,
+                                           string destDir, List<string> errors) {
+            if (string.IsNullOrWhiteSpace(entryPath)) return string.Empty;
+
+            var entry = zip.GetEntry(entryPath)
+                     ?? zip.GetEntry(Path.GetFileName(entryPath)); // fallback: flat name
+            if (entry == null) {
+                errors.Add($"[vcld] missing entry: {entryPath}");
+                return string.Empty;
             }
+
+            string dest = Path.Combine(destDir, Path.GetFileName(entryPath));
+            // only re-extract if stale
+            if (!File.Exists(dest) || new FileInfo(dest).Length != entry.Length) {
+                using var src  = entry.Open();
+                using var file = File.Create(dest);
+                src.CopyTo(file);
+            }
+            return dest;
         }
 
-        public static IReadOnlyList<IWavtool> GetSupportedWavtools(IResampler? resampler) {
-            return ToolsManager.Inst.Wavtools;
+        private static byte[]? ReadEntryBytes(ZipArchive zip, string entryPath) {
+            if (string.IsNullOrWhiteSpace(entryPath)) return null;
+            var entry = zip.GetEntry(entryPath)
+                     ?? zip.GetEntry(Path.GetFileName(entryPath));
+            if (entry == null) return null;
+            using var stream = entry.Open();
+            using var ms     = new MemoryStream((int)entry.Length);
+            stream.CopyTo(ms);
+            return ms.ToArray();
+        }
+
+        private static string SanitizeDirName(string raw) {
+            foreach (char c in Path.GetInvalidFileNameChars())
+                raw = raw.Replace(c, '_');
+            return raw;
         }
     }
 }
