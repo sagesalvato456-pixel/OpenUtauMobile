@@ -32,6 +32,7 @@ public class SingerTypeToColorConverter : IValueConverter
                 USingerType.Vogen => ThemeResources.GetBrush("Sem.Color.Singer.Vogen"),
                 USingerType.Voicevox => ThemeResources.GetBrush("Sem.Color.Singer.Voicevox"),
                 USingerType.Neutrino => ThemeResources.GetBrush("Sem.Color.Singer.Neutrino"),
+                USingerType.Vocaloid4 => ThemeResources.GetBrush("Sem.Color.Singer.Vocaloid"),
                 _ => ThemeResources.GetBrush("Sem.Color.Singer.Unknown"),
             };
         }
@@ -118,6 +119,7 @@ public class SingerTypeToLabelConverter : IValueConverter
                 USingerType.Vogen => "Vogen",
                 USingerType.Voicevox => "Voicevox",
                 USingerType.Neutrino => "NEUTRINO v3",
+                USingerType.Vocaloid4 => "VOCALOID",
                 _ => "Unknown",
             };
         }
@@ -180,7 +182,11 @@ public class StringToInitialConverter : IValueConverter
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is string { Length: > 0 } s)
-            return s[0].ToString().ToUpper(culture);
+        {
+            // keep a surrogate pair together, or the avatar shows a broken half character
+            string first = char.IsHighSurrogate(s[0]) && s.Length > 1 ? s.Substring(0, 2) : s.Substring(0, 1);
+            return first.ToUpper(culture);
+        }
         return "?";
     }
 
@@ -368,9 +374,10 @@ public class PassThroughConverter : IValueConverter
         return value;
     }
 
-    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    // pass-through both ways: a two-way binding must not blow up on the way back
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        throw new NotImplementedException();
+        return value;
     }
 }
 

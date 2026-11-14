@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
 using OpenUtau.Core;
 using OpenUtau.Core.Ustx;
+using OpenUtau.Core.Vocaloid;
 using OpenUtauMobile.Helpers;
 using OpenUtauMobile.Services.Dialogs;
 using OpenUtauMobile.Services.Platform;
@@ -111,6 +112,10 @@ public class SingerDetailViewModel : NavigateViewModelBase, IDisposable
             USingerType.Voicevox => "VOICEVOX",
             USingerType.Vogen => "Vogen",
             USingerType.Neutrino => "NEUTRINO v3",
+            // every VOCALOID generation shares USingerType.Vocaloid4; the singer knows its own
+            USingerType.Vocaloid4 => _singer is VocaloidSinger vocaloid
+                ? VocaloidVersions.Display(vocaloid.EngineVersion)
+                : "VOCALOID",
             _ => "Unknown"
         };
     }

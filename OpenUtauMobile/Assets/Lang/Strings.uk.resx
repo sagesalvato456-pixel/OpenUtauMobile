@@ -1268,6 +1268,12 @@
   <data name="SingerSetup.Step3.TypeNeutrino" xml:space="preserve">
     <value>• neutrino: використовує ШІ-рушій синтезу NEUTRINO v3</value>
   </data>
+  <data name="SingerSetup.Step3.TypeVocaloid" xml:space="preserve">
+    <value>• vocaloid: голосові бази VOCALOID 1–5 (.ddb/.ddi/.vvd) або пакет .vcld. VOCALOID:AI не підтримується</value>
+  </data>
+  <data name="SingerManagement.VocaloidInstalled" xml:space="preserve">
+    <value>Голосову базу VOCALOID встановлено</value>
+  </data>
   <data name="SingerSetup.Step4.Title" xml:space="preserve">
     <value>Підсумок встановлення</value>
   </data>
@@ -1306,6 +1312,9 @@
   </data>
   <data name="SingerSetup.Error.Encrypted" xml:space="preserve">
     <value>Зашифровані архіви не підтримуються</value>
+  </data>
+  <data name="SingerSetup.Error.VocaloidAI" xml:space="preserve">
+    <value>VOCALOID:AI (нативні банки V6) не підтримуються. Підтримуються лише класичні банки V1–V5 (.ddb/.ddi/.vvd).</value>
   </data>
   <data name="SingerSetup.Installing" xml:space="preserve">
     <value>Підготовка до встановлення...</value>

@@ -52,6 +52,10 @@
                     Text="{DynamicResource SingerSetup.Step3.TypeNeutrino}"
                     FontSize="{x:Static semantic:TypographyTokens.LabelSSize}"
                     TextWrapping="Wrap"/>
+                <TextBlock
+                    Text="{DynamicResource SingerSetup.Step3.TypeVocaloid}"
+                    FontSize="{x:Static semantic:TypographyTokens.LabelSSize}"
+                    TextWrapping="Wrap"/>
             </StackPanel>
         </Border>
     </StackPanel>

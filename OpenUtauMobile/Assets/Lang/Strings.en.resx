@@ -1345,6 +1345,12 @@
   <data name="SingerSetup.Step3.TypeNeutrino" xml:space="preserve">
     <value>• neutrino: Uses the NEUTRINO v3 AI synthesis engine</value>
   </data>
+  <data name="SingerSetup.Step3.TypeVocaloid" xml:space="preserve">
+    <value>• vocaloid: VOCALOID 1-5 voicebanks (.ddb/.ddi/.vvd) or a .vcld package. VOCALOID:AI is not supported</value>
+  </data>
+  <data name="SingerManagement.VocaloidInstalled" xml:space="preserve">
+    <value>VOCALOID voicebank installed</value>
+  </data>
   <data name="SingerSetup.Step4.Title" xml:space="preserve">
     <value>Installation Summary</value>
   </data>
@@ -1383,6 +1389,9 @@
   </data>
   <data name="SingerSetup.Error.Encrypted" xml:space="preserve">
     <value>Encrypted archives are not supported</value>
+  </data>
+  <data name="SingerSetup.Error.VocaloidAI" xml:space="preserve">
+    <value>VOCALOID:AI (V6 native) banks are not supported. Only classic V1–V5 voicebanks (.ddb/.ddi/.vvd) can be installed.</value>
   </data>
   <data name="SingerSetup.Installing" xml:space="preserve">
     <value>Preparing to install...</value>

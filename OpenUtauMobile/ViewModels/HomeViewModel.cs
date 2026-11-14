@@ -180,7 +180,7 @@ public class HomeViewModel : NavigateViewModelBase
     private static async Task<string> SelectProjectFile()
     {
         return await Storage.FilePicker.PickSingleFileAsync(L.S("FilePicker.OpenProject"),
-            ["*.ustx", "*.vsqx", "*.ust", "*.mid", "*.midi", "*.ufdata", "*.musicxml", "*.svp"]);
+            ["*.ustx", "*.vsqx", "*.vsq", "*.ust", "*.mid", "*.midi", "*.ufdata", "*.musicxml", "*.svp", "*.vpr"]);
     }
 
     private async Task Initialize()

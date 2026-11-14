@@ -47,7 +47,7 @@ public class ClassicSingerSetupViewModel : NavigateViewModelBase, ICmdSubscriber
     [Reactive] public Encoding TextEncoding { get; set; }
     [Reactive] public bool MissingInfo { get; set; }
 
-    public string[] SingerTypes { get; set; } = ["utau", "enunu", "diffsinger", "neutrino"];
+    public string[] SingerTypes { get; set; } = ["utau", "enunu", "diffsinger", "neutrino", "vocaloid"];
     [Reactive] public string SingerType { get; set; }
 
     public ObservableCollection<string> TextItems => _textItems;
@@ -77,7 +77,12 @@ public class ClassicSingerSetupViewModel : NavigateViewModelBase, ICmdSubscriber
         _textItems = [];
 
         // 初始化命令
-        NextCommand = ReactiveCommand.Create(OnNext);
+        // NextCommand is disabled while an error is shown on step 0 (encrypted, V6 AI, etc.)
+        var canGoNext = this.WhenAnyValue(
+            vm => vm.ShowErrorState,
+            vm => vm.IsInstalling,
+            (err, installing) => !err && !installing);
+        NextCommand = ReactiveCommand.Create(OnNext, canGoNext);
         BackCommand = ReactiveCommand.Create(OnBack);
         ConfirmInstallCommand = ReactiveCommand.Create(OnConfirmInstall);
         ExitCommand = ReactiveCommand.Create(OnExit);
@@ -91,12 +96,21 @@ public class ClassicSingerSetupViewModel : NavigateViewModelBase, ICmdSubscriber
             {
                 if (!string.IsNullOrEmpty(ArchiveFilePath))
                 {
+                    ShowErrorState = false;
+                    ErrorMessage = string.Empty;
                     try
                     {
                         if (IsEncrypted(ArchiveFilePath))
                         {
                             ShowErrorState = true;
                             ErrorMessage = L.S("SingerSetup.Error.Encrypted");
+                            return;
+                        }
+
+                        if (IsVocaloidAIBank(ArchiveFilePath))
+                        {
+                            ShowErrorState = true;
+                            ErrorMessage = L.S("SingerSetup.Error.VocaloidAI");
                             return;
                         }
 
@@ -272,6 +286,58 @@ public class ClassicSingerSetupViewModel : NavigateViewModelBase, ICmdSubscriber
         }
     }
 
+    /// <summary>
+    /// Returns true when the archive looks like a VOCALOID6 AI bank: it carries a
+    /// package-config.json that declares vocaloidVersion 6, but has no .ddb or .ddi
+    /// (native V6 AI banks use a neural format with no classic binary assets).
+    /// Classic V3/V4/V5 banks re-used by V6 have .ddb/.ddi and load fine; they are not flagged.
+    /// </summary>
+    private static bool IsVocaloidAIBank(string archiveFilePath)
+    {
+        try
+        {
+            using IArchive archive = ArchiveFactory.OpenArchive(archiveFilePath);
+            var names = archive.Entries
+                .Where(e => !e.IsDirectory && e.Key != null)
+                .Select(e => Path.GetFileName(e.Key!.Replace('\\', '/')))
+                .ToList();
+
+            bool hasClassicAssets = names.Any(n =>
+                n.EndsWith(".ddb", StringComparison.OrdinalIgnoreCase) ||
+                n.EndsWith(".ddi", StringComparison.OrdinalIgnoreCase));
+            if (hasClassicAssets) return false;
+
+            // No .ddb/.ddi — only flag if the manifest or folder name screams V6 AI.
+            // Signs: package-config.json with vocaloidVersion == 6, or a .vpr alongside
+            // an "ai" marker file (some redistributors include one).
+            var configEntry = archive.Entries.FirstOrDefault(e =>
+                e.Key != null &&
+                Path.GetFileName(e.Key.Replace('\\', '/')).Equals("package-config.json", StringComparison.OrdinalIgnoreCase));
+            if (configEntry != null)
+            {
+                using var stream = configEntry.OpenEntryStream();
+                using var reader = new System.IO.StreamReader(stream, System.Text.Encoding.UTF8);
+                string json = reader.ReadToEnd();
+                // Quick text scan — no full JSON parse needed here.
+                // Matches: "vocaloidVersion": 6  |  "vocaloidVersion": "6"  |  "VOCALOID6"
+                if (System.Text.RegularExpressions.Regex.IsMatch(json,
+                        @"""vocaloidVersion""\s*:\s*(6|""[Vv]?6"")",
+                        System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+                {
+                    return true;
+                }
+            }
+
+            // A .vpr with no .ddb/.ddi and no classic config is a plain VOCALOID project,
+            // not a voicebank archive — not our problem here, let the existing flow handle it.
+            return false;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
     private VoicebankConfig? LoadCharacterYaml(string archiveFilePath)
     {
         try
@@ -301,9 +367,11 @@ public class ClassicSingerSetupViewModel : NavigateViewModelBase, ICmdSubscriber
     {
         if (!string.IsNullOrEmpty(config?.SingerType))
         {
-            if (SingerTypes.Contains(config.SingerType))
+            string? known = SingerTypes.FirstOrDefault(type =>
+                string.Equals(type, config.SingerType, StringComparison.OrdinalIgnoreCase));
+            if (known != null)
             {
-                return config.SingerType;
+                return known;
             }
             Log.Warning("Unknown SingerType {SingerType} in {ArchivePath}; using UTAU.",
                 config.SingerType, archiveFilePath);
@@ -331,6 +399,13 @@ public class ClassicSingerSetupViewModel : NavigateViewModelBase, ICmdSubscriber
             if (names.Contains("info.toml"))
             {
                 return "neutrino";
+            }
+            if (names.Any(name => name != null && (
+                    name.EndsWith(".ddb", StringComparison.OrdinalIgnoreCase)
+                    || name.EndsWith(".ddi", StringComparison.OrdinalIgnoreCase)
+                    || name.EndsWith(".vcld", StringComparison.OrdinalIgnoreCase))))
+            {
+                return "vocaloid";
             }
         }
         catch (Exception ex)
@@ -362,12 +437,21 @@ public class ClassicSingerSetupViewModel : NavigateViewModelBase, ICmdSubscriber
                 try
                 {
                     string basePath = PathManager.Inst.SingersInstallPath;
-                    VoicebankInstaller installer = new VoicebankInstaller(basePath, (progress, info) =>
+                    if (singerType == "vocaloid")
                     {
-                        // 这会发送 ProgressBarNotification，我们在 OnNext 中处理
-                        DocManager.Inst.ExecuteCmd(new ProgressBarNotification(progress, info));
-                    }, archiveEncoding, textEncoding);
-                    installer.Install(archiveFilePath, singerType);
+                        OpenUtau.Core.Vocaloid.VocaloidInstaller.Install(archiveFilePath, basePath,
+                            (progress, info) => DocManager.Inst.ExecuteCmd(new ProgressBarNotification(progress, info)),
+                            archiveEncoding);
+                    }
+                    else
+                    {
+                        VoicebankInstaller installer = new VoicebankInstaller(basePath, (progress, info) =>
+                        {
+                            // 这会发送 ProgressBarNotification，我们在 OnNext 中处理
+                            DocManager.Inst.ExecuteCmd(new ProgressBarNotification(progress, info));
+                        }, archiveEncoding, textEncoding);
+                        installer.Install(archiveFilePath, singerType);
+                    }
                 }
                 catch (Exception ex)
                 {

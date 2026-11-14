@@ -1345,6 +1345,12 @@
   <data name="SingerSetup.Step3.TypeNeutrino" xml:space="preserve">
     <value>• neutrino: NEUTRINO v3 AI 合成エンジンを使用</value>
   </data>
+  <data name="SingerSetup.Step3.TypeVocaloid" xml:space="preserve">
+    <value>• vocaloid: VOCALOID 1〜5 のボイスバンク (.ddb/.ddi/.vvd) または .vcld パッケージ。VOCALOID:AI は非対応</value>
+  </data>
+  <data name="SingerManagement.VocaloidInstalled" xml:space="preserve">
+    <value>VOCALOID ボイスバンクをインストールしました</value>
+  </data>
   <data name="SingerSetup.Step4.Title" xml:space="preserve">
     <value>インストールの概要</value>
   </data>
@@ -1383,6 +1389,9 @@
   </data>
   <data name="SingerSetup.Error.Encrypted" xml:space="preserve">
     <value>暗号化されたアーカイブはサポートされていません</value>
+  </data>
+  <data name="SingerSetup.Error.VocaloidAI" xml:space="preserve">
+    <value>VOCALOID:AI（V6ネイティブ）バンクはサポートされていません。V1〜V5のクラシック音声ライブラリ（.ddb/.ddi/.vvd）のみインストール可能です。</value>
   </data>
   <data name="SingerSetup.Installing" xml:space="preserve">
     <value>インストール準備中...</value>

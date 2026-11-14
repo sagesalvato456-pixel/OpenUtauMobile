@@ -30,8 +30,9 @@ namespace OpenUtau.Core {
             Directory.CreateDirectory(PathManager.Inst.SingersPath);
             var stopWatch = Stopwatch.StartNew();
             var oldSingers = Singers.Values.ToList();
-            var found = ClassicSingerLoader.FindAllSingers()
-                .Concat(Vogen.VogenSingerLoader.FindAllSingers())
+            var found = SafeFind("Classic", () => ClassicSingerLoader.FindAllSingers())
+                .Concat(SafeFind("Vogen", () => Vogen.VogenSingerLoader.FindAllSingers()))
+                .Concat(SafeFind("Vocaloid", () => Vocaloid.VocaloidSingerLoader.FindAllSingers()))
                 .ToList();
             // Singers with the same id are equal (see USinger.Equals), so this keeps the first.
             var singers = found.Distinct().ToList();
@@ -59,13 +60,23 @@ namespace OpenUtau.Core {
             }
         }
 
+        // One broken loader must not hide the singers of the others.
+        private static List<USinger> SafeFind(string loaderName, Func<IEnumerable<USinger>> find) {
+            try {
+                return find().ToList();
+            } catch (Exception e) {
+                Log.Error(e, $"Failed to search {loaderName} singers");
+                return new List<USinger>();
+            }
+        }
+
         public USinger GetSinger(string name) {
             Log.Information($"Attach singer to track: {name}");
-            name = name.Replace("%VOICE%", "");
-            if (Singers.ContainsKey(name)) {
-                return Singers[name];
+            if (string.IsNullOrEmpty(name)) {
+                return null;
             }
-            return null;
+            name = name.Replace("%VOICE%", "");
+            return Singers.TryGetValue(name, out var singer) ? singer : null;
         }
 
         /// <summary>
@@ -84,6 +95,9 @@ namespace OpenUtau.Core {
                 }
 
                 singer.FreeMemory();
+                // A .vcld leaves a big extracted copy in the cache, named by its manifest:
+                // clear it while the .vcld still exists.
+                (singer as Vocaloid.VocaloidSinger)?.DeleteCache();
                 if (Directory.Exists(location))
                 {
                     Directory.Delete(location, true);
@@ -95,6 +109,11 @@ namespace OpenUtau.Core {
                 else
                 {
                     throw new DirectoryNotFoundException($"Singer location does not exist: {location}");
+                }
+                if (singer is Vocaloid.VocaloidSinger)
+                {
+                    // installs sit in "<archive>/<bank>/<id>/": do not leave the empty wrappers behind
+                    Vocaloid.VocaloidInstaller.PruneEmptyParents(location);
                 }
             }
             finally

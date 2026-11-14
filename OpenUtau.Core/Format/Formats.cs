@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using OpenUtau.Classic;
 using OpenUtau.Core.Ustx;
 
 namespace OpenUtau.Core.Format {
-    public enum ProjectFormats { Unknown, Vsq3, Vsq4, Ust, Ustx, Midi, Ufdata, Musicxml, Svp };
+    public enum ProjectFormats { Unknown, Vsq3, Vsq4, Ust, Ustx, Midi, Ufdata, Musicxml, Svp, Vpr, Vsq };
 
     public static class Formats {
         const string ustMatch = "[#SETTING]";
@@ -20,7 +21,41 @@ namespace OpenUtau.Core.Format {
         const string svpdata = "\"database\":";
         const string svp2 = "\"mouthOpening\":";
 
+        static bool IsVprFile(string file) {
+            if (string.Equals(Path.GetExtension(file), ".vpr", System.StringComparison.OrdinalIgnoreCase)) {
+                return true;
+            }
+            try {
+                // .vpr (VOCALOID4/5/6) is a zip archive holding Project/sequence.json. Detect it by
+                // content so renamed files still work, without taking any other zip (.mxl...) for one.
+                using var stream = File.OpenRead(file);
+                var magic = new byte[4];
+                if (stream.Read(magic, 0, 4) != 4
+                    || magic[0] != 0x50 || magic[1] != 0x4B || magic[2] != 0x03 || magic[3] != 0x04) {
+                    return false;
+                }
+                stream.Position = 0;
+                using var zip = new ZipArchive(stream, ZipArchiveMode.Read);
+                return zip.Entries.Any(e => e.FullName.Replace('\\', '/')
+                    .EndsWith("sequence.json", System.StringComparison.OrdinalIgnoreCase));
+            } catch {
+                return false;
+            }
+        }
+
+        // VOCALOID2 .vsq: a MIDI file carrying VSQ text. VOCALOID1 uses plain MIDI, handled by Midi.
+        static bool IsVsqFile(string file) {
+            return string.Equals(Path.GetExtension(file), ".vsq", System.StringComparison.OrdinalIgnoreCase)
+                || VsqImporter.LooksLikeVsq(file);
+        }
+
         public static ProjectFormats DetectProjectFormat(string file) {
+            if (IsVprFile(file)) {
+                return ProjectFormats.Vpr;
+            }
+            if (IsVsqFile(file)) {
+                return ProjectFormats.Vsq;
+            }
             var lines = new List<string>();
             using (var reader = new StreamReader(file)) {
                 for (int i = 0; i < 10 && !reader.EndOfStream; ++i) {
@@ -62,7 +97,8 @@ namespace OpenUtau.Core.Format {
             ProjectFormats format = DetectProjectFormat(files[0]);
             UProject? project = null;
             var lines = new List<string>();
-            using (var reader = new StreamReader(files[0])) {
+            if (format != ProjectFormats.Vpr && format != ProjectFormats.Vsq) {
+                using var reader = new StreamReader(files[0]);
                 for (int i = 0; i < 10 && !reader.EndOfStream; ++i) {
                     lines.Add(reader.ReadLine());
                 }
@@ -87,6 +123,12 @@ namespace OpenUtau.Core.Format {
                     break;
                 case ProjectFormats.Musicxml:
                     project = MusicXML.LoadProject(files[0]);
+                    break;
+                case ProjectFormats.Vpr:
+                    project = VPR.Load(files[0]);
+                    break;
+                case ProjectFormats.Vsq:
+                    project = VsqImporter.Load(files[0]);
                     break;
                 case ProjectFormats.Svp:
                     if (contents.Contains(svp2)) {
@@ -206,12 +248,7 @@ namespace OpenUtau.Core.Format {
             if (files == null || files.Length < 1) {
                 return;
             }
-            UProject[] loadedProjects = files
-                .Select(file => ReadProject(new string[] { file }))
-                .Where(p => p != null)
-                .Cast<UProject>()
-                .ToArray();
-            ImportTracks(project, loadedProjects, importTempo);
+            ImportTracks(project, ReadProjects(files), importTempo);
         }
     }
 }

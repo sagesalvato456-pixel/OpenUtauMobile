@@ -1345,6 +1345,12 @@
   <data name="SingerSetup.Step3.TypeNeutrino" xml:space="preserve">
     <value>• neutrino: 使用 NEUTRINO v3 AI 合成引擎</value>
   </data>
+  <data name="SingerSetup.Step3.TypeVocaloid" xml:space="preserve">
+    <value>• vocaloid: VOCALOID 1–5 音源 (.ddb/.ddi/.vvd) 或 .vcld 包。不支持 VOCALOID:AI</value>
+  </data>
+  <data name="SingerManagement.VocaloidInstalled" xml:space="preserve">
+    <value>VOCALOID 音源已安装</value>
+  </data>
   <data name="SingerSetup.Step4.Title" xml:space="preserve">
     <value>安装摘要</value>
   </data>
@@ -1383,6 +1389,9 @@
   </data>
   <data name="SingerSetup.Error.Encrypted" xml:space="preserve">
     <value>不支持加密的压缩包文件</value>
+  </data>
+  <data name="SingerSetup.Error.VocaloidAI" xml:space="preserve">
+    <value>不支持 VOCALOID:AI（V6 原生）声库。仅支持经典的 V1–V5 声库（.ddb/.ddi/.vvd）。</value>
   </data>
   <data name="SingerSetup.Installing" xml:space="preserve">
     <value>准备安装...</value>
