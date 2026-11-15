@@ -1,5 +1,5 @@
 // OpenUtau.Core/Vocaloid/VocaloidSingerLoader.cs
-// Lang: C# 10, Target: .NET 7 / Android (OpenUtau Mobile dev branch)
+// Lang: C# 10, Target: .NET 7 / Android (OpenLoid-Flame dev branch)
 // Scans SingersPaths for VOCALOID voicebanks (V1..V6): .vcld packages and loose folders
 // holding a .ddb together with its .ddi. Mirrors the pattern of Classic.ClassicSingerLoader
 // and Vogen.VogenSingerLoader.

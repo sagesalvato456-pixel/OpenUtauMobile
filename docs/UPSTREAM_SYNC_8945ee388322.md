@@ -104,10 +104,10 @@ CPP 无本地定制。冻结上游的 cpp、实际 CPP split 的 tree、HEAD:nat
 ## 验证结果
 
 - Plugin：dotnet build OpenUtau.Plugin.Builtin/OpenUtau.Plugin.Builtin.csproj --nologo -v:minimal，exit 0；兼容修复后重建亦 exit 0（16 个现有 Core 告警）。
-- Mobile：dotnet build OpenUtauMobile/OpenUtauMobile.csproj --nologo -v:minimal，exit 0；兼容修复后重建亦 exit 0（0 个告警）。第一次沙箱执行因 obj 文件写权限失败，沙箱外重试通过。
+- Mobile：dotnet build OpenLoidFlame/OpenLoidFlame.csproj --nologo -v:minimal，exit 0；兼容修复后重建亦 exit 0（0 个告警）。第一次沙箱执行因 obj 文件写权限失败，沙箱外重试通过。
 - 以上构建均设置 AVALONIA_TELEMETRY_OPTOUT=1，并实际执行默认 restore；本次没有依赖变更。
 - Native：python native/worldline/build.py --rid win-x64 --test，exit 0。Bazel 9.2.0 / MSVC 19.51.36256；worldline、continuous_noise、effects 三个已有测试均通过，结果来自有效 Bazel 测试缓存，源码与测试输入未变。
 - Native ABI：python native/worldline/verify.py artifacts/worldline-native/win-x64/worldline.dll win-x64 --run，exit 0，实际 F0/codec/config/analysis/synthesis/R1.1 调用、缓冲区哨兵和 64 位噪声种子验证通过。worldline-build.json 的 upstream_commit 为本次冻结完整 SHA。
-- Android：按当前 pr-requirements.yml 执行 dotnet restore OpenUtauMobile.Android/OpenUtauMobile.Android.csproj -r android-arm64 -p:Configuration=Release，失败 NETSDK1147（选中的 .NET 10.0.400 未识别到所需 Android workload）；未继续执行 Android 构建、APK 内容验证及设备验收。由 PR 的 Android ARM64 云检查补齐，必需云检查通过前不合并。
+- Android：按当前 pr-requirements.yml 执行 dotnet restore OpenLoidFlame.Android/OpenLoidFlame.Android.csproj -r android-arm64 -p:Configuration=Release，失败 NETSDK1147（选中的 .NET 10.0.400 未识别到所需 Android workload）；未继续执行 Android 构建、APK 内容验证及设备验收。由 PR 的 Android ARM64 云检查补齐，必需云检查通过前不合并。
 - git diff --check 通过；无冲突标记或未合并索引。
 - 附属文件复制运行验证：本地一次性 console harness（plans/resampler-copy-check，未新增仓库测试套件）直接调用真实 Core 的 CopySourceTemp / CopyBackMetaFiles。Worldline、Hifisampler、带 YAML 自定义后缀的 ExeResampler、空 files 数组、null files、null manifest 共六个用例全部通过。核对源 WAV 字节、默认 frq/llsm 正向复制及反向回写、自定义 .custom 正向复制及反向回写。修复前同一 harness 的两种内置 resampler 与三个接口边界用例均抛出 NullReferenceException，ExeResampler 用例通过；修复后 0/6 失败。未执行完整外部 wavtool 合成或设备播放验收。

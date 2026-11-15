@@ -1,12 +1,12 @@
-﻿# Contributing to OpenUtau Mobile
+﻿# Contributing to OpenLoid-Flame
 
 [简体中文](../CONTRIBUTING.md) | **English**
 
-Thank you for your interest in contributing to OpenUtau Mobile!
+Thank you for your interest in contributing to OpenLoid-Flame!
 
 Contributions of all kinds are welcome, including code, bug fixes, documentation, translations, UI/UX improvements, testing, and technical discussions.
 
-OpenUtau Mobile is currently under active development. Architecture, APIs, and platform-specific implementations may change frequently, so please keep changes focused and coordinate large changes before investing significant work.
+OpenLoid-Flame is currently under active development. Architecture, APIs, and platform-specific implementations may change frequently, so please keep changes focused and coordinate large changes before investing significant work.
 
 ## Ways to contribute
 
@@ -54,8 +54,8 @@ sources from GitHub and packages from NuGet; it also compiles GAME. Models are i
 Fork the repository on GitHub, then run:
 
 ```powershell
-git clone https://github.com/<your-username>/OpenUtauMobile.git
-cd OpenUtauMobile
+git clone https://github.com/<your-username>/OpenLoidFlame.git
+cd OpenLoidFlame
 git remote add upstream https://github.com/vocoder712/OpenUtauMobile.git
 git fetch upstream
 git switch dev
@@ -80,17 +80,17 @@ variable and restart Rider if you launch the IDE from a shortcut.
 
 ```powershell
 $env:AVALONIA_TELEMETRY_OPTOUT='1'
-dotnet restore OpenUtauMobile.Windows/OpenUtauMobile.Windows.csproj
-dotnet run --project OpenUtauMobile.Windows/OpenUtauMobile.Windows.csproj -c Debug
+dotnet restore OpenLoidFlame.Windows/OpenLoidFlame.Windows.csproj
+dotnet run --project OpenLoidFlame.Windows/OpenLoidFlame.Windows.csproj -c Debug
 ```
 
 Use project-specific restore/build: restoring the whole solution may require unrelated platform workloads.
-In Rider, open `OpenUtauMobile.sln`, check the .NET CLI path, and select the Windows project's **.NET Project**
+In Rider, open `OpenLoidFlame.sln`, check the .NET CLI path, and select the Windows project's **.NET Project**
 run configuration and **Debug** build configuration. Build the target project and dependencies before launch,
 set a C# breakpoint, then click Debug. If necessary, create the configuration under **Run → Edit Configurations**.
 
 No explicit RID or `EnableGameGgml` flag is needed. GAME and worldline are placed in the correct output directory.
-Default output is `OpenUtauMobile.Windows/bin/Debug/net10.0-windows/`; an explicit RID adds a RID subdirectory.
+Default output is `OpenLoidFlame.Windows/bin/Debug/net10.0-windows/`; an explicit RID adds a RID subdirectory.
 
 ### 4. Prepare Android
 
@@ -139,11 +139,11 @@ To check the build before attaching a debugger:
 ```powershell
 $env:AVALONIA_TELEMETRY_OPTOUT='1'
 $androidRid = 'android-arm64'
-dotnet build OpenUtauMobile.Android/OpenUtauMobile.Android.csproj -c Debug -r $androidRid "-p:AndroidSdkDirectory=$androidSdk" "-p:AndroidNdkDirectory=$androidNdk" "-p:JavaSdkDirectory=$javaSdk"
+dotnet build OpenLoidFlame.Android/OpenLoidFlame.Android.csproj -c Debug -r $androidRid "-p:AndroidSdkDirectory=$androidSdk" "-p:AndroidNdkDirectory=$androidNdk" "-p:JavaSdkDirectory=$javaSdk"
 ```
 
-The signed APK is under `OpenUtauMobile.Android/bin/Debug/net10.0-android36.0/<RID>/`.
-In Rider, choose or create an **Android** run configuration for `OpenUtauMobile.Android`, use **Debug** and
+The signed APK is under `OpenLoidFlame.Android/bin/Debug/net10.0-android36.0/<RID>/`.
+In Rider, choose or create an **Android** run configuration for `OpenLoidFlame.Android`, use **Debug** and
 **Default APK**, select the device, keep the pre-launch build, set a C# breakpoint and click Debug.
 Rider builds, installs, launches and attaches the debugger. No CI release-signing secrets are needed for Debug.
 See [Rider's Android instructions](https://www.jetbrains.com/help/rider/Run_Debug_Configuration_Xamarin_Android.html).
@@ -158,13 +158,13 @@ from a missing model; do not copy binaries from another RID. Use `GameBuildRoot`
 
 ### `dev`
 
-`dev` is the main development and integration branch for OpenUtau Mobile V2.
+`dev` is the main development and integration branch for OpenLoid-Flame V2.
 
 Normal contributions should target this branch.
 
 ### `master`
 
-`master` contains the legacy generation of OpenUtau Mobile.
+`master` contains the legacy generation of OpenLoid-Flame.
 
 It is not the base branch for normal V2 development.
 
@@ -187,7 +187,7 @@ In particular:
 
 ## Commit messages
 
-OpenUtau Mobile follows a lightweight form of the Conventional Commits convention.
+OpenLoid-Flame follows a lightweight form of the Conventional Commits convention.
 
 Preferred format:
 
@@ -396,7 +396,7 @@ AI tools can assist development, not replace review and engineering judgment.
 
 ## Upstream synchronization
 
-OpenUtau Mobile periodically synchronizes code from the upstream OpenUtau repository.
+OpenLoid-Flame periodically synchronizes code from the upstream OpenUtau repository.
 
 Upstream synchronization is a repository maintenance operation and is different from normal feature development.
 
@@ -419,7 +419,7 @@ version formulas in documentation.
 
 When reporting a reproducible bug, include as much relevant information as possible:
 
-* OpenUtau Mobile version or commit;
+* OpenLoid-Flame version or commit;
 * device model;
 * operating system and version;
 * affected platform;
@@ -441,7 +441,7 @@ Start logging, reproduce the issue, stop logging, and remove personal or unrelat
 
 ## Licensing
 
-By contributing to OpenUtau Mobile, you agree that your contributions will be distributed under the repository's applicable license.
+By contributing to OpenLoid-Flame, you agree that your contributions will be distributed under the repository's applicable license.
 
 Do not submit code, assets, libraries, models, or other materials unless they can legally be included and redistributed by the project.
 

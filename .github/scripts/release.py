@@ -275,10 +275,10 @@ class Transaction:
         }
         result = []
         for artifact, suffix in packages.items():
-            filename = f"OpenUtauMobile-build{build_number}-{suffix}"
+            filename = f"OpenLoidFlame-build{build_number}-{suffix}"
             if artifact == "browser-wasm":
-                filename = "OpenUtauMobile-browser-wasm.tar.gz"
-            path = Path("release-assets") / f"OpenUtauMobile-{artifact}" / filename
+                filename = "OpenLoidFlame-browser-wasm.tar.gz"
+            path = Path("release-assets") / f"OpenLoidFlame-{artifact}" / filename
             files = [path]
             if artifact.startswith(("android-", "ios-", "browser-")):
                 files.append(path.with_name(path.name + ".sha256"))
@@ -343,7 +343,7 @@ class Transaction:
             generated = self.api("POST", "releases/generate-notes", {"tag_name": tag, "target_commitish": self.source})
             notes = "\n\n".join(filter(None, [os.environ.get("VERSION_LYRICS"), os.environ.get("CUSTOM_NOTES"), generated["body"]]))
         annotation = self.api("POST", "git/tags", {
-            "tag": tag, "message": f"OpenUtau Mobile {tag[1:]}\n\n{self.identity}:{mode}",
+            "tag": tag, "message": f"OpenLoid-Flame {tag[1:]}\n\n{self.identity}:{mode}",
             "object": self.source, "type": "commit",
         })
         self.api("POST", "git/refs", {"ref": f"refs/tags/{tag}", "sha": annotation["sha"]})
@@ -351,7 +351,7 @@ class Transaction:
             print(f"已创建 Tag：{tag}", flush=True)
             return
         release = self.api("POST", "releases", {
-            "tag_name": tag, "target_commitish": self.source, "name": f"OpenUtau Mobile {tag[1:]}",
+            "tag_name": tag, "target_commitish": self.source, "name": f"OpenLoid-Flame {tag[1:]}",
             "body": f"{notes}\n\n{self.pending}", "draft": True,
         })
         for asset in assets:

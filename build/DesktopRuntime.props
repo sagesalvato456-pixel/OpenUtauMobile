@@ -12,9 +12,9 @@
         <CopyNuGetNativeSymbols Condition="'$(CopyNuGetNativeSymbols)' == ''">false</CopyNuGetNativeSymbols>
         <_OpumDefaultDesktopRid>$(NETCoreSdkRuntimeIdentifier)</_OpumDefaultDesktopRid>
         <_OpumDesktopArchitecture>$([System.Text.RegularExpressions.Regex]::Replace('$(NETCoreSdkRuntimeIdentifier)', '^.*-', ''))</_OpumDesktopArchitecture>
-        <_OpumDefaultDesktopRid Condition="'$(MSBuildProjectName)' == 'OpenUtauMobile.Windows'">win-$(_OpumDesktopArchitecture)</_OpumDefaultDesktopRid>
-        <_OpumDefaultDesktopRid Condition="'$(MSBuildProjectName)' == 'OpenUtauMobile.MacOS'">osx-$(_OpumDesktopArchitecture)</_OpumDefaultDesktopRid>
-        <_OpumDefaultDesktopRid Condition="'$(MSBuildProjectName)' == 'OpenUtauMobile.Linux' and !$([System.String]::Copy('$(NETCoreSdkRuntimeIdentifier)').StartsWith('linux-'))">linux-$(_OpumDesktopArchitecture)</_OpumDefaultDesktopRid>
+        <_OpumDefaultDesktopRid Condition="'$(MSBuildProjectName)' == 'OpenLoidFlame.Windows'">win-$(_OpumDesktopArchitecture)</_OpumDefaultDesktopRid>
+        <_OpumDefaultDesktopRid Condition="'$(MSBuildProjectName)' == 'OpenLoidFlame.MacOS'">osx-$(_OpumDesktopArchitecture)</_OpumDefaultDesktopRid>
+        <_OpumDefaultDesktopRid Condition="'$(MSBuildProjectName)' == 'OpenLoidFlame.Linux' and !$([System.String]::Copy('$(NETCoreSdkRuntimeIdentifier)').StartsWith('linux-'))">linux-$(_OpumDesktopArchitecture)</_OpumDefaultDesktopRid>
         <_OpumDesktopArchitecture Condition="'$(PlatformTarget)' != '' and '$(PlatformTarget)' != 'AnyCPU'">$(PlatformTarget)</_OpumDesktopArchitecture>
         <_OpumDesktopArchitecture Condition="'$(PlatformTarget)' == '' and ('$(Platform)' == 'x86' or '$(Platform)' == 'x64' or '$(Platform)' == 'ARM64')">$(Platform)</_OpumDesktopArchitecture>
         <_OpumDesktopArchitecture>$([System.String]::Copy('$(_OpumDesktopArchitecture)').ToLowerInvariant())</_OpumDesktopArchitecture>

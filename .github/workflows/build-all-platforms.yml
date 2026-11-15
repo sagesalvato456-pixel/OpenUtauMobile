@@ -125,7 +125,7 @@ jobs:
           PUBLISH_DIR="${GITHUB_WORKSPACE}/artifacts/publish/${{ matrix.rid }}"
 
           dotnet publish \
-            OpenUtauMobile.Linux/OpenUtauMobile.Linux.csproj \
+            OpenLoidFlame.Linux/OpenLoidFlame.Linux.csproj \
             -c Release \
             -r "${{ matrix.rid }}" \
             --self-contained true \
@@ -145,9 +145,9 @@ jobs:
         shell: bash
         run: |
           PUBLISH_DIR="${GITHUB_WORKSPACE}/artifacts/publish/${{ matrix.rid }}"
-          PACKAGE="${GITHUB_WORKSPACE}/artifacts/OpenUtauMobile-build${{ inputs.build_number }}-linux-${{ matrix.arch }}.tar.gz"
+          PACKAGE="${GITHUB_WORKSPACE}/artifacts/OpenLoidFlame-build${{ inputs.build_number }}-linux-${{ matrix.arch }}.tar.gz"
 
-          chmod +x "$PUBLISH_DIR/OpenUtauMobile.Linux" || true
+          chmod +x "$PUBLISH_DIR/OpenLoidFlame.Linux" || true
 
           tar \
             -C "$PUBLISH_DIR" \
@@ -159,8 +159,8 @@ jobs:
       - name: Upload Linux ${{ matrix.arch }}
         uses: actions/upload-artifact@v4
         with:
-          name: OpenUtauMobile-linux-${{ matrix.arch }}
-          path: artifacts/OpenUtauMobile-build${{ inputs.build_number }}-linux-${{ matrix.arch }}.tar.gz
+          name: OpenLoidFlame-linux-${{ matrix.arch }}
+          path: artifacts/OpenLoidFlame-build${{ inputs.build_number }}-linux-${{ matrix.arch }}.tar.gz
           if-no-files-found: error
           compression-level: 0
 
@@ -219,7 +219,7 @@ jobs:
           $publishDir = "$env:GITHUB_WORKSPACE/artifacts/publish/${{ matrix.rid }}"
 
           dotnet publish `
-            OpenUtauMobile.Windows/OpenUtauMobile.Windows.csproj `
+            OpenLoidFlame.Windows/OpenLoidFlame.Windows.csproj `
             -c Release `
             -r "${{ matrix.rid }}" `
             --self-contained true `
@@ -240,7 +240,7 @@ jobs:
         run: |
           $publishDir = "$env:GITHUB_WORKSPACE/artifacts/publish/${{ matrix.rid }}"
 
-          $package = "$env:GITHUB_WORKSPACE/artifacts/OpenUtauMobile-build${{ inputs.build_number }}-windows-${{ matrix.arch }}.zip"
+          $package = "$env:GITHUB_WORKSPACE/artifacts/OpenLoidFlame-build${{ inputs.build_number }}-windows-${{ matrix.arch }}.zip"
 
           Compress-Archive `
             -Path "$publishDir/*" `
@@ -253,8 +253,8 @@ jobs:
       - name: Upload Windows ${{ matrix.arch }}
         uses: actions/upload-artifact@v4
         with:
-          name: OpenUtauMobile-windows-${{ matrix.arch }}
-          path: artifacts/OpenUtauMobile-build${{ inputs.build_number }}-windows-${{ matrix.arch }}.zip
+          name: OpenLoidFlame-windows-${{ matrix.arch }}
+          path: artifacts/OpenLoidFlame-build${{ inputs.build_number }}-windows-${{ matrix.arch }}.zip
           if-no-files-found: error
           compression-level: 0
 
@@ -310,7 +310,7 @@ jobs:
           PUBLISH_DIR="${GITHUB_WORKSPACE}/artifacts/publish/${{ matrix.rid }}"
 
           dotnet publish \
-            OpenUtauMobile.MacOS/OpenUtauMobile.MacOS.csproj \
+            OpenLoidFlame.MacOS/OpenLoidFlame.MacOS.csproj \
             -c Release \
             -r "${{ matrix.rid }}" \
             --self-contained true \
@@ -330,9 +330,9 @@ jobs:
         shell: bash
         run: |
           PUBLISH_DIR="${GITHUB_WORKSPACE}/artifacts/publish/${{ matrix.rid }}"
-          PACKAGE="${GITHUB_WORKSPACE}/artifacts/OpenUtauMobile-build${{ inputs.build_number }}-macos-${{ matrix.arch }}.tar.gz"
+          PACKAGE="${GITHUB_WORKSPACE}/artifacts/OpenLoidFlame-build${{ inputs.build_number }}-macos-${{ matrix.arch }}.tar.gz"
 
-          chmod +x "$PUBLISH_DIR/OpenUtauMobile.MacOS" || true
+          chmod +x "$PUBLISH_DIR/OpenLoidFlame.MacOS" || true
 
           tar \
             -C "$PUBLISH_DIR" \
@@ -344,8 +344,8 @@ jobs:
       - name: Upload macOS ${{ matrix.arch }}
         uses: actions/upload-artifact@v4
         with:
-          name: OpenUtauMobile-macos-${{ matrix.arch }}
-          path: artifacts/OpenUtauMobile-build${{ inputs.build_number }}-macos-${{ matrix.arch }}.tar.gz
+          name: OpenLoidFlame-macos-${{ matrix.arch }}
+          path: artifacts/OpenLoidFlame-build${{ inputs.build_number }}-macos-${{ matrix.arch }}.tar.gz
           if-no-files-found: error
           compression-level: 0
 

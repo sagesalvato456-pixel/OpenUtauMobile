@@ -1,0 +1,53 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:foundation="clr-namespace:OpenLoidFlame.Themes.OpenLoidFlame.Tokens.Foundation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:OpenLoidFlame.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="OpenLoidFlame.Views.SplashScreenView"
+             x:DataType="vm:SplashScreenViewModel"
+             Background="{DynamicResource Sem.Color.SurfaceContainer}">
+
+    <Grid>
+        <!-- Center content -->
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="48">
+            <!-- App Logo -->
+            <Svg Path="avares://OpenLoidFlame/Assets/logotype.svg"
+                 Css="{DynamicResource SvgCss}"
+                 Width="280"
+                 Stretch="Uniform"
+                 HorizontalAlignment="Center" />
+
+            <!-- Progress section -->
+            <StackPanel Spacing="{x:Static foundation:LayoutTokens.SpaceM}" Width="300">
+                <TextBlock Text="{Binding InitState}"
+                           FontSize="14"
+                           HorizontalAlignment="Center"
+                           Foreground="{DynamicResource Sem.Color.OnSurfaceVariant}"/>
+
+                <ProgressBar Value="{Binding ProgressPercent}"
+                             Maximum="100"
+                             ShowProgressText="False">
+                    <ProgressBar.Transitions>
+                        <Transitions>
+                            <DoubleTransition Property="Value" Duration="{x:Static foundation:MotionTokens.DurationProgress}" Easing="CubicEaseOut"/>
+                        </Transitions>
+                    </ProgressBar.Transitions>
+                </ProgressBar>
+            </StackPanel>
+        </StackPanel>
+
+        <!-- Version Info -->
+        <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,32" Spacing="{x:Static foundation:LayoutTokens.SpaceXS}" Opacity="0.6">
+            <TextBlock Text="{Binding Version, StringFormat='v{0}'}"
+                       FontSize="12"
+                       HorizontalAlignment="Center"
+                       Foreground="{DynamicResource Sem.Color.OnSurfaceVariant}"/>
+            <TextBlock Text="{Binding CoreVersion, StringFormat='Core: {0}'}"
+                       FontSize="12"
+                       HorizontalAlignment="Center"
+                       Foreground="{DynamicResource Sem.Color.OnSurfaceVariant}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

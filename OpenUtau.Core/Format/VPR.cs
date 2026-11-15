@@ -1,5 +1,5 @@
 // OpenUtau.Core/Format/VPR.cs
-// Lang: C# 10, Target: net10.0 / Android (OpenUtauMobile-dev / OpenLoid-Flame)
+// Lang: C# 10, Target: net10.0 / Android (OpenLoidFlame-dev / OpenLoid-Flame)
 // Imports Vocaloid 5/6 .vpr project files into UProject.
 //
 // .vpr = zip archive containing:

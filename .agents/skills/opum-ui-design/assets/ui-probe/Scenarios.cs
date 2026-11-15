@@ -7,10 +7,10 @@ using Avalonia.VisualTree;
 using Newtonsoft.Json;
 using OpenUtau.Core;
 using OpenUtau.Core.Util;
-using OpenUtauMobile.Controls;
-using OpenUtauMobile.Helpers;
-using OpenUtauMobile.ViewModels;
-using OpenUtauMobile.Views;
+using OpenLoidFlame.Controls;
+using OpenLoidFlame.Helpers;
+using OpenLoidFlame.ViewModels;
+using OpenLoidFlame.Views;
 
 namespace UiProbe;
 

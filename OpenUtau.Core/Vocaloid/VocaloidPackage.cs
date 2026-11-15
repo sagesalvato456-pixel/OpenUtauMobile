@@ -1,5 +1,5 @@
 // OpenUtau.Core/Vocaloid/VocaloidPackage.cs
-// Lang: C# 10, Target: .NET 7 / Android (OpenUtau Mobile dev branch)
+// Lang: C# 10, Target: .NET 7 / Android (OpenLoid-Flame dev branch)
 // Parses a .vcld package (zip) with its package-config.json manifest, or a loose
 // voicebank folder. Binary assets: .ddb (samples), .ddi (index), .vvd (small info file).
 // Works for VOCALOID 1..6 voicebanks, see VocaloidVersion.
@@ -11,6 +11,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using Serilog;
 
 namespace OpenUtau.Core.Vocaloid {
@@ -302,6 +303,24 @@ namespace OpenUtau.Core.Vocaloid {
 
         /// <summary>Phonemizer used for banks that do not name one.</summary>
         public const string DefaultPhonemizerName = "OpenUtau.Core.Vocaloid.VocaloidJapanesePhonemizer";
+
+        private static readonly (string Pattern, string Type)[] languageHints = {
+            (@"(?<![A-Za-z])(english|eng|en)(?![A-Za-z])", "OpenUtau.Core.Vocaloid.VocaloidEnglishPhonemizer"),
+            (@"(?<![A-Za-z])(chinese|mandarin|chn|zh|tianyi)(?![A-Za-z])", "OpenUtau.Core.Vocaloid.VocaloidMandarinPhonemizer"),
+            (@"(?<![A-Za-z])(korean|kor|ko)(?![A-Za-z])", "OpenUtau.Core.Vocaloid.VocaloidKoreanPhonemizer"),
+            (@"(?<![A-Za-z])(spanish|spa|es)(?![A-Za-z])", "OpenUtau.Core.Vocaloid.VocaloidSpanishPhonemizer"),
+        };
+
+        /// <summary>Deduce el fonemizador por idioma a partir de nombres del banco; japonés si nada coincide.</summary>
+        public static string GuessPhonemizerName(params string?[] hints) {
+            foreach (string? hint in hints) {
+                if (string.IsNullOrWhiteSpace(hint)) continue;
+                foreach (var (pattern, type) in languageHints) {
+                    if (Regex.IsMatch(hint, pattern, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)) return type;
+                }
+            }
+            return DefaultPhonemizerName;
+        }
 
         /// <summary>
         /// Deletes the extracted copy of a .vcld from the cache (every "vocaloid*" cache folder,

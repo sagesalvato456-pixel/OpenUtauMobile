@@ -206,7 +206,7 @@ jobs:
         if: inputs.release != 'none'
         uses: actions/download-artifact@v8
         with:
-          pattern: OpenUtauMobile-*
+          pattern: OpenLoidFlame-*
           path: release-assets
           # 保留产物目录，以便逐平台核对清单，也避免混入失败诊断附件。
           merge-multiple: false

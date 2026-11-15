@@ -47,7 +47,7 @@ jobs:
         run: |
           args=()
           if [ -n "$PRODUCT_VERSION" ]; then args+=("-p:Version=$PRODUCT_VERSION"); fi
-          dotnet publish OpenUtauMobile.Browser/OpenUtauMobile.Browser.csproj \
+          dotnet publish OpenLoidFlame.Browser/OpenLoidFlame.Browser.csproj \
             -c Release -o artifacts/publish/browser-wasm \
             -p:BuildNumber="$BUILD_NUMBER" -p:SourceCommit="$SOURCE_SHA" \
             -p:ActionRunId="$ACTION_RUN_ID" "${args[@]}"
@@ -56,16 +56,16 @@ jobs:
       - name: Package Browser static files
         run: |
           test -f artifacts/publish/browser-wasm/wwwroot/licenses/Worldline/worldline-build.json
-          tar -C artifacts/publish/browser-wasm/wwwroot -czf artifacts/OpenUtauMobile-browser-wasm.tar.gz .
+          tar -C artifacts/publish/browser-wasm/wwwroot -czf artifacts/OpenLoidFlame-browser-wasm.tar.gz .
           cd artifacts
-          sha256sum OpenUtauMobile-browser-wasm.tar.gz > OpenUtauMobile-browser-wasm.tar.gz.sha256
+          sha256sum OpenLoidFlame-browser-wasm.tar.gz > OpenLoidFlame-browser-wasm.tar.gz.sha256
       - name: Upload Browser package
         uses: actions/upload-artifact@v4
         with:
-          name: OpenUtauMobile-browser-wasm
+          name: OpenLoidFlame-browser-wasm
           path: |
-            artifacts/OpenUtauMobile-browser-wasm.tar.gz
-            artifacts/OpenUtauMobile-browser-wasm.tar.gz.sha256
+            artifacts/OpenLoidFlame-browser-wasm.tar.gz
+            artifacts/OpenLoidFlame-browser-wasm.tar.gz.sha256
           if-no-files-found: error
       - name: Upload native verification evidence
         uses: actions/upload-artifact@v4

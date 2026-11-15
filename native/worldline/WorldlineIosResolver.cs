@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using OpenUtau.Core.Render;
 
-namespace OpenUtauMobile.iOS
+namespace OpenLoidFlame.iOS
 {
     internal static class WorldlineIosResolver
     {

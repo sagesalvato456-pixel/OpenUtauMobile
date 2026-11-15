@@ -127,7 +127,7 @@ jobs:
       - name: Restore Android ${{ inputs.arch }}
         shell: bash
         run: |
-          dotnet restore OpenUtauMobile.Android/OpenUtauMobile.Android.csproj \
+          dotnet restore OpenLoidFlame.Android/OpenLoidFlame.Android.csproj \
             -r "${{ inputs.rid }}" \
             -p:UseMonoRuntime=true \
             -p:Configuration=Release
@@ -151,7 +151,7 @@ jobs:
               "-p:AndroidSigningKeyAlias=$KEY_ALIAS"
               "-p:AndroidSigningKeyPass=$KEY_PASSWORD")
           fi
-          dotnet publish OpenUtauMobile.Android/OpenUtauMobile.Android.csproj \
+          dotnet publish OpenLoidFlame.Android/OpenLoidFlame.Android.csproj \
             --no-restore \
             -c Release \
             -f net10.0-android36.0 \
@@ -172,7 +172,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          PUBLISH_DIR="OpenUtauMobile.Android/bin/Release/net10.0-android36.0/${{ inputs.rid }}/publish"
+          PUBLISH_DIR="OpenLoidFlame.Android/bin/Release/net10.0-android36.0/${{ inputs.rid }}/publish"
           ARTIFACT_DIR="artifacts/android-${{ inputs.arch }}"
           VERIFY_DIR="artifacts/verification-android-${{ inputs.arch }}"
 
@@ -270,7 +270,7 @@ jobs:
           EOF
 
           cp "$SIGNED_APK" \
-            "$ARTIFACT_DIR/OpenUtauMobile-build${{ inputs.build_number }}-android-${{ inputs.arch }}.apk"
+            "$ARTIFACT_DIR/OpenLoidFlame-build${{ inputs.build_number }}-android-${{ inputs.arch }}.apk"
 
           echo "===== Android build contract ====="
           cat "$VERIFY_DIR/build-contract.txt"
@@ -282,17 +282,17 @@ jobs:
         working-directory: artifacts/android-${{ inputs.arch }}
         run: |
           set -euo pipefail
-          PACKAGE="OpenUtauMobile-build${{ inputs.build_number }}-android-${{ inputs.arch }}.apk"
+          PACKAGE="OpenLoidFlame-build${{ inputs.build_number }}-android-${{ inputs.arch }}.apk"
           sha256sum "$PACKAGE" > "$PACKAGE.sha256"
           sha256sum --check "$PACKAGE.sha256"
 
       - name: Upload Android ${{ inputs.arch }}
         uses: actions/upload-artifact@v7
         with:
-          name: OpenUtauMobile-android-${{ inputs.arch }}
+          name: OpenLoidFlame-android-${{ inputs.arch }}
           path: |
-            artifacts/android-${{ inputs.arch }}/OpenUtauMobile-build${{ inputs.build_number }}-android-${{ inputs.arch }}.apk
-            artifacts/android-${{ inputs.arch }}/OpenUtauMobile-build${{ inputs.build_number }}-android-${{ inputs.arch }}.apk.sha256
+            artifacts/android-${{ inputs.arch }}/OpenLoidFlame-build${{ inputs.build_number }}-android-${{ inputs.arch }}.apk
+            artifacts/android-${{ inputs.arch }}/OpenLoidFlame-build${{ inputs.build_number }}-android-${{ inputs.arch }}.apk.sha256
           if-no-files-found: error
           compression-level: 0
 

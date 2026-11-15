@@ -1,0 +1,50 @@
+<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:OpenLoidFlame.ViewModels"
+    xmlns:theme="clr-namespace:OpenLoidFlame.Themes.OpenLoidFlame.Tokens"
+    xmlns:dialogs="clr-namespace:OpenLoidFlame.Controls"
+    xmlns:foundation="clr-namespace:OpenLoidFlame.Themes.OpenLoidFlame.Tokens.Foundation"
+    xmlns:semantic="clr-namespace:OpenLoidFlame.Themes.OpenLoidFlame.Tokens.Semantic"
+    mc:Ignorable="d"
+    x:Class="OpenLoidFlame.Controls.LoadingPopup"
+    x:DataType="vm:LoadingPopupViewModel"
+    d:DataContext="{d:DesignInstance Type=vm:LoadingPopupViewModel, IsDesignTimeCreatable=False}"
+    Classes="PopupDialogRoot">
+    <dialogs:DialogShell Header="{DynamicResource LoadingPopup.Title}">
+        <dialogs:DialogShell.Footer>
+            <dialogs:DialogActions IsVisible="{Binding CanCancel}">
+                <Button
+                    Content="{DynamicResource Common.Cancel}"
+                    Command="{Binding CancelCommand}"
+                    IsVisible="{Binding CanCancel}"
+                    IsEnabled="{Binding !IsCancelling}"
+                    Classes="DialogAction" />
+            </dialogs:DialogActions>
+        </dialogs:DialogShell.Footer>
+        <DockPanel>
+            <Border Classes="DialogBodyBorder">
+                <StackPanel Spacing="{x:Static foundation:LayoutTokens.SpaceM}">
+                    <TextBlock
+                        Text="{Binding Message}"
+                        FontSize="{x:Static semantic:TypographyTokens.BodyMSize}"
+                        Foreground="{DynamicResource Sem.Color.OnSurface}"
+                        TextWrapping="Wrap"
+                        TextAlignment="Center" />
+                    <ProgressBar
+                        Value="{Binding Progress}"
+                        IsIndeterminate="{Binding IsIndeterminate}"
+                        HorizontalAlignment="Stretch" />
+                    <TextBlock
+                        Text="{Binding ProgressText}"
+                        IsVisible="{Binding IsIndeterminate, Converter={x:Static BoolConverters.Not}}"
+                        FontSize="{x:Static semantic:TypographyTokens.LabelMSize}"
+                        Foreground="{DynamicResource Sem.Color.Primary}"
+                        HorizontalAlignment="Center" />
+                </StackPanel>
+            </Border>
+        </DockPanel>
+    </dialogs:DialogShell>
+</UserControl>

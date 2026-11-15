@@ -9,24 +9,24 @@ belongs to the [build workflows](../.github/workflows).
 
 Desktop `Program` entry points and Android's `AndroidApp` / `MainActivity`
 configure paths, logging and ServiceHub capabilities before shared application
-initialization. Shared [App](../OpenUtauMobile/App.axaml.cs) chooses the lifetime:
+initialization. Shared [App](../OpenLoidFlame/App.axaml.cs) chooses the lifetime:
 desktop gets MainWindow, Android gets an activity main-view factory, and iOS/browser
-get a single MainView. [SplashScreenViewModel](../OpenUtauMobile/ViewModels/SplashScreenViewModel.cs)
+get a single MainView. [SplashScreenViewModel](../OpenLoidFlame/ViewModels/SplashScreenViewModel.cs)
 initializes Core with the captured UI thread/scheduler and invokes host audio setup.
 Do not infer capability parity merely because hosts share App.
 
 ## Android
 
-- [AndroidApp](../OpenUtauMobile.Android/AndroidApp.cs) delegates builder setup to
-  [MainActivity](../OpenUtauMobile.Android/MainActivity.cs). Native immersive-mode
+- [AndroidApp](../OpenLoidFlame.Android/AndroidApp.cs) delegates builder setup to
+  [MainActivity](../OpenLoidFlame.Android/MainActivity.cs). Native immersive-mode
   visibility is activity-owned through AndroidX; avoid a second shared-UI owner.
 - The internal picker uses raw filesystem paths, not Storage Access Framework URIs.
-  [Storage service](../OpenUtauMobile.Android/Storage/AndroidExternalStorageService.cs)
+  [Storage service](../OpenLoidFlame.Android/Storage/AndroidExternalStorageService.cs)
   resolves the live activity for legacy runtime read/write permissions. Android 10
-  uses the [manifest's](../OpenUtauMobile.Android/Properties/AndroidManifest.xml)
+  uses the [manifest's](../OpenLoidFlame.Android/Properties/AndroidManifest.xml)
   legacy-storage opt-in; Android 11+ uses all-files access. Changing to URI-based
   storage is an integration change, not a permission-name substitution.
-- The [project](../OpenUtauMobile.Android/OpenUtauMobile.Android.csproj) embeds Debug
+- The [project](../OpenLoidFlame.Android/OpenLoidFlame.Android.csproj) embeds Debug
   assemblies to avoid startup loading stalls from Fast Deployment. Debug has a
   distinct application ID, allowing side-by-side installation with Release.
 - ONNX native libraries come only from the official Android AAR. Preserve the
@@ -38,13 +38,13 @@ Do not infer capability parity merely because hosts share App.
 
 ## Desktop, iOS and browser distinctions
 
-- [MacOS](../OpenUtauMobile.MacOS/OpenUtauMobile.MacOS.csproj) is an Avalonia desktop
+- [MacOS](../OpenLoidFlame.MacOS/OpenLoidFlame.MacOS.csproj) is an Avalonia desktop
   host, not Mac Catalyst; its Program uses the classic desktop lifetime.
-- [Windows](../OpenUtauMobile.Windows/OpenUtauMobile.Windows.csproj) and
-  [Linux](../OpenUtauMobile.Linux/OpenUtauMobile.Linux.csproj) Build and Publish targets copy
+- [Windows](../OpenLoidFlame.Windows/OpenLoidFlame.Windows.csproj) and
+  [Linux](../OpenLoidFlame.Linux/OpenLoidFlame.Linux.csproj) Build and Publish targets copy
   RID-native files beside the executable for P/Invoke lookup. Preserve this during
   packaging changes; an assembly-only output is insufficient.
-- [iOS AppDelegate](../OpenUtauMobile.iOS/AppDelegate.cs) registers AVAudioEngine audio
+- [iOS AppDelegate](../OpenLoidFlame.iOS/AppDelegate.cs) registers AVAudioEngine audio
   initialization (with a Dummy fallback) and probes ONNX Runtime at startup. It does
   not establish complete desktop/mobile feature parity.
 - iOS and Browser import the [Worldline native build](../native/worldline/README.md).
@@ -53,7 +53,7 @@ Do not infer capability parity merely because hosts share App.
   `NativeFileReference` with the .NET workload's Emscripten toolchain. This does not
   provide GAME/ggml, ONNX support or a Browser audio output backend. iOS still requires
   validation on macOS/Xcode and devices.
-- [Browser Program](../OpenUtauMobile.Browser/Program.cs)
+- [Browser Program](../OpenLoidFlame.Browser/Program.cs)
   uses silent Dummy audio and injects PathManager through private fields instead of
   its normal constructor. Core singleton/property changes therefore need browser
   bootstrap review. These are source limitations, not claims about current build

@@ -12,7 +12,7 @@ for Core and the built-in Plugin; local feature work does not fork Plugin behavi
 
 ## Host capabilities, not platform-aware ViewModels
 
-[ServiceHub](../OpenUtauMobile/Services/ServiceHub.cs) is the capability boundary.
+[ServiceHub](../OpenLoidFlame/Services/ServiceHub.cs) is the capability boundary.
 Hosts register native implementations; portable implementations can stay shared
 (for example, the Avalonia clipboard service). ViewModels consume capabilities
 rather than select native APIs or move platform dependencies into Core.
@@ -29,4 +29,4 @@ undo boundaries overtake posted commands. The thread-scoped
 making unrelated background dispatch globally blocking. It accepts synchronous
 work, not an async delegate; the UI thread must remain free to process dispatch.
 See [DocManager](../OpenUtau.Core/DocManager.cs) and the existing synchronous batch
-caller in [PianoRollViewModel](../OpenUtauMobile/ViewModels/PianoRollViewModel.cs).
+caller in [PianoRollViewModel](../OpenLoidFlame/ViewModels/PianoRollViewModel.cs).

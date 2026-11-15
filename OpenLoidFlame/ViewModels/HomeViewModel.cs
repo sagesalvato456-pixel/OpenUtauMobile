@@ -1,0 +1,257 @@
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Reactive;
+using System.Threading.Tasks;
+using DynamicData.Binding;
+using OpenUtau.Core;
+using OpenUtau.Core.Util;
+using OpenLoidFlame.Controls;
+using OpenLoidFlame.Helpers;
+using OpenLoidFlame.Services;
+using OpenLoidFlame.Services.Dialogs;
+using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
+using Serilog;
+
+namespace OpenLoidFlame.ViewModels;
+
+public class HomeViewModel : NavigateViewModelBase
+{
+    private static readonly TimeSpan backPressInterval = TimeSpan.FromMilliseconds(2000);
+    private DateTime? _lastBackPressedTime;
+
+    public ReactiveCommand<Unit, Unit> NewCommand { get; set; }
+    public ReactiveCommand<Unit, Unit> OpenCommand { get; set; }
+    public ReactiveCommand<Unit, Unit> SingersCommand { get; set; }
+    public ReactiveCommand<Unit, Unit> OptionsCommand { get; set; }
+    public ReactiveCommand<string, Unit> OpenRecentCommand { get; set; }
+    public ReactiveCommand<string, Unit> RemoveRecentCommand { get; set; }
+    public ReactiveCommand<Unit, Unit> OpenRecoveryCommand { get; set; }
+    public ReactiveCommand<Unit, Unit> DismissRecoveryCommand { get; set; }
+
+    /// <summary>
+    /// 最近打开的项目列表，字符串为项目文件的路径。
+    /// </summary>
+    [Reactive]
+    public ObservableCollectionExtended<string> RecentProjects { get; set; } = [];
+
+    public ObservableCollectionExtended<string> Templates { get; } = [];
+
+    /// <summary>
+    /// 是否有异常退出且恢复文件
+    /// </summary>
+    [Reactive]
+    public bool HasRecovery { get; set; }
+
+    /// <summary>
+    /// 恢复横幅是否被手动关闭
+    /// </summary>
+    [Reactive]
+    public bool RecoveryBannerDismissed { get; set; }
+
+    /// <summary>
+    /// 恢复横幅高度，用于收起动画
+    /// </summary>
+    /// <remarks>
+    /// TODO: 动画很麻烦
+    /// </remarks>
+    [Reactive]
+    public double RecoveryBannerHeight { get; set; } = double.NaN;
+
+    /// <summary>
+    /// 恢复文件路径
+    /// </summary>
+    [Reactive]
+    public string RecoveryPath { get; set; } = string.Empty;
+
+    public HomeViewModel(MainViewModel navigator) : base(navigator)
+    {
+        NewCommand = ReactiveCommand.Create(New);
+        OpenCommand = ReactiveCommand.Create(Open);
+        SingersCommand = ReactiveCommand.Create(Singers);
+        OptionsCommand = ReactiveCommand.Create(Options);
+        OpenRecentCommand = ReactiveCommand.CreateFromTask<string>(OpenRecent);
+        RemoveRecentCommand = ReactiveCommand.Create<string>(RemoveRecent);
+        OpenRecoveryCommand = ReactiveCommand.Create(OpenRecovery);
+        DismissRecoveryCommand = ReactiveCommand.Create(DismissRecovery);
+    }
+
+    public override void OnNavigatedTo()
+    {
+        _ = Initialize();
+    }
+
+    private async Task OpenRecent(string path)
+    {
+        if (string.IsNullOrEmpty(path)) return;
+        // 存储访问放到后台；等待期间仍可从主页导航到其他页面。
+        bool exists = await Task.Run(() => File.Exists(path));
+        if (Navigator.CurrentViewModel != this) return;
+        if (!exists)
+        {
+            ErrorDialogService.Show(new ErrorDialogViewModel(
+                new ErrorMessageNotification(new FileNotFoundException(null, path))));
+            return;
+        }
+        Navigator.Navigate(new EditorViewModel(Navigator, new ProjectOpenOptions(path)));
+    }
+
+    private void RemoveRecent(string path)
+    {
+        if (string.IsNullOrEmpty(path)) return;
+        Preferences.Default.RecentFiles.Remove(path);
+        Preferences.Save();
+        RecentProjects.Remove(path);
+    }
+
+    private void New()
+    {
+        string defaultTemplate = Path.Combine(PathManager.Inst.TemplatesPath, "default.ustx");
+        Navigator.Navigate(File.Exists(defaultTemplate)
+            ? new EditorViewModel(Navigator,
+                new ProjectOpenOptions(defaultTemplate, ProjectOpenKind.Template))
+            : new EditorViewModel(Navigator));
+    }
+
+    public async Task OpenTemplatesAsync()
+    {
+        try
+        {
+            string? path = await PopupService.Show<string>(new ProjectTemplatesPopup(), new ProjectTemplatesViewModel());
+            if (!string.IsNullOrEmpty(path) && Navigator.CurrentViewModel == this)
+            {
+                Navigator.Navigate(new EditorViewModel(Navigator,
+                    new ProjectOpenOptions(path, ProjectOpenKind.Template)));
+            }
+        }
+        catch (Exception exception)
+        {
+            ErrorDialogService.Show(new ErrorDialogViewModel(new ErrorMessageNotification(exception)));
+        }
+    }
+
+    private async void Open()
+    {
+        try
+        {
+            string path = await SelectProjectFile();
+            Debug.WriteLine($"选取了：{path}");
+            if (string.IsNullOrEmpty(path))
+            {
+                return;
+            }
+
+            Navigator.Navigate(new EditorViewModel(Navigator, new ProjectOpenOptions(path)));
+        }
+        catch (Exception e)
+        {
+            Log.Error(e, "An error occured");
+        }
+    }
+
+    private void Singers()
+    {
+        Navigator.Navigate(new SingerManagementViewModel(Navigator));
+    }
+
+    private void Options()
+    {
+        Navigator.Navigate(new OptionsViewModel(Navigator));
+    }
+
+    private void OpenRecovery()
+    {
+        if (string.IsNullOrEmpty(RecoveryPath)) return;
+        RecoveryBannerDismissed = true;
+        RecoveryBannerHeight = 0;
+        Navigator.Navigate(new EditorViewModel(Navigator, new ProjectOpenOptions(RecoveryPath, ProjectOpenKind.Recovery)));
+    }
+
+    private void DismissRecovery()
+    {
+        RecoveryBannerDismissed = true;
+        RecoveryBannerHeight = 0;
+        Preferences.Default.RecoveryPath = string.Empty;
+        Preferences.Save();
+    }
+
+    private static async Task<string> SelectProjectFile()
+    {
+        return await Storage.FilePicker.PickSingleFileAsync(L.S("FilePicker.OpenProject"),
+            ["*.ustx", "*.vsqx", "*.vsq", "*.ust", "*.mid", "*.midi", "*.ufdata", "*.musicxml", "*.svp", "*.vpr"]);
+    }
+
+    private async Task Initialize()
+    {
+        RecoveryBannerDismissed = false;
+
+        string recPath = Preferences.Default.RecoveryPath;
+        if (!string.IsNullOrWhiteSpace(recPath) && File.Exists(recPath))
+        {
+            RecoveryPath = recPath;
+            HasRecovery = true;
+        }
+        else
+        {
+            HasRecovery = false;
+            RecoveryPath = string.Empty;
+        }
+
+        await RefreshRecentProjectsAsync();
+        await RefreshTemplatesAsync();
+
+        if (!Preferences.Default.SetupWizardCompleted)
+        {
+            await ShowSetupWizardAsync();
+        }
+    }
+
+    private async Task RefreshRecentProjectsAsync()
+    {
+        string[] recent = await Task.Run(() => Preferences.Default.RecentFiles.ToArray());
+        if (!RecentProjects.SequenceEqual(recent)) RecentProjects.Load(recent);
+    }
+
+    private async Task RefreshTemplatesAsync()
+    {
+        try
+        {
+            string[] templates = await Task.Run(() => Directory.Exists(PathManager.Inst.TemplatesPath)
+                ? Directory.GetFiles(PathManager.Inst.TemplatesPath, "*.ustx").OrderBy(Path.GetFileName).ToArray() : []);
+            if (!Templates.SequenceEqual(templates)) Templates.Load(templates);
+        }
+        catch (Exception exception)
+        {
+            Log.Error(exception, "Failed to refresh project templates");
+        }
+    }
+
+    private async Task ShowSetupWizardAsync()
+    {
+        SetupWizardViewModel vm = new();
+        await PopupService.Show<object>(new SetupWizardPopup(), vm);
+    }
+
+    public override void OnBackRequested()
+    {
+        if (Services.ServiceHub.UseDesktopFileWorkflows && Navigator.ActiveEditor != null)
+        {
+            Navigator.NavigateBack(this);
+            return;
+        }
+        DateTime now = DateTime.UtcNow;
+        if (_lastBackPressedTime.HasValue && (now - _lastBackPressedTime.Value) <= backPressInterval)
+        {
+            // 第二次按下且在有效窗口内，退出应用
+            AppService.ExitApplication();
+        }
+        else
+        {
+            // 第一次按下（或超时后再按），显示提示并记录时间
+            _lastBackPressedTime = now;
+            ToastService.Enqueue(L.S("Home.Toast.BackToExit"), backPressInterval.TotalMilliseconds);
+        }
+    }
+}

@@ -1,5 +1,5 @@
 // OpenUtau.Core/Format/VsqImporter.cs
-// Lang: C# 10, Target: .NET 7 / Android (OpenUtau Mobile dev branch)
+// Lang: C# 10, Target: .NET 7 / Android (OpenLoid-Flame dev branch)
 // Imports VOCALOID2 .vsq sequences (and VOCALOID1 files that carry the same text).
 //
 // A .vsq is a Standard MIDI File. Tempo and time signature are ordinary MIDI meta events;

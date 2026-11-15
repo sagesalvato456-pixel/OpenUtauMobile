@@ -7,7 +7,7 @@ using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using OpenUtau.Core;
-using OpenUtauMobile.Helpers;
+using OpenLoidFlame.Helpers;
 using ReactiveUI.Avalonia;
 
 namespace UiProbe;
@@ -48,9 +48,9 @@ internal sealed class ProbeHost : IDisposable
             .UseSkia()
             .UseReactiveUI(_ => { })
             .SetupWithoutStarting();
-        Application.Current!.Styles.Add(new StyleInclude(new Uri("avares://OpenUtauMobile/"))
+        Application.Current!.Styles.Add(new StyleInclude(new Uri("avares://OpenLoidFlame/"))
         {
-            Source = new Uri("avares://OpenUtauMobile/Themes/OpenUtauMobile/OpenUtauMobileTheme.axaml")
+            Source = new Uri("avares://OpenLoidFlame/Themes/OpenLoidFlame/OpenLoidFlameTheme.axaml")
         });
         LocalizationManager.LoadLanguage("zh-Hans");
         Console.WriteLine("ISOLATED_PREFS " + PathManager.Inst.PrefsFilePath);

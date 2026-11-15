@@ -62,7 +62,7 @@ python3 native/worldline/build.py --rid iossimulator-arm64
 python3 native/worldline/build.py --rid iossimulator-x64
 
 # 通过 .NET 提供精确的 Emscripten 工具和编译配置，生成 worldline.a。
-dotnet msbuild OpenUtauMobile.Browser/OpenUtauMobile.Browser.csproj -t:BuildWorldlineNative
+dotnet msbuild OpenLoidFlame.Browser/OpenLoidFlame.Browser.csproj -t:BuildWorldlineNative
 python3 native/worldline/verify_browser.py artifacts/worldline-native/browser-wasm
 ```
 

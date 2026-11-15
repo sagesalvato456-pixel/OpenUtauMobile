@@ -96,9 +96,9 @@ Plugin 的 `OpenUtau.Plugin.Builtin.csproj` 保留既有 NoWarn，整个 Plugin 
 | 检查 | 结果 |
 | --- | --- |
 | `dotnet build OpenUtau.Plugin.Builtin/OpenUtau.Plugin.Builtin.csproj --nologo -v:minimal` | exit 0；35 个警告、0 错误 |
-| `dotnet build OpenUtauMobile/OpenUtauMobile.csproj --nologo -v:minimal` | exit 0；30 个警告、0 错误 |
-| `dotnet restore OpenUtauMobile.Android/OpenUtauMobile.Android.csproj -r android-arm64 -p:Configuration=Release` | exit 0；实际完成依赖还原 |
-| `dotnet build OpenUtauMobile.Android/OpenUtauMobile.Android.csproj -c Release -f net10.0-android36.0 --no-restore -p:RuntimeIdentifier=android-arm64` | exit 0；70 个警告、0 错误 |
+| `dotnet build OpenLoidFlame/OpenLoidFlame.csproj --nologo -v:minimal` | exit 0；30 个警告、0 错误 |
+| `dotnet restore OpenLoidFlame.Android/OpenLoidFlame.Android.csproj -r android-arm64 -p:Configuration=Release` | exit 0；实际完成依赖还原 |
+| `dotnet build OpenLoidFlame.Android/OpenLoidFlame.Android.csproj -c Release -f net10.0-android36.0 --no-restore -p:RuntimeIdentifier=android-arm64` | exit 0；70 个警告、0 错误 |
 | `python native/verify-android-runtime.py <signed-apk> android-arm64` | PASS：ABI、必需 native 库、GAME 对齐及许可证 |
 | CPP `worldline`（Bazel 6.6.0 / MinGW64 GCC 14.2.0） | exit 0；88 actions；输出 `bazel-bin/worldline/libworldline.so`，未替换应用原有二进制 |
 | 上游已有 `worldline/classic:timing_test` | 未能编译：上游测试引用了当前快照中不存在的 `worldline/model/model_utils.h`；0 个测试执行。未改写测试或源码掩盖问题 |

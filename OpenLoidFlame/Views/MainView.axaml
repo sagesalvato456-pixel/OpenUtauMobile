@@ -1,0 +1,43 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:OpenLoidFlame.ViewModels"
+             xmlns:controls="clr-namespace:OpenLoidFlame.Controls"
+             xmlns:warnings="clr-namespace:OpenLoidFlame.Controls.Warnings"
+             xmlns:dialogHostAvalonia="clr-namespace:DialogHostAvalonia;assembly=DialogHost.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="OpenLoidFlame.Views.MainView"
+             x:DataType="vm:MainViewModel"
+             Background="{DynamicResource Sem.Color.Surface}">
+    <!-- Root 根 -->
+    <!-- 弹窗容器，覆盖在导航页之上 -->
+    <!-- 保留背景模糊并叠加共享遮罩，点击外部不关闭，支持多重弹窗。 -->
+    <Panel>
+        <dialogHostAvalonia:DialogHost BlurBackground="True"
+                                       CloseOnClickAway="False"
+                                       Identifier="MainDialogHost"
+                                       IsMultipleDialogsEnabled="True"
+                                       OverlayBackground="{DynamicResource Sem.Color.Shadow}">
+            <dialogHostAvalonia:DialogHost.PopupTemplate>
+                <ControlTemplate>
+                    <!-- 这里的 Border 就是弹窗的“背景容器”，透明背景 -->
+                    <Border Background="Transparent" Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Content="{TemplateBinding Content}" />
+                    </Border>
+                </ControlTemplate>
+            </dialogHostAvalonia:DialogHost.PopupTemplate>
+
+            <Panel>
+                <!-- 导航页的容器 -->
+                <ContentControl x:Name="PageHost" Content="{Binding CurrentViewModel}" />
+                <warnings:WarningOverlay x:Name="WarningOverlay" />
+            </Panel>
+        </dialogHostAvalonia:DialogHost>
+        <!-- 普通提示透传；错误变体仅在提示区域命中，并在模态打开时让出输入。 -->
+        <controls:ToastOverlay x:Name="ToastOverlay" />
+        <Panel x:Name="PerformanceLayer" IsHitTestVisible="False">
+            <controls:PerformanceMonitorOverlay />
+        </Panel>
+    </Panel>
+</UserControl>

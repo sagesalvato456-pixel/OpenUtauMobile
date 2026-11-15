@@ -81,9 +81,9 @@
 ## 验证
 
 - Plugin：`dotnet build OpenUtau.Plugin.Builtin/OpenUtau.Plugin.Builtin.csproj --nologo -v:minimal`，exit 0，73 warnings / 0 errors。
-- Mobile：`dotnet build OpenUtauMobile/OpenUtauMobile.csproj --nologo -v:minimal`，exit 0；追加 NotesCanvas 重绘适配后再次构建通过。
-- Android restore：`dotnet restore OpenUtauMobile.Android/OpenUtauMobile.Android.csproj`，exit 0。
-- Android ARM64 Release（NotesCanvas 重绘适配前，最终提交由 PR CI 再验证）：`dotnet build OpenUtauMobile.Android/OpenUtauMobile.Android.csproj -c Release -f net10.0-android36.0 -p:RuntimeIdentifier=android-arm64`，exit 0，9 warnings / 0 errors。沙箱内首次构建因 NuGet 缓存写权限失败，获准在沙箱外重试后通过。
+- Mobile：`dotnet build OpenLoidFlame/OpenLoidFlame.csproj --nologo -v:minimal`，exit 0；追加 NotesCanvas 重绘适配后再次构建通过。
+- Android restore：`dotnet restore OpenLoidFlame.Android/OpenLoidFlame.Android.csproj`，exit 0。
+- Android ARM64 Release（NotesCanvas 重绘适配前，最终提交由 PR CI 再验证）：`dotnet build OpenLoidFlame.Android/OpenLoidFlame.Android.csproj -c Release -f net10.0-android36.0 -p:RuntimeIdentifier=android-arm64`，exit 0，9 warnings / 0 errors。沙箱内首次构建因 NuGet 缓存写权限失败，获准在沙箱外重试后通过。
 - Android 构建保留现有 XA0141 警告：`libworldline.so` 未满足 16 KB 页面大小要求；本次未更换该原生库。
 - 构建均设置 `AVALONIA_TELEMETRY_OPTOUT=1`，未以 --no-restore 代替依赖还原。
 - 当前仓库没有现成的测试 csproj；未新增测试套件。尚未做设备音频、声库推理和 USTX 文件读写的运行时验证。

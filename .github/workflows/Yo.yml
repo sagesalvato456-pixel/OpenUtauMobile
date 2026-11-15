@@ -245,7 +245,7 @@ jobs:
         if: inputs.release != 'none'
         uses: actions/download-artifact@v8
         with:
-          pattern: OpenUtauMobile-*
+          pattern: OpenLoidFlame-*
           path: release-assets
           merge-multiple: false
 

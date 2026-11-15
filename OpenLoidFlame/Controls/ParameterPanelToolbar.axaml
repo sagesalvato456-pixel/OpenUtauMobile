@@ -1,0 +1,89 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia"
+             xmlns:ustx="clr-namespace:OpenUtau.Core.Ustx;assembly=OpenUtau.Core"
+             xmlns:vm="clr-namespace:OpenLoidFlame.ViewModels"
+             xmlns:theme="clr-namespace:OpenLoidFlame.Themes.OpenLoidFlame.Tokens"
+             xmlns:foundation="clr-namespace:OpenLoidFlame.Themes.OpenLoidFlame.Tokens.Foundation"
+             x:Class="OpenLoidFlame.Controls.ParameterPanelToolbar"
+             x:DataType="vm:PianoRollViewModel">
+
+    <Border Background="{DynamicResource Sem.Color.SurfaceContainer}"
+            BorderBrush="{DynamicResource Sem.Color.OutlineVariant}"
+            BorderThickness="0,0,1,0" Padding="4,4">
+        <StackPanel Orientation="Vertical"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Stretch"
+                    Spacing="{x:Static foundation:LayoutTokens.SpaceXS}">
+            <!-- 主参数选择按钮 -->
+            <Button HorizontalAlignment="Stretch"
+                    Height="28"
+                    CornerRadius="{x:Static foundation:ShapeTokens.CornerS}"
+                    Background="{DynamicResource Sem.Color.SurfaceContainerHigh}"
+                    BorderBrush="{DynamicResource Sem.Color.OutlineVariant}"
+                    BorderThickness="1"
+                    ToolTip.Tip="{Binding PrimaryExpressionDisplayName}" Padding="2,0" HorizontalContentAlignment="Stretch">
+                <Button.Flyout>
+                    <MenuFlyout ItemsSource="{Binding AvailableExpressions}">
+                        <MenuFlyout.ItemContainerTheme>
+                            <ControlTheme TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}" x:DataType="vm:ExpressionOption">
+                                <Setter Property="Header" Value="{Binding DisplayName}" />
+                                <Setter Property="Command" Value="{Binding $parent[UserControl].((vm:PianoRollViewModel)DataContext).SelectPrimaryExpressionCommand}" />
+                                <Setter Property="CommandParameter" Value="{Binding}" />
+                            </ControlTheme>
+                        </MenuFlyout.ItemContainerTheme>
+                    </MenuFlyout>
+                </Button.Flyout>
+                <Viewbox Stretch="Uniform" StretchDirection="DownOnly" HorizontalAlignment="Stretch">
+                    <TextBlock Text="{Binding PrimaryExpressionDisplayName}"
+                               FontWeight="Bold" FontSize="11"
+                               Foreground="{DynamicResource Sem.Color.Primary}" />
+                </Viewbox>
+            </Button>
+
+            <!-- 交换和设置入口共用一行，保持参数面板原有高度。 -->
+            <Grid ColumnDefinitions="*,*">
+                <Button Command="{Binding SwapExpressionsCommand}"
+                        HorizontalAlignment="Stretch"
+                        Height="24"
+                        Padding="0"
+                        CornerRadius="{x:Static foundation:ShapeTokens.CornerS}"
+                        Background="Transparent"
+                        ToolTip.Tip="{DynamicResource PhonemePanel.Param.Swap}">
+                    <iconPacks:PackIconPhosphorIcons Kind="ArrowsDownUp" Width="14" Height="14" />
+                </Button>
+                <Button Grid.Column="1" Click="OpenExpressionsClicked" HorizontalAlignment="Stretch" Height="24" Padding="0"
+                        Background="Transparent" ToolTip.Tip="{DynamicResource Expressions.Title}"
+                        AutomationProperties.Name="{DynamicResource Expressions.Title}">
+                    <iconPacks:PackIconPhosphorIcons Kind="GearSix" Width="14" Height="14" />
+                </Button>
+            </Grid>
+
+            <!-- 背景参数选择按钮 -->
+            <Button HorizontalAlignment="Stretch"
+                    Height="28"
+                    CornerRadius="{x:Static foundation:ShapeTokens.CornerS}"
+                    Background="{DynamicResource Sem.Color.SurfaceContainerHigh}"
+                    BorderBrush="{DynamicResource Sem.Color.OutlineVariant}"
+                    BorderThickness="1"
+                    ToolTip.Tip="{Binding SecondaryExpressionDisplayName}" Padding="2,0" HorizontalContentAlignment="Stretch">
+                <Button.Flyout>
+                    <MenuFlyout ItemsSource="{Binding AvailableSecondaryExpressions}">
+                        <MenuFlyout.ItemContainerTheme>
+                            <ControlTheme TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}" x:DataType="vm:ExpressionOption">
+                                <Setter Property="Header" Value="{Binding DisplayName}" />
+                                <Setter Property="Command" Value="{Binding $parent[UserControl].((vm:PianoRollViewModel)DataContext).SelectSecondaryExpressionCommand}" />
+                                <Setter Property="CommandParameter" Value="{Binding}" />
+                            </ControlTheme>
+                        </MenuFlyout.ItemContainerTheme>
+                    </MenuFlyout>
+                </Button.Flyout>
+                <Viewbox Stretch="Uniform" StretchDirection="DownOnly" HorizontalAlignment="Stretch">
+                    <TextBlock Text="{Binding SecondaryExpressionDisplayName}"
+                               FontWeight="Medium" FontSize="11"
+                               Foreground="{DynamicResource Sem.Color.OnSurfaceVariant}" />
+                </Viewbox>
+            </Button>
+        </StackPanel>
+    </Border>
+</UserControl>

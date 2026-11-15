@@ -50,7 +50,7 @@ PR 矩阵包含桌面六个 RID、Android 四 ABI 的 Worldline 和 GAME 源码�
 ```sh
 python native/game/build.py --rid win-x64 --test
 python native/game/verify.py artifacts/game-native/win-x64 win-x64 --run
-python native/verify-runtime.py OpenUtauMobile.Windows/bin/Debug/net10.0-windows
+python native/verify-runtime.py OpenLoidFlame.Windows/bin/Debug/net10.0-windows
 ```
 
 `--test` 和 `--run` 只能用于匹配宿主及 Python 架构的平台。交叉构建自动检查文件格式与导出，但不执行目标库。

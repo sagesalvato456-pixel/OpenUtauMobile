@@ -43,8 +43,8 @@
 ## Text / localization change
 
 - Reuse existing resource keys before adding strings. AXAML examples use DynamicResource;
-  `OpenUtauMobile/Helpers/LocalizationManager.cs` loads
-  `OpenUtauMobile/Assets/Lang/Strings.*.resx`. Check the currently supported dictionaries
+  `OpenLoidFlame/Helpers/LocalizationManager.cs` loads
+  `OpenLoidFlame/Assets/Lang/Strings.*.resx`. Check the currently supported dictionaries
   when adding keys; do not rely on an unrelated locale file to fill missing entries.
 - Inspect bound ViewModel text at its producer too. Verify live language change where
   supported, long titles/actions, wrapping vs truncation and narrow widths; do not shrink

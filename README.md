@@ -1,8 +1,10 @@
-# OpenUtau Mobile Developer Preview
+# OpenLoid-Flame Developer Preview
+
+OpenLoid-Flame is a Vocaloid-style mobile editor forked from [OpenUtauMobile](https://github.com/vocoder712/OpenUtauMobile) (Apache-2.0, © vocoder712). The upstream credit and license are kept in `LICENSE` and the About page.
 
 ## Overview
 
-Developer UI reference: [token ownership and dialog sizing](OpenUtauMobile/Themes/OpenUtauMobile/Tokens/README.md).
+Developer UI reference: [token ownership and dialog sizing](OpenLoidFlame/Themes/OpenLoidFlame/Tokens/README.md).
 
 To solve the performance issues, outdated UI design, and cross-platform limitations of the first-generation implementation, the project is being rebuilt from scratch.
 
@@ -71,7 +73,7 @@ availability on the target OS. Phonemizers and renderers inherited from Core can
 
 ### Desktop workspace
 
-Windows, Linux and macOS hosts reference a separate `OpenUtauMobile.DesktopUI` assembly. The desktop
+Windows, Linux and macOS hosts reference a separate `OpenLoidFlame.DesktopUI` assembly. The desktop
 workspace combines menus and transport, arrangement, piano roll, parameter/phoneme lanes, a persistent Track → Notes → Phoneme inspector column and a separate mixer window. Panel sizes and window state are saved separately
 from projects; View → Reset Layout restores defaults. Mobile hosts retain their existing navigation and
 share editing surfaces, gestures, commands and note-property validation with desktop. View → Mixer opens the desktop mixer at its usable minimum size. Mobile's mixer opens from the sliders button

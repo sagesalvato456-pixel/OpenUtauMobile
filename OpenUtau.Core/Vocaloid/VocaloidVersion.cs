@@ -1,5 +1,5 @@
 // OpenUtau.Core/Vocaloid/VocaloidVersion.cs
-// Lang: C# 10, Target: .NET 7 / Android (OpenUtau Mobile dev branch)
+// Lang: C# 10, Target: .NET 7 / Android (OpenLoid-Flame dev branch)
 // VOCALOID engine generations (V1..V6) and helpers to recognise them.
 //
 // Voicebank layout notes:

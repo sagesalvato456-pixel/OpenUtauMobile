@@ -1,6 +1,6 @@
 ---
 name: opum-ui-design
-description: Make repository-specific UI implementation and review decisions in OpenUtauMobile (OPUM). Use when creating or changing pages, dialogs, popups, editor UI, layouts, interaction states, ControlThemes, component styles, or visual tokens; also when deciding whether a value or abstraction should be shared or feature-local. Not for unrelated backend work or generic design advice.
+description: Make repository-specific UI implementation and review decisions in OpenLoidFlame (OPUM). Use when creating or changing pages, dialogs, popups, editor UI, layouts, interaction states, ControlThemes, component styles, or visual tokens; also when deciding whether a value or abstraction should be shared or feature-local. Not for unrelated backend work or generic design advice.
 ---
 
 # OPUM UI design

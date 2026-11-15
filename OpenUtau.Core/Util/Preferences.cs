@@ -349,7 +349,7 @@ namespace OpenUtau.Core.Util {
             public string RecoveryPath = string.Empty;
             public bool DetachPianoRoll = true;
 
-            #region OpenUtau Mobile 特定选项
+            #region OpenLoid-Flame 特定选项
             /// <summary>告警悬浮球贴靠侧：0 为左侧，1 为右侧。</summary>
             public int WarningOrbDockSide = 1;
 

@@ -1,6 +1,6 @@
 # OpenUtau 上游内核同步操作手册
 
-本文是 OpenUtauMobile（OPUM）同步 OpenUtau（OPU）内核的标准流程。命令以 PowerShell 7 为准。
+本文是 OpenLoidFlame（OPUM）同步 OpenUtau（OPU）内核的标准流程。命令以 PowerShell 7 为准。
 
 执行方式：同一 PowerShell 会话按顺序执行；每条 Git/dotnet 命令检查 `$LASTEXITCODE`。除文档明确预期的分支不存在、无差异或冲突检查外，非零立即停止，禁止继续下一条。会话中断后恢复已经记录的冻结 SHA/版本，不重新获取上游目标。
 
@@ -473,7 +473,7 @@ CPP 首次引入时，比较 `$OpuSha:cpp`、`$CppSplit^{tree}` 和 `HEAD:native
 
 ```powershell
 rg -n "RenderPhraseEvents|GetSuggestions\(|EnsureAvatarLoaded|PhraseRenderedNotification|PartRenderedNotification" `
-    OpenUtau.Core OpenUtauMobile.Plugin.Renderers OpenUtauMobile
+    OpenUtau.Core OpenLoidFlame.Plugin.Renderers OpenLoidFlame
 ```
 
 上游 API 引起的 OPUM 兼容修复作为普通提交提交。
@@ -487,7 +487,7 @@ dotnet build OpenUtau.Plugin.Builtin\OpenUtau.Plugin.Builtin.csproj `
 if ($LASTEXITCODE -ne 0) { throw 'Plugin build failed.' }
 
 $env:AVALONIA_TELEMETRY_OPTOUT='1'
-dotnet build OpenUtauMobile\OpenUtauMobile.csproj `
+dotnet build OpenLoidFlame\OpenLoidFlame.csproj `
     --nologo -v:minimal
 if ($LASTEXITCODE -ne 0) { throw 'Mobile build failed.' }
 ```
@@ -496,9 +496,9 @@ if ($LASTEXITCODE -ne 0) { throw 'Mobile build failed.' }
 
 ```powershell
 $env:AVALONIA_TELEMETRY_OPTOUT='1'
-dotnet restore OpenUtauMobile.Android/OpenUtauMobile.Android.csproj
+dotnet restore OpenLoidFlame.Android/OpenLoidFlame.Android.csproj
 if ($LASTEXITCODE -ne 0) { throw 'Android restore failed.' }
-dotnet build OpenUtauMobile.Android/OpenUtauMobile.Android.csproj `
+dotnet build OpenLoidFlame.Android/OpenLoidFlame.Android.csproj `
     -c Release -f net10.0-android36.0 -p:RuntimeIdentifier=android-arm64
 if ($LASTEXITCODE -ne 0) { throw 'Android build failed.' }
 ```
@@ -545,11 +545,11 @@ git pull --ff-only origin dev
 
 ## 11. 全新电脑/本地什么都没有
 
-不要把 `OpenUtauMobile-sync` 当作源码工作区。先克隆正式仓库：
+不要把 `OpenLoidFlame-sync` 当作源码工作区。先克隆正式仓库：
 
 ```powershell
 git clone https://github.com/vocoder712/OpenUtauMobile.git
-Set-Location OpenUtauMobile
+Set-Location OpenLoidFlame
 git switch dev
 
 git remote add opu https://github.com/openutau/OpenUtau.git

@@ -25,7 +25,7 @@ while ($ancestor) {
     $ancestor = Split-Path -Parent $ancestor
 }
 if (Test-Path -LiteralPath $target) { throw 'OUTPUT_ALREADY_EXISTS' }
-$project = Join-Path $repo 'OpenUtauMobile/OpenUtauMobile.csproj'
+$project = Join-Path $repo 'OpenLoidFlame/OpenLoidFlame.csproj'
 $env:AVALONIA_TELEMETRY_OPTOUT = '1'
 $raw = & dotnet msbuild $project -nologo -getProperty:TargetFramework,AvaloniaVersion
 if ($LASTEXITCODE -ne 0) { throw 'PROJECT_PROPERTY_QUERY_FAILED' }

@@ -39,3 +39,20 @@ reports `USingerType.Vocaloid4`.
 - `VsqImporter` converts notes, lyrics, phonemes, tempo and time signature. Vibrato, pitch and dynamics curves are dropped.
   Any failure falls back to the plain MIDI import.
 - The default phonemizer name for loose banks is `VocaloidPackageLoader.DefaultPhonemizerName`; that class is not in this bundle.
+
+## Sound and phonemes (Flame engine)
+
+Why there was no sound: the old renderer read the `.vvd` (a tiny info file, not audio) as PCM and parsed the `.ddb` with an invented layout, so every render was silence. The phonemizers also returned `note.position` (absolute) where OpenUtau expects a position relative to the note, which pushed phonemes out of the note.
+
+Now:
+
+- `VocaloidPhonemizers.cs`: JA (kana, yōon, small kana, romaji), EN (dictionary + rules), ES, ZH (pinyin), KO (hangul), VI, FR, DE, IT, RU, PT, TH and RAW. Consonants start before the beat so the vowel lands on the note.
+- `VocaloidPhonemeSet.cs`: symbol catalogue. `VocaloidSinger.TryGetOto` accepts any known symbol, so phonemes are no longer red. An unknown symbol is still red.
+- `FlameVoice.cs` + `VocaloidRenderer.cs`: built-in source-filter synthesizer that follows pitch (vibrato, PITD), DYN, GENC, BREC and TENC. It sings with any bank, but the timbre is generic, not the sampled voice.
+- `VocaloidBankProbe.cs`: on load writes `probe-<bank>.txt` into the cache (`vocaloid` folder) with the first 128 bytes of `.ddi`, `.ddb` and `.vvd`. Send that file to build a real sample decoder.
+
+Not done: decoding the real `.ddb`/`.ddi` samples (the format is proprietary and no sample bank was available here to verify it).
+
+## Themes
+
+Settings, Appearance, preset swatches: VOCALOID1 to VOCALOID6 (seed colors in `ThemeSeedPresets`).

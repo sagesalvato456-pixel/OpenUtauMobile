@@ -1,11 +1,10 @@
 // OpenUtau.Core/Vocaloid/VocaloidSinger.cs
-// Lang: C# 10, Target: .NET 7 / Android (OpenUtau Mobile dev branch)
+// Lang: C# 10, Target: .NET 7 / Android (OpenLoid-Flame dev branch)
 // USinger implementation wrapping a loaded VOCALOID voicebank (V1..V6, a .vcld package
 // or a loose folder). Every generation reports USingerType.Vocaloid4, the only value the
 // core enum has; the real generation is in EngineVersion.
-// Synthesis is intentionally deferred — this layer handles identity,
-// avatar/portrait, metadata, and binary-asset paths. Wire a renderer
-// once the DSP bridge is ready.
+// This layer handles identity, avatar/portrait, metadata, binary-asset paths and the phoneme
+// lookup the editor needs (TryGetOto). Audio comes from VocaloidRenderer (Flame voice).
 
 using System;
 using System.Collections.Generic;
@@ -48,13 +47,49 @@ namespace OpenUtau.Core.Vocaloid {
         public override float   PortraitOpacity => _config.PortraitOpacity;
         public override int     PortraitHeight  => 0;
 
-        public override string DefaultPhonemizer => _config.DefaultPhonemizer ?? string.Empty;
+        // Sin phonemizer en el manifiesto se deduce del nombre del banco (EN, ZH, KO, ES) o se usa
+        // el japonés. Antes devolvía vacío y la pista se quedaba con el fonemizador por defecto,
+        // que no genera fonemas válidos para un banco VOCALOID.
+        public override string DefaultPhonemizer =>
+            !string.IsNullOrWhiteSpace(_config.DefaultPhonemizer)
+                ? _config.DefaultPhonemizer
+                : VocaloidPackageLoader.GuessPhonemizerName(_config.Name, _id);
         public override string Sample            => string.Empty;
         public override Encoding TextFileEncoding => Encoding.UTF8;
 
         // VOCALOID voicebanks expose no UTAU-style oto entries
         public override IList<USubbank> Subbanks => Array.Empty<USubbank>();
         public override IList<UOto>     Otos     => emptyOtos;
+
+        private readonly Dictionary<string, UOto> _otoCache = new(StringComparer.Ordinal);
+
+        /// <summary>
+        /// Un banco VOCALOID no tiene oto.ini: el fonema es válido si el catálogo lo conoce.
+        /// Devuelve un oto sintético para que el editor no marque el fonema en rojo.
+        /// </summary>
+        public override bool TryGetOto(string phoneme, out UOto oto) {
+            oto = default!;
+            if (!VocaloidPhonemeSet.Contains(phoneme)) return false;
+            lock (_otoCache) {
+                if (!_otoCache.TryGetValue(phoneme, out UOto? cached)) {
+                    cached = UOto.OfDummy(phoneme);
+                    _otoCache[phoneme] = cached;
+                }
+                oto = cached;
+            }
+            return true;
+        }
+
+        /// <summary>Sugerencias de fonemas para el editor de alias.</summary>
+        public override Dictionary<string, UOto> GetSuggestions(string text, bool isAlias) {
+            var result = new Dictionary<string, UOto>();
+            foreach (string symbol in VocaloidPhonemeSet.AllSymbols) {
+                if (!string.IsNullOrEmpty(text) && symbol.IndexOf(text, StringComparison.OrdinalIgnoreCase) < 0) continue;
+                if (TryGetOto(symbol, out UOto oto)) result[symbol] = oto;
+                if (result.Count >= 40) break;
+            }
+            return result;
+        }
 
         // ── binary asset paths (for the renderer / DSP bridge) ───────────────
         // Valid after EnsureLoaded(); a .vcld is extracted to the cache on that call.
@@ -145,8 +180,10 @@ namespace OpenUtau.Core.Vocaloid {
                 loaded = _pkg.Errors.Count == 0;
                 if (!loaded)
                     Log.Warning($"[VocaloidSinger] {_id} loaded with errors: {string.Join("; ", _pkg.Errors)}");
-                else
+                else {
                     Log.Information($"[VocaloidSinger] loaded {_id} ({VocaloidVersions.Display(_version)}, ddb={DdbPath}, ddi={DdiPath}, vvd={VvdPath})");
+                    VocaloidBankProbe.TryWrite(_id, _version, DdiPath, DdbPath, VvdPath);
+                }
             } catch (Exception ex) {
                 Log.Error(ex, $"[VocaloidSinger] failed to load {_id}");
                 _pkg.Errors.Add(ex.Message);

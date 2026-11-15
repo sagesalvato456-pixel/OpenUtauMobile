@@ -1,6 +1,6 @@
 # Desktop presentation
 
-`OpenUtauMobile.DesktopUI` is referenced by Windows, Linux and macOS hosts only. Its registration
+`OpenLoidFlame.DesktopUI` is referenced by Windows, Linux and macOS hosts only. Its registration
 provides `ServiceHub.DesktopWindowFactory` and enables native desktop file workflows. Android, iOS and
 Browser compile the shared Mobile layer without this presentation assembly.
 
@@ -74,7 +74,7 @@ imported projects require Save As. Drops and imports use existing project/audio 
 
 The desktop inspector retains its control tree across selections with the same property schema and rebinds it to a fresh, guarded draft. Selection changes still discard stale input, and external note commands still refresh values. Unchanged focus/transport updates do not rebuild note or phoneme controls. Shared canvases use a selected-note lookup, the property draft captures selection membership once, and playback state is synchronized once per position notification/timer tick. These shared optimizations also apply to mobile. While a desktop ruler owns the viewport, seek reveal and playback page-follow leave its continuous edge scrolling in control.
 
-Windows WaveOut playback sets NAudio `DesiredLatency` to 60 ms and `NumberOfBuffers` to 3 in `OpenUtauMobile.Windows/Services/Audio/NAudioOutput.cs`. Audible dropout behavior on a physical audio device has not been verified.
+Windows WaveOut playback sets NAudio `DesiredLatency` to 60 ms and `NumberOfBuffers` to 3 in `OpenLoidFlame.Windows/Services/Audio/NAudioOutput.cs`. Audible dropout behavior on a physical audio device has not been verified.
 
 ## External tools
 

@@ -1,18 +1,18 @@
-﻿# 参与 OpenUtau Mobile 贡献
+﻿# 参与 OpenLoid-Flame 贡献
 
 **简体中文** | [English](docs/CONTRIBUTING.en-US.md)
 
-感谢你对 OpenUtau Mobile 的关注！
+感谢你对 OpenLoid-Flame 的关注！
 
 我们欢迎各种形式的贡献，包括代码、Bug 修复、文档、翻译、UI/UX 改进、测试以及技术讨论等。
 
-OpenUtau Mobile 目前仍处于活跃开发阶段，项目架构、API 和平台相关实现可能会不断调整。因此，请尽量保持每次修改的目标明确、范围集中。对于较大的功能或架构调整，建议在投入大量开发工作前先进行讨论。
+OpenLoid-Flame 目前仍处于活跃开发阶段，项目架构、API 和平台相关实现可能会不断调整。因此，请尽量保持每次修改的目标明确、范围集中。对于较大的功能或架构调整，建议在投入大量开发工作前先进行讨论。
 
 ---
 
 ## 贡献方式
 
-你可以通过以下方式参与 OpenUtau Mobile：
+你可以通过以下方式参与 OpenLoid-Flame：
 
 * 修复 Bug；
 * 实现新功能；
@@ -59,8 +59,8 @@ Worldline 原生构建见 [native/worldline/README.md](native/worldline/README.m
 在 GitHub 上 Fork 仓库，然后执行：
 
 ```powershell
-git clone https://github.com/<你的用户名>/OpenUtauMobile.git
-cd OpenUtauMobile
+git clone https://github.com/<你的用户名>/OpenLoidFlame.git
+cd OpenLoidFlame
 git remote add upstream https://github.com/vocoder712/OpenUtauMobile.git
 git fetch upstream
 git switch dev
@@ -91,19 +91,19 @@ $env:AVALONIA_TELEMETRY_OPTOUT='1'
 
 ```powershell
 $env:AVALONIA_TELEMETRY_OPTOUT='1'
-dotnet restore OpenUtauMobile.Windows/OpenUtauMobile.Windows.csproj
-dotnet run --project OpenUtauMobile.Windows/OpenUtauMobile.Windows.csproj -c Debug
+dotnet restore OpenLoidFlame.Windows/OpenLoidFlame.Windows.csproj
+dotnet run --project OpenLoidFlame.Windows/OpenLoidFlame.Windows.csproj -c Debug
 ```
 
-出现应用窗口即完成第一次启动。这里启动的是 OpenUtau Mobile 的 Windows 宿主。
+出现应用窗口即完成第一次启动。这里启动的是 OpenLoid-Flame 的 Windows 宿主。
 只做 Windows 开发时，按项目恢复即可；在根目录直接执行 `dotnet restore` 会处理整个解决方案，
 可能要求安装 Android、iOS 或浏览器等无关工作负载。
 
 在 Rider 中：
 
-1. 打开根目录的 `OpenUtauMobile.sln`。在设置中搜索 `.NET CLI`，确认使用上述 .NET SDK。
-2. 选择 `OpenUtauMobile.Windows` 的运行配置和 `Debug` 配置。若没有自动生成，
-   在 **Run → Edit Configurations** 添加 **.NET Project**，启动项目选择 `OpenUtauMobile.Windows`。
+1. 打开根目录的 `OpenLoidFlame.sln`。在设置中搜索 `.NET CLI`，确认使用上述 .NET SDK。
+2. 选择 `OpenLoidFlame.Windows` 的运行配置和 `Debug` 配置。若没有自动生成，
+   在 **Run → Edit Configurations** 添加 **.NET Project**，启动项目选择 `OpenLoidFlame.Windows`。
 3. 启动前构建目标项目及其依赖；只调试 Windows 时，不要将构建整个解决方案作为启动前任务。
 4. 在 C# 代码行旁设置断点，点击虫子图标 **Debug**。需要执行到断点所在操作才会暂停。
 
@@ -114,7 +114,7 @@ dotnet run --project OpenUtauMobile.Windows/OpenUtauMobile.Windows.csproj -c Deb
 NuGet 原生库附带的 PDB 默认不复制；需要调试这些第三方原生库时，传入
 `-p:CopyNuGetNativeSymbols=true`。应用自身的托管调试符号不受影响。
 构建会自动生成 `opum_game.dll`，并将对应架构的 worldline 放到输出目录。
-默认 Debug 输出位于 `OpenUtauMobile.Windows/bin/Debug/net10.0-windows/`。
+默认 Debug 输出位于 `OpenLoidFlame.Windows/bin/Debug/net10.0-windows/`。
 如果显式使用 `-r win-x64`，输出会多一层 `win-x64/`；启动时应使用此次构建的目录。
 
 ### 4. 准备 Android 环境
@@ -126,7 +126,7 @@ Windows 已能启动后，再安装以下 Android 专用工具。Android 的 C++
 | .NET Android workload | 在仓库根目录运行 `dotnet workload install android`；若提示权限不足，使用管理员 PowerShell。升级 .NET SDK 后重新检查 `dotnet workload list`。 |
 | JDK | 建议安装 [Microsoft OpenJDK 21](https://learn.microsoft.com/java/openjdk/download)。填写 JDK 根目录，不是 `bin`；Android Studio 自带 JBR 只有版本兼容时才可复用。 |
 | [Android Studio](https://developer.android.com/studio) | 用它的 SDK Manager 安装和管理 SDK，也可用 Device Manager 创建模拟器；C# 代码仍在 Rider 调试。 |
-| Android SDK | SDK Manager 中安装 Android API 36、Build-Tools 36.0.0、Platform-Tools、Command-line Tools (latest)。具体目标以 [Android 项目](OpenUtauMobile.Android/OpenUtauMobile.Android.csproj) 和安装的 .NET Android 工作负载为准。 |
+| Android SDK | SDK Manager 中安装 Android API 36、Build-Tools 36.0.0、Platform-Tools、Command-line Tools (latest)。具体目标以 [Android 项目](OpenLoidFlame.Android/OpenLoidFlame.Android.csproj) 和安装的 .NET Android 工作负载为准。 |
 | Android NDK | 在 SDK Tools 中勾选 Show Package Details，安装 [android-ndk-version.txt](native/game/android-ndk-version.txt) 指定的版本，当前为 r30 LTS `30.0.16248370`。 |
 
 安装方法也可参考微软的 [.NET Android 依赖说明](https://learn.microsoft.com/dotnet/android/getting-started/installation/dependencies)。
@@ -180,14 +180,14 @@ RID 是目标系统与 CPU 架构的标识；Android 应用按目标设备选择
 ```powershell
 $env:AVALONIA_TELEMETRY_OPTOUT='1'
 $androidRid = 'android-arm64'
-dotnet build OpenUtauMobile.Android/OpenUtauMobile.Android.csproj -c Debug -r $androidRid "-p:AndroidSdkDirectory=$androidSdk" "-p:AndroidNdkDirectory=$androidNdk" "-p:JavaSdkDirectory=$javaSdk"
+dotnet build OpenLoidFlame.Android/OpenLoidFlame.Android.csproj -c Debug -r $androidRid "-p:AndroidSdkDirectory=$androidSdk" "-p:AndroidNdkDirectory=$androidNdk" "-p:JavaSdkDirectory=$javaSdk"
 ```
 
 命令会自动恢复对应 RID 的依赖，签名 APK 位于
-`OpenUtauMobile.Android/bin/Debug/net10.0-android36.0/<RID>/*-Signed.apk`。
+`OpenLoidFlame.Android/bin/Debug/net10.0-android36.0/<RID>/*-Signed.apk`。
 这一步只构建，附加调试器使用 Rider：
 
-1. 选择 `OpenUtauMobile.Android` 的 **Android** 运行配置，构建配置为 `Debug`。
+1. 选择 `OpenLoidFlame.Android` 的 **Android** 运行配置，构建配置为 `Debug`。
    没有配置时，在 **Run → Edit Configurations → Add → Android** 创建，启动项目选 Android 项目。
 2. 部署选择 **Default APK**，目标选择已连接设备或已启动模拟器，保留启动前构建步骤。
 3. 设置 C# 断点并点击虫子。Rider 会构建、安装 APK、启动应用并附加调试器。
@@ -219,7 +219,7 @@ Debug 使用独立应用 ID 和本地调试签名，无需配置 CI 的发布签
 
 ### `dev`
 
-`dev` 是 OpenUtau Mobile V2 当前的主要开发和集成分支。
+`dev` 是 OpenLoid-Flame V2 当前的主要开发和集成分支。
 
 正常贡献都应该基于 `dev` 开发，并向 `dev` 提交 Pull Request。
 
@@ -227,7 +227,7 @@ Debug 使用独立应用 ID 和本地调试签名，无需配置 CI 的发布签
 
 ### `master`
 
-`master` 保存 OpenUtau Mobile 的旧版本代码。
+`master` 保存 OpenLoid-Flame 的旧版本代码。
 
 它不是 V2 日常开发使用的基础分支。
 
@@ -250,7 +250,7 @@ Debug 使用独立应用 ID 和本地调试签名，无需配置 CI 的发布签
 
 ## Commit Message 规范
 
-OpenUtau Mobile 使用轻量的 **Conventional Commits** 风格。
+OpenLoid-Flame 使用轻量的 **Conventional Commits** 风格。
 
 推荐格式：
 
@@ -504,7 +504,7 @@ AI 工具可以开发，但不能替代代码审查和工程判断。
 
 # 同步主线内核
 
-OpenUtau Mobile 会定期从上游 OpenUtau 仓库同步代码。
+OpenLoid-Flame 会定期从上游 OpenUtau 仓库同步代码。
 
 **上游同步属于仓库维护操作，与普通 Feature 开发不同。**
 
@@ -518,10 +518,10 @@ OpenUtau Mobile 会定期从上游 OpenUtau 仓库同步代码。
 
 ## UI 本地化
 
-OpenUtau Mobile 的 UI 本地化资源位于 `dev` 分支的以下目录：
+OpenLoid-Flame 的 UI 本地化资源位于 `dev` 分支的以下目录：
 
 ```text
-OpenUtauMobile/Assets/Lang/
+OpenLoidFlame/Assets/Lang/
 ```
 
 当前支持：
@@ -628,7 +628,7 @@ Strings.ja.resx
 在：
 
 ```text
-OpenUtauMobile/Assets/Lang/
+OpenLoidFlame/Assets/Lang/
 ```
 
 中创建：
@@ -646,7 +646,7 @@ Strings.fr.resx
 在：
 
 ```text
-OpenUtauMobile/OpenUtauMobile.csproj
+OpenLoidFlame/OpenLoidFlame.csproj
 ```
 
 的语言资源列表中加入：
@@ -660,7 +660,7 @@ OpenUtauMobile/OpenUtauMobile.csproj
 在：
 
 ```text
-OpenUtauMobile/Helpers/LocalizationManager.cs
+OpenLoidFlame/Helpers/LocalizationManager.cs
 ```
 
 的 `AvailableLanguages` 中加入该语言：
@@ -686,7 +686,7 @@ Français
 
 新增或修改 UI 翻译后，应至少：
 
-- 构建并启动 OpenUtau Mobile；
+- 构建并启动 OpenLoid-Flame；
 - 在设置中切换到目标语言；
 - 检查主要页面是否能够正常显示；
 - 检查是否出现未翻译的 localization key；
@@ -746,7 +746,7 @@ string saveText = L.S("Editor.Save");
 
 提交可复现的 Bug 时，请尽量提供：
 
-* OpenUtau Mobile 版本或 commit；
+* OpenLoid-Flame 版本或 commit；
 * 设备型号；
 * 操作系统及版本；
 * 受影响的平台；
@@ -777,7 +777,7 @@ adb logcat > log.txt
 
 ## 许可证
 
-向 OpenUtau Mobile 提交贡献，即表示你同意你的贡献按照本仓库适用的许可证进行发布。
+向 OpenLoid-Flame 提交贡献，即表示你同意你的贡献按照本仓库适用的许可证进行发布。
 
 请不要提交无法合法包含或重新分发的：
 

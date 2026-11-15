@@ -1,6 +1,6 @@
 # Select a canonical source
 
-Paths below are relative to `OpenUtauMobile/`. Read the matching entry only, then the
+Paths below are relative to `OpenLoidFlame/`. Read the matching entry only, then the
 current source and relevant bindings/code-behind. These are **examples/current patterns**,
 not a catalog or permanent specification of feature layouts. If no entry matches, search
 the feature's control usages and nearest behavioral sibling before creating an abstraction.
@@ -8,7 +8,7 @@ the feature's control usages and nearest behavioral sibling before creating an a
 ## Navigation/options page
 
 **Source:** `Views/OptionsView.axaml`; role owners
-`Themes/OpenUtauMobile/Styles/Components/TopBar.axaml` and `OptionEntry.axaml`.
+`Themes/OpenLoidFlame/Styles/Components/TopBar.axaml` and `OptionEntry.axaml`.
 
 Use for a titled, scrollable page of command-driven destinations. Reuse TopBar,
 TopBarBtn/TopBarTitle and OptionEntry roles, semantic paint, DynamicResource labels,
@@ -83,7 +83,7 @@ to this dialog's swatches.
   in EditorView before changing layout. Their domain geometry and editing gestures are
   not shared theme tokens or generic button interaction.
 - Mixer input: `Controls/TrackHeader.axaml` and `Controls/DawKnob.cs`, with
-  `Themes/OpenUtauMobile/Styles/Components/DawKnob.axaml`. Reuse when the same knob
+  `Themes/OpenLoidFlame/Styles/Components/DawKnob.axaml`. Reuse when the same knob
   interaction is wanted; volume/pan conversion and ranges remain mixer-owned.
 
 For noninteractive notifications, inspect `Controls/ToastOverlay.axaml` and its code-behind

@@ -1,0 +1,72 @@
+/* Splash de OpenLoid-Flame: tile oscuro con la V blanca que se dibuja. */
+.avalonia-splash {
+    position: absolute;
+    inset: 0;
+    background: #f4f4f4;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    pointer-events: none;
+}
+
+.flame-splash {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.flame-logo {
+    width: 192px;
+    height: 192px;
+    max-width: 60vmin;
+    max-height: 60vmin;
+    filter: drop-shadow(0 10px 24px rgba(0, 0, 0, .28));
+    animation: tile-in 520ms cubic-bezier(.2, .8, .2, 1) both;
+}
+
+.reveal-path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: draw-v 1200ms cubic-bezier(.4, 0, .2, 1) 320ms forwards;
+}
+
+.flame-name {
+    font: 600 22px/1 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    letter-spacing: .06em;
+    color: #2d2c2c;
+    opacity: 0;
+    animation: name-in 600ms ease-out 1100ms forwards;
+}
+
+.flame-name span { opacity: .45; }
+
+@keyframes tile-in {
+    from { opacity: 0; transform: scale(.9); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes draw-v {
+    to { stroke-dashoffset: 0; }
+}
+
+@keyframes name-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-color-scheme: dark) {
+    .avalonia-splash { background: #141414; }
+    .flame-name { color: #ececec; }
+    .flame-logo { filter: drop-shadow(0 10px 24px rgba(0, 0, 0, .6)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .flame-logo, .reveal-path, .flame-name { animation-duration: 1ms; animation-delay: 0s; }
+}
+
+.avalonia-splash.splash-close {
+    transition: opacity 200ms, display 200ms;
+    display: none;
+    opacity: 0;
+}

@@ -1,0 +1,35 @@
+﻿using Avalonia.Controls;
+using OpenLoidFlame.ViewModels;
+
+namespace OpenLoidFlame.Views;
+
+public partial class SettingsView : UserControl
+{
+    public bool PersistentNavigation { get; set; }
+    public SettingsView()
+    {
+        InitializeComponent();
+
+        // 订阅控件尺寸变化，实现侧栏自适应展开/收起
+        SizeChanged += OnSizeChanged;
+        Loaded += (_, _) =>
+        {
+            if (DataContext is SettingsViewModel vm)
+            {
+                _ = vm.InitializeAsync();
+            }
+        };
+    }
+
+    private void OnSizeChanged(object? sender, SizeChangedEventArgs e)
+    {
+        if (DataContext is SettingsViewModel vm)
+        {
+            bool shouldExpand = PersistentNavigation || e.NewSize.Width >= ViewConstants.SettingsSidebarBreakpoint;
+            if (vm.IsNavExpanded != shouldExpand)
+            {
+                vm.IsNavExpanded = shouldExpand;
+            }
+        }
+    }
+}

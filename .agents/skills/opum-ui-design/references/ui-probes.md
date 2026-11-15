@@ -49,7 +49,7 @@ the callback fails compilation. `PathManager` is in `OpenUtau.Core`, not `.Util`
 Visual traversal extensions require `Avalonia.VisualTree`. Before guessing a changed
 API, inspect the current app entrypoint and restored package XML documentation.
 
-Load OPUM's `OpenUtauMobileTheme.axaml` and the required language after starting the
+Load OPUM's `OpenLoidFlameTheme.axaml` and the required language after starting the
 minimal Application. Do not call the production App startup merely to get its styles;
 that can initialize audio, navigation and background services. Do not substitute Fluent.
 Use scoped `GetResourceObservable` bindings for live brushes/colors; dispose them.

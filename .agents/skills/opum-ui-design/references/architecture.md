@@ -1,7 +1,7 @@
 # UI ownership decisions
 
 All code paths are repository-relative. `T` below means
-`OpenUtauMobile/Themes/OpenUtauMobile/`.
+`OpenLoidFlame/Themes/OpenLoidFlame/`.
 
 ## Choose the owner (contract)
 
@@ -9,16 +9,16 @@ All code paths are repository-relative. `T` below means
 | --- | --- | --- |
 | A standard control's structure or reusable hover/focus/pressed/disabled behavior | `T/Controls/<Control>.axaml`, helper themes and `ControlThemes.axaml` | Read the whole affected template/state family, not just the matching selector. Preserve parts and behavior. |
 | Shared role such as dialog action, top-bar action, FAB or option entry | `T/Styles/Components/` and its tokens | Compose the base theme using role colors/metrics; do not fork its interaction state. |
-| Feature-specific visual family or gesture | `OpenUtauMobile/Controls/Styles/`, `Views/Styles/`, corresponding control/view and tokens | Feature loads its styles. Global theme must not import feature-owned resources. |
+| Feature-specific visual family or gesture | `OpenLoidFlame/Controls/Styles/`, `Views/Styles/`, corresponding control/view and tokens | Feature loads its styles. Global theme must not import feature-owned resources. |
 | One section's alignment, gap or drawing offset | That AXAML/layout or drawing implementation | A local value/style is valid; promotion needs a shared meaning or coordinated change contract. |
 
 **Important path distinction:** `T/Controls/` contains base theme dictionaries;
-`OpenUtauMobile/Controls/` contains application controls, popup views and domain interactions.
+`OpenLoidFlame/Controls/` contains application controls, popup views and domain interactions.
 Putting a file in the latter does not make it a global theme component.
 
 For loading, resource ownership or a framework upgrade, read the
-[theme README](../../../../OpenUtauMobile/Themes/OpenUtauMobile/README.md)
-and `OpenUtauMobile/App.axaml` / `T/OpenUtauMobileTheme.axaml`.
+[theme README](../../../../OpenLoidFlame/Themes/OpenLoidFlame/README.md)
+and `OpenLoidFlame/App.axaml` / `T/OpenLoidFlameTheme.axaml`.
 The local theme is complete; DialogHost and IconPacks integrations are separate.
 Do not add Fluent/Semi dependencies to fix a missing style. Trace includes, keys and
 resource resolution first.
@@ -26,7 +26,7 @@ resource resolution first.
 ## Choose a value owner
 
 Consult the current ownership table in the
-[token README](../../../../OpenUtauMobile/Themes/OpenUtauMobile/Tokens/README.md)
+[token README](../../../../OpenLoidFlame/Themes/OpenLoidFlame/Tokens/README.md)
 when adding/changing a shared value, not for every local layout edit.
 
 | Kind | Use when | Avoid |
@@ -91,9 +91,9 @@ against actual layout behavior after framework changes, rather than spreading wo
 ## Modal decisions (contract)
 
 For modal work, verify the contracts below against
-[DialogShell](../../../../OpenUtauMobile/Controls/DialogShell.cs),
-[PopupDialogControl](../../../../OpenUtauMobile/Controls/PopupDialogControl.cs) and
-[Dialog styles](../../../../OpenUtauMobile/Themes/OpenUtauMobile/Styles/Components/Dialog.axaml).
+[DialogShell](../../../../OpenLoidFlame/Controls/DialogShell.cs),
+[PopupDialogControl](../../../../OpenLoidFlame/Controls/PopupDialogControl.cs) and
+[Dialog styles](../../../../OpenLoidFlame/Themes/OpenLoidFlame/Styles/Components/Dialog.axaml).
 Select a matching modal example from [canonical patterns](canonical-patterns.md).
 
 - Use PopupDialogControl with root `PopupDialogRoot`, one DialogShell and business content.
