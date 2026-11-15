@@ -1,4 +1,4 @@
-name: Build and Release But YO 2
+name: Build and Release But YO 3
 
 run-name: >-
   ${{ github.event_name == 'workflow_dispatch'
