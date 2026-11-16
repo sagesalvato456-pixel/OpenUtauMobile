@@ -33,6 +33,7 @@ namespace OpenUtau.Core {
             var found = SafeFind("Classic", () => ClassicSingerLoader.FindAllSingers())
                 .Concat(SafeFind("Vogen", () => Vogen.VogenSingerLoader.FindAllSingers()))
                 .Concat(SafeFind("Vocaloid", () => Vocaloid.VocaloidSingerLoader.FindAllSingers()))
+                .Concat(SafeFind("DefaultLoid", () => new List<USinger> { new Vocaloid.DefaultLoidSinger() }))
                 .ToList();
             // Singers with the same id are equal (see USinger.Equals), so this keeps the first.
             var singers = found.Distinct().ToList();
@@ -88,6 +89,9 @@ namespace OpenUtau.Core {
             try
             {
                 ArgumentNullException.ThrowIfNull(singer);
+                if (singer is Vocaloid.DefaultLoidSinger) {
+                    throw new InvalidOperationException("DefaultLoid is built in and cannot be uninstalled.");
+                }
                 string location = singer.Location;
                 if (string.IsNullOrWhiteSpace(location))
                 {

@@ -64,7 +64,10 @@ namespace OpenUtau.Core.Vocaloid {
 
                 float[] samples;
                 try {
-                    samples = FlameVoice.Synthesize(phrase, kTailMs, cancellation.Token);
+                    FlameVoiceProfile profile = phrase.singer is DefaultLoidSinger loid
+                        ? loid.Profile
+                        : FlameVoiceProfile.Generic;
+                    samples = FlameVoice.Synthesize(phrase, kTailMs, cancellation.Token, profile);
                 } catch (Exception ex) {
                     Log.Error(ex, "[VocaloidRenderer] render failed");
                     samples = new float[Math.Max(1, (int)Math.Ceiling(

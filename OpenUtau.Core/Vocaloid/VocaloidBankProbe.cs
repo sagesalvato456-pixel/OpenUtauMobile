@@ -54,14 +54,29 @@ namespace OpenUtau.Core.Vocaloid {
             }
         }
 
+        /// <summary>Copia el informe a Descargas para verlo desde Termux o el gestor de archivos.</summary>
+        private static void CopyToDownloads(string fileName, string report) {
+            try {
+                const string downloads = "/storage/emulated/0/Download";
+                if (!Directory.Exists(downloads)) return;
+                string target = Path.Combine(downloads, fileName);
+                File.WriteAllText(target, report);
+                Log.Information($"[VocaloidProbe] copy saved to {target}");
+            } catch (Exception ex) {
+                Log.Warning(ex, "[VocaloidProbe] cannot copy the report to Downloads (storage permission?)");
+            }
+        }
+
         /// <summary>Escribe el informe en la caché de VOCALOID. Nunca lanza.</summary>
         public static void TryWrite(string id, VocaloidVersion version, string ddi, string ddb, string vvd) {
             try {
                 string dir = Path.Combine(PathManager.Inst.CachePath, VocaloidPackageLoader.CacheFolderName);
                 Directory.CreateDirectory(dir);
                 string file = Path.Combine(dir, "probe-" + VocaloidPackageLoader.SanitizeDirName(id) + ".txt");
-                File.WriteAllText(file, BuildReport(id, version, ddi, ddb, vvd));
+                string report = BuildReport(id, version, ddi, ddb, vvd);
+                File.WriteAllText(file, report);
                 Log.Information($"[VocaloidProbe] bank report saved to {file}");
+                CopyToDownloads(Path.GetFileName(file), report);
             } catch (Exception ex) {
                 Log.Warning(ex, "[VocaloidProbe] cannot write the bank report");
             }

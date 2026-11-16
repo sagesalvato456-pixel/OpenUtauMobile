@@ -9,6 +9,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using OpenUtau.Core.Ustx;
 
 namespace OpenUtau.Core.Vocaloid {
 
@@ -231,6 +232,22 @@ B br,ap,AP
                 }
             }
             return false;
+        }
+
+        private static readonly Dictionary<string, UOto> otoCache = new Dictionary<string, UOto>(StringComparer.Ordinal);
+
+        /// <summary>Oto sintético para un símbolo conocido (los bancos VOCALOID no tienen oto.ini).</summary>
+        internal static bool TryGetOto(string? symbol, out UOto oto) {
+            oto = default!;
+            if (symbol == null || !Contains(symbol)) return false;
+            lock (otoCache) {
+                if (!otoCache.TryGetValue(symbol, out UOto? cached)) {
+                    cached = UOto.OfDummy(symbol);
+                    otoCache[symbol] = cached;
+                }
+                oto = cached;
+            }
+            return true;
         }
 
         internal static bool Contains(string? symbol) {

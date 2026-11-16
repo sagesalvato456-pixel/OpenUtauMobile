@@ -17,6 +17,31 @@ using OpenUtau.Core.Render;
 
 namespace OpenUtau.Core.Vocaloid {
 
+    /// <summary>Carácter de una voz Flame: tamaño de formantes, brillo, soplo y micro-variaciones.</summary>
+    internal sealed class FlameVoiceProfile {
+        /// <summary>Escala de formantes: mayor que 1 suena más joven / aguda.</summary>
+        public float FormantScale = 1.0f;
+        /// <summary>Desplaza la fase abierta de la glotis (negativo = más brillante).</summary>
+        public float OpenQuotient = 0f;
+        public float BaseBreath = 0f;
+        /// <summary>Variación lenta de f0 (fracción); da naturalidad.</summary>
+        public float Jitter = 0.002f;
+        /// <summary>Variación lenta de amplitud (fracción).</summary>
+        public float Shimmer = 0.03f;
+        public float LowpassHz = 9500f;
+
+        public static readonly FlameVoiceProfile Generic = new FlameVoiceProfile();
+
+        public static readonly FlameVoiceProfile DefaultLoid = new FlameVoiceProfile {
+            FormantScale = 1.07f,
+            OpenQuotient = -0.02f,
+            BaseBreath = 0.06f,
+            Jitter = 0.0025f,
+            Shimmer = 0.035f,
+            LowpassHz = 9000f,
+        };
+    }
+
     internal static class FlameVoice {
 
         public const int SampleRate = 44100;
@@ -46,7 +71,8 @@ namespace OpenUtau.Core.Vocaloid {
         }
 
         /// <summary>Genera el audio mono de 44100 Hz de la frase. samples[0] cae en positionMs - leadingMs.</summary>
-        public static float[] Synthesize(RenderPhrase phrase, double tailMs, CancellationToken token) {
+        public static float[] Synthesize(RenderPhrase phrase, double tailMs, CancellationToken token, FlameVoiceProfile? profile = null) {
+            profile ??= FlameVoiceProfile.Generic;
             double t0 = phrase.positionMs - phrase.leadingMs;
             int total = Math.Max(1, (int)Math.Ceiling((phrase.durationMs + phrase.leadingMs + tailMs) * SampleRate / 1000.0));
             var output = new float[total];
@@ -80,6 +106,9 @@ namespace OpenUtau.Core.Vocaloid {
             double phase = 0, gPrev = 0;
             uint rng = 2463534242u;
             int segIdx = 0;
+            double jit = 0, shim = 0, nasal = 0, lp = 0;
+            double nx1 = 0, nx2 = 0, ny1 = 0, ny2 = 0;
+            double lpA = 1.0 - Math.Exp(-2.0 * Math.PI * profile.LowpassHz / SampleRate);
 
             for (int b0 = 0; b0 < total; b0 += Block) {
                 if ((b0 / Block) % 256 == 0 && token.IsCancellationRequested) break;
@@ -92,7 +121,7 @@ namespace OpenUtau.Core.Vocaloid {
                     if (segs[k].EndMs > tms) { seg = segs[k]; }
                 }
 
-                double vT = 0, nT = 0;
+                double vT = 0, nT = 0, nasT = 0;
                 double tF1 = f1, tF2 = f2, tF3 = f3;
                 double tHz = noiseHz, tBw = noiseBw;
 
@@ -119,6 +148,7 @@ namespace OpenUtau.Core.Vocaloid {
                             vT = 1.0;
                             break;
                         case PhonemeClass.Nasal:
+                            nasT = 1.0;
                             vT = 0.55 * sp.Gain / 0.7;
                             break;
                         case PhonemeClass.Liquid:
@@ -180,9 +210,10 @@ namespace OpenUtau.Core.Vocaloid {
                 double absMs = t0 + b0 * 1000.0 / SampleRate;
                 double idx = (phrase.timeAxis.MsPosToNonExactTickPos(absMs) - pitchStart) / 5.0;
                 double genderCurve = Curve(phrase.gender, idx);
-                double breath = Math.Clamp(Curve(phrase.breathiness, idx) / 100.0, 0.0, 1.0);
+                double breath = Math.Clamp(Curve(phrase.breathiness, idx) / 100.0 + profile.BaseBreath, 0.0, 1.0);
                 double tension = Math.Clamp(Curve(phrase.tension, idx) / 100.0, -1.0, 1.0);
                 double fScale = Math.Pow(2.0, Math.Clamp(genderCurve / 100.0, -1.0, 1.0) * 0.3);
+                fScale *= profile.FormantScale;
                 tF1 *= fScale; tF2 *= fScale; tF3 *= fScale;
 
                 // ── suavizado ──────────────────────────────────────────────
@@ -190,6 +221,11 @@ namespace OpenUtau.Core.Vocaloid {
                 f1 += (tF1 - f1) * a; f2 += (tF2 - f2) * a; f3 += (tF3 - f3) * a;
                 voice += (vT - voice) * (1.0 - Math.Exp(-BlockMs / (vT < voice ? 12.0 : 4.0)));
                 noise += (nT - noise) * (1.0 - Math.Exp(-BlockMs / 2.5));
+                nasal += (nasT - nasal) * (1.0 - Math.Exp(-BlockMs / 10.0));
+                rng ^= rng << 13; rng ^= rng >> 17; rng ^= rng << 5;
+                jit += ((rng / 2147483648.0 - 1.0) - jit) * 0.12;
+                rng ^= rng << 13; rng ^= rng >> 17; rng ^= rng << 5;
+                shim += ((rng / 2147483648.0 - 1.0) - shim) * 0.05;
                 double ah = 1.0 - Math.Exp(-BlockMs / 8.0);
                 noiseHz += (tHz - noiseHz) * ah;
                 noiseBw += (tBw - noiseBw) * ah;
@@ -214,15 +250,24 @@ namespace OpenUtau.Core.Vocaloid {
 
                 // vocales cerradas suenan más flojas con filtros de ganancia unidad en continua
                 double comp = Math.Min(2.6, Math.Pow(800.0 / Math.Max(f1, 200.0), 1.1));
-                double tp = Math.Clamp(0.40 - 0.08 * tension, 0.28, 0.5);
+                double tp = Math.Clamp(0.40 + profile.OpenQuotient - 0.08 * tension, 0.28, 0.5);
+
+                // antirresonancia de las nasales (muesca alrededor de 1 kHz)
+                double nw = 2.0 * Math.PI * 1000.0 / SampleRate;
+                double nal = Math.Sin(nw) / 3.0;
+                double nb0 = 1.0 / (1.0 + nal);
+                double nb1 = -2.0 * Math.Cos(nw) / (1.0 + nal);
+                double na2 = (1.0 - nal) / (1.0 + nal);
                 const double tn = 0.16;
 
-                double fa = F0At(phrase, pitches, t0, b0, pitchStart);
-                double fb = F0At(phrase, pitches, t0, b0 + Block, pitchStart);
+                double fa = F0At(phrase, pitches, t0, b0, pitchStart) * (1.0 + profile.Jitter * jit * 3.0);
+                double fb = F0At(phrase, pitches, t0, b0 + Block, pitchStart) * (1.0 + profile.Jitter * jit * 3.0);
+                double shimmer = 1.0 + profile.Shimmer * shim;
 
                 if (silent) {
                     Array.Clear(ry1, 0, 5); Array.Clear(ry2, 0, 5);
                     bpx1 = bpx2 = bpy1 = bpy2 = 0;
+                    nx1 = nx2 = ny1 = ny2 = 0;
                 }
                 int end = Math.Min(Block, total - b0);
                 for (int k = 0; k < end; k++) {
@@ -242,17 +287,23 @@ namespace OpenUtau.Core.Vocaloid {
                         gPrev = g;
                         ex = ex * (1.0 - 0.6 * breath) + nz * 0.15 * breath + nz * 0.01;
 
-                        double x = ex * voice * comp;
+                        double x = ex * voice * comp * shimmer;
                         for (int r = 0; r < 5; r++) {
                             double y = ra[r] * x + rb[r] * ry1[r] + rc[r] * ry2[r];
                             ry2[r] = ry1[r]; ry1[r] = y; x = y;
+                        }
+                        if (nasal > 1e-3) {
+                            double yn = nb0 * x + nb1 * nx1 + nb0 * nx2 - nb1 * ny1 - na2 * ny2;
+                            nx2 = nx1; nx1 = x; ny2 = ny1; ny1 = yn;
+                            x = x * (1.0 - nasal) + yn * nasal;
                         }
                         double xn = nz * 0.7;
                         double yb = bb0 * xn - bb0 * bpx2 - ba1 * bpy1 - ba2 * bpy2;
                         bpx2 = bpx1; bpx1 = xn; bpy2 = bpy1; bpy1 = yb;
                         sample = x + yb * noise * 1.6;
                     }
-                    output[b0 + k] = (float)Math.Tanh(sample);
+                    lp += (sample - lp) * lpA;
+                    output[b0 + k] = (float)Math.Tanh(lp);
                 }
             }
             return output;
