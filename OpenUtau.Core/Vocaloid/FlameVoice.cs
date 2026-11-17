@@ -73,7 +73,7 @@ namespace OpenUtau.Core.Vocaloid {
         }
 
         /// <summary>Genera el audio mono de 44100 Hz de la frase. samples[0] cae en positionMs - leadingMs.</summary>
-        public static float[] Synthesize(RenderPhrase phrase, double tailMs, CancellationToken token, FlameVoiceProfile? profile = null, VocaloidSampleBank? bank = null) {
+        public static float[] Synthesize(RenderPhrase phrase, double tailMs, CancellationToken token, FlameVoiceProfile? profile = null, VocaloidSampleBank? bank = null, VocaloidArticulationBank? art = null) {
             profile ??= FlameVoiceProfile.Generic;
             double t0 = phrase.positionMs - phrase.leadingMs;
             int total = Math.Max(1, (int)Math.Ceiling((phrase.durationMs + phrase.leadingMs + tailMs) * SampleRate / 1000.0));
@@ -111,6 +111,50 @@ namespace OpenUtau.Core.Vocaloid {
                     samplerMix ??= new float[total];
                     for (int i = 0; i < piece.Length; i++) {
                         int di = segStart + i;
+                        if (di >= 0 && di < total) samplerMix[di] += piece[i] * sg.Volume;
+                    }
+                    sg.UseSampler = true;
+                }
+            }
+
+            // Consonantes (oclusivas, africadas y fricativas) con las articulaciones reales del banco.
+            // Si la consonante desemboca en una vocal (silaba CV) se alinea su final con la vocal;
+            // si no, es una consonante final y se alinea su principio con el segmento.
+            if (art != null) {
+                for (int si = 0; si < segs.Count; si++) {
+                    Seg sg = segs[si];
+                    PhonemeClass cls = sg.Spec.Class;
+                    if (cls != PhonemeClass.Plosive && cls != PhonemeClass.Affricate && cls != PhonemeClass.Fricative) continue;
+                    int segStart = (int)Math.Round(sg.StartMs * SampleRate / 1000.0);
+                    int segEnd = (int)Math.Round(sg.EndMs * SampleRate / 1000.0);
+                    int slot = segEnd - segStart;
+                    if (slot < 200 || segStart >= total) continue;
+
+                    int nx = sg.NextSonorant;
+                    bool onset = nx >= 0 && segs[nx].Spec.Class == PhonemeClass.Vowel
+                        && segs[nx].StartMs - sg.EndMs < 30.0;
+
+                    float[]? piece;
+                    int dest;
+                    if (onset) {
+                        string ctx = VocaloidArticulationBank.VowelBase(segs[nx].Symbol);
+                        double tf0 = F0At(phrase, pitches, t0, segEnd, pitchStart);
+                        piece = art.Render(sg.Symbol, ctx, tf0, sg.Spec.Voiced, slot + VocaloidArticulationBank.OverlapSamples, true);
+                        if (piece == null) continue;
+                        dest = segEnd + VocaloidArticulationBank.OverlapSamples - piece.Length;
+                    } else {
+                        string ctx = "a";
+                        for (int pj = si - 1; pj >= 0; pj--) {
+                            if (segs[pj].Spec.Class == PhonemeClass.Vowel) { ctx = VocaloidArticulationBank.VowelBase(segs[pj].Symbol); break; }
+                        }
+                        double tf0 = F0At(phrase, pitches, t0, segStart, pitchStart);
+                        piece = art.Render(sg.Symbol, ctx, tf0, sg.Spec.Voiced, Math.Max(slot, 3100), false);
+                        if (piece == null) continue;
+                        dest = segStart;
+                    }
+                    samplerMix ??= new float[total];
+                    for (int i = 0; i < piece.Length; i++) {
+                        int di = dest + i;
                         if (di >= 0 && di < total) samplerMix[di] += piece[i] * sg.Volume;
                     }
                     sg.UseSampler = true;
@@ -226,7 +270,7 @@ namespace OpenUtau.Core.Vocaloid {
                     }
                     vT *= seg.Volume;
                     nT *= seg.Volume;
-                    if (seg.UseSampler) vT = 0;   // la voz la pone el banco
+                    if (seg.UseSampler) { vT = 0; nT = 0; }   // el audio lo pone el banco
                 }
 
                 // ── curvas de la frase (índices cada 5 ticks) ──────────────
