@@ -54,6 +54,8 @@ namespace OpenUtau.Core.Vocaloid {
             public double EndMs;
             public float Volume = 1f;
             public int NextSonorant = -1;
+            public string Symbol = string.Empty;
+            public bool UseSampler;
         }
 
         private static float Smooth(float x) {
@@ -71,7 +73,7 @@ namespace OpenUtau.Core.Vocaloid {
         }
 
         /// <summary>Genera el audio mono de 44100 Hz de la frase. samples[0] cae en positionMs - leadingMs.</summary>
-        public static float[] Synthesize(RenderPhrase phrase, double tailMs, CancellationToken token, FlameVoiceProfile? profile = null) {
+        public static float[] Synthesize(RenderPhrase phrase, double tailMs, CancellationToken token, FlameVoiceProfile? profile = null, VocaloidSampleBank? bank = null) {
             profile ??= FlameVoiceProfile.Generic;
             double t0 = phrase.positionMs - phrase.leadingMs;
             int total = Math.Max(1, (int)Math.Ceiling((phrase.durationMs + phrase.leadingMs + tailMs) * SampleRate / 1000.0));
@@ -84,7 +86,7 @@ namespace OpenUtau.Core.Vocaloid {
                 double s = phone.positionMs - t0;
                 double e = phone.endMs - t0;
                 if (e <= s) e = s + 1.0;
-                segs.Add(new Seg { Spec = spec, StartMs = s, EndMs = e, Volume = Math.Clamp(phone.volume, 0f, 2f) });
+                segs.Add(new Seg { Spec = spec, Symbol = phone.phoneme, StartMs = s, EndMs = e, Volume = Math.Clamp(phone.volume, 0f, 2f) });
             }
             for (int i = 0; i < segs.Count; i++) {
                 for (int j = i + 1; j < segs.Count; j++) {
@@ -94,6 +96,26 @@ namespace OpenUtau.Core.Vocaloid {
 
             int pitchStart = phrase.position - phrase.leading;
             float[] pitches = phrase.pitches;
+
+            // Vocales y nasales con muestras reales del banco (PSOLA); lo demás lo hace Flame.
+            float[]? samplerMix = null;
+            if (bank != null) {
+                foreach (Seg sg in segs) {
+                    if (sg.Spec.Class != PhonemeClass.Vowel && sg.Spec.Class != PhonemeClass.Nasal) continue;
+                    int segStart = (int)Math.Round(sg.StartMs * SampleRate / 1000.0);
+                    int segLen = (int)Math.Round((sg.EndMs - sg.StartMs) * SampleRate / 1000.0);
+                    if (segLen < 200 || segStart >= total) continue;
+                    float[]? piece = bank.Render(sg.Symbol, segLen,
+                        x => F0At(phrase, pitches, t0, segStart + x, pitchStart));
+                    if (piece == null) continue;
+                    samplerMix ??= new float[total];
+                    for (int i = 0; i < piece.Length; i++) {
+                        int di = segStart + i;
+                        if (di >= 0 && di < total) samplerMix[di] += piece[i] * sg.Volume;
+                    }
+                    sg.UseSampler = true;
+                }
+            }
 
             // ── estado ─────────────────────────────────────────────────────
             double f1 = 500, f2 = 1500, f3 = 2500;
@@ -204,6 +226,7 @@ namespace OpenUtau.Core.Vocaloid {
                     }
                     vT *= seg.Volume;
                     nT *= seg.Volume;
+                    if (seg.UseSampler) vT = 0;   // la voz la pone el banco
                 }
 
                 // ── curvas de la frase (índices cada 5 ticks) ──────────────
@@ -303,7 +326,9 @@ namespace OpenUtau.Core.Vocaloid {
                         sample = x + yb * noise * 1.6;
                     }
                     lp += (sample - lp) * lpA;
-                    output[b0 + k] = (float)Math.Tanh(lp);
+                    double mixed = lp;
+                    if (samplerMix != null) mixed += samplerMix[b0 + k];
+                    output[b0 + k] = (float)Math.Tanh(mixed);
                 }
             }
             return output;

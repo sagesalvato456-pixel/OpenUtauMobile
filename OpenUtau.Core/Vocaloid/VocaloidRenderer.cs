@@ -8,7 +8,8 @@
 // .ddb/.ddi reales son binarios propios de VOCALOID, así que el resultado era siempre
 // silencio. Además colocaba los fonemas uno tras otro en vez de en su posición.
 //
-// Ahora: cada fonema se coloca en su posición real y se sintetiza con FlameVoice (glotis +
+// Ahora: cada fonema se coloca en su posición real; las vocales y nasales salen de las muestras
+// reales del banco (VocaloidSampleBank, PSOLA) y lo demás se sintetiza con FlameVoice (glotis +
 // formantes + ruido), siguiendo la curva de pitch de la frase (vibrato y PITD incluidos),
 // DYN, GENC, BREC y TENC. El audio sale aunque el banco no se pueda leer.
 // Las muestras reales del .ddb necesitan un decodificador aparte (ver VOCALOID-SUPPORT.md).
@@ -67,7 +68,10 @@ namespace OpenUtau.Core.Vocaloid {
                     FlameVoiceProfile profile = phrase.singer is DefaultLoidSinger loid
                         ? loid.Profile
                         : FlameVoiceProfile.Generic;
-                    samples = FlameVoice.Synthesize(phrase, kTailMs, cancellation.Token, profile);
+                    VocaloidSampleBank? bank = phrase.singer is VocaloidSinger vocaloidSinger
+                        ? VocaloidSampleBank.ForSinger(vocaloidSinger)
+                        : null;
+                    samples = FlameVoice.Synthesize(phrase, kTailMs, cancellation.Token, profile, bank);
                 } catch (Exception ex) {
                     Log.Error(ex, "[VocaloidRenderer] render failed");
                     samples = new float[Math.Max(1, (int)Math.Ceiling(

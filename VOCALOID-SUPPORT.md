@@ -56,3 +56,16 @@ Not done: decoding the real `.ddb`/`.ddi` samples (the format is proprietary and
 ## Themes
 
 Settings, Appearance, preset swatches: VOCALOID1 to VOCALOID6 (seed colors in `ThemeSeedPresets`).
+
+## Real samples (VocaloidSampleBank)
+
+Format verified on MIKU_V4X_EVEC (V4X, 2.3 GB). Hybrid mode: stationary vowels and nasals come from the bank, consonants and transitions still use Flame.
+
+- `.vvd`: text obfuscated with XOR 0x1A (spaces and CRLF untouched): ID, FORMAT, VOICEIDSTR, VOICENAME and the voice parameters.
+- `.ddb`: chain of chunks `[tag(4) size(u32) ...]`, 229232 chunks that end exactly at the end of the file.
+  - `FRM2`: frame of 256 samples at 44100 Hz. Header: type (u32 @8), time in seconds (double @0x0c), `0x20` = start of the tables (@0x18), `350` = capacity (@0x1c). Tables of 350 floats: harmonic frequencies @0x20, amplitude in dB @0x598 (padding 10000), phase in radians @0xb10. f0 (float) @0x1088, then `ENV ` sub-chunks. A frame of 32 bytes = no voice.
+  - `SND `: `[tag, size, 44100(u32), channels(u16), samples(u32)]` (18 bytes) followed by int16 PCM.
+- `.ddi`: `DBSe` header, `PHDC` = 133 phoneme names in 31-byte slots from 0x2c, `PHG2` groups, `TDB `/`TMM `/`ARR ` tree (pitch, dynamics, opening), `ART`/`SND`/`EpR`/`STA` records.
+  - Stationary record: `EpR 0xFFFFFFFF N`, N u64 pointers to frames, `[44100 u32][channels u16][samples u32][u64 pointer]`. The pointer addresses sample 1024 of the SND, so the SND starts at `pointer - 2066`. The PCM has 4 frames of margin before and 4 after the N frames. Then 16 bytes, `u32 = 1`, `c` (1 byte), `nameLen` (u32), `name`.
+  - 144 records = 36 phonemes (12 sonorants x variants plain, #2, #6) x 4 pitches (about C4, E4, G4 and C5). Only the 4th record of each group carries the name.
+- Not decoded yet: the ~5700 articulation samples (`ART` records) that hold consonants and transitions, the `ENV` and `TMM` tables.

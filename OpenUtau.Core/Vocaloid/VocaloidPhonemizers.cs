@@ -248,22 +248,28 @@ namespace OpenUtau.Core.Vocaloid {
                 case "s": list.Add(v == 'i' ? "S" : "s"); break;
                 case "z": list.Add(v == 'i' ? "dZ" : "dz"); break;
                 case "j": list.Add("dZ"); break;
+                case "k": list.Add(v == 'i' ? "k'" : "k"); break;
+                case "g": list.Add(v == 'i' ? "g'" : "g"); break;
+                case "b": list.Add(v == 'i' ? "b'" : "b"); break;
+                case "p": list.Add(v == 'i' ? "p'" : "p"); break;
+                case "m": list.Add(v == 'i' ? "m'" : "m"); break;
                 case "t": list.Add(v == 'i' ? "tS" : v == 'u' ? "ts" : "t"); break;
                 case "n": list.Add(v == 'i' ? "J" : "n"); break;
                 case "h": list.Add(v == 'i' ? "C" : v == 'u' ? "F" : "h"); break;
                 case "f": list.Add("F"); break;
-                case "r": list.Add("4"); break;
+                case "r": list.Add(v == 'i' ? "4'" : "4"); break;
                 case "y": list.Add("j"); break;
                 case "sh": list.Add("S"); break;
                 case "ch": list.Add("tS"); break;
-                case "ky": list.Add("k"); list.Add("j"); break;
-                case "gy": list.Add("g"); list.Add("j"); break;
+                // consonantes palatalizadas nativas del banco JA (k' g' p' b' m' 4')
+                case "ky": list.Add("k'"); break;
+                case "gy": list.Add("g'"); break;
                 case "ny": list.Add("J"); break;
                 case "hy": list.Add("C"); break;
-                case "by": list.Add("b"); list.Add("j"); break;
-                case "py": list.Add("p"); list.Add("j"); break;
-                case "my": list.Add("m"); list.Add("j"); break;
-                case "ry": list.Add("4"); list.Add("j"); break;
+                case "by": list.Add("b'"); break;
+                case "py": list.Add("p'"); break;
+                case "my": list.Add("m'"); break;
+                case "ry": list.Add("4'"); break;
                 default: list.Add(prefix); break; // k g b p m d w v ts
             }
             list.Add(vow);
