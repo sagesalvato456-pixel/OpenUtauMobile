@@ -1,0 +1,122 @@
+name: OpenLoid-Flame — Android Build
+
+on:
+  push:
+    branches:
+      - main
+      - flame/**
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version string (e.g. 1.0.0-flame)'
+        required: true
+        default: '1.0.0-flame'
+      build_number:
+        description: 'Build number'
+        required: true
+        default: '1'
+      release_signing:
+        description: 'Use release keystore (requires secrets)'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  # ── derive build metadata ───────────────────────────────────────────────────
+  meta:
+    name: Build metadata
+    runs-on: ubuntu-latest
+    outputs:
+      version:      ${{ steps.meta.outputs.version }}
+      build_number: ${{ steps.meta.outputs.build_number }}
+      source_sha:   ${{ steps.meta.outputs.source_sha }}
+      run_id:       ${{ github.run_id }}
+    steps:
+      - name: Checkout (shallow, for SHA)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - id: meta
+        name: Resolve version + build number
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+            BUILD_NUMBER="${{ github.event.inputs.build_number }}"
+          elif [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            VERSION="${GITHUB_REF#refs/tags/v}"
+            # use the timestamp as build number for tag builds
+            BUILD_NUMBER="$(date -u +'%Y%m%d%H%M')"
+          else
+            VERSION="0.0.0-dev"
+            BUILD_NUMBER="${{ github.run_number }}"
+          fi
+          echo "version=$VERSION"       >> "$GITHUB_OUTPUT"
+          echo "build_number=$BUILD_NUMBER" >> "$GITHUB_OUTPUT"
+          echo "source_sha=${{ github.sha }}" >> "$GITHUB_OUTPUT"
+
+  # ── arm64 (the one that actually runs on modern android phones) ─────────────
+  android-arm64:
+    name: Android arm64
+    needs: meta
+    uses: ./.github/workflows/build-android.yml
+    with:
+      version:         ${{ needs.meta.outputs.version }}
+      build_number:    ${{ fromJson(needs.meta.outputs.build_number) }}
+      source_sha:      ${{ needs.meta.outputs.source_sha }}
+      action_run_id:   ${{ needs.meta.outputs.run_id }}
+      arch:            arm64
+      rid:             android-arm64
+      version_lyrics:  'flame build'
+      release_signing: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/') }}
+    secrets:
+      ANDROID_KEYSTORE_BASE64:  ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+      ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+      ANDROID_KEY_ALIAS:        ${{ secrets.ANDROID_KEY_ALIAS }}
+      ANDROID_KEY_PASSWORD:     ${{ secrets.ANDROID_KEY_PASSWORD }}
+
+  # ── arm32 (older/cheaper devices) ──────────────────────────────────────────
+  android-arm:
+    name: Android arm32
+    needs: meta
+    uses: ./.github/workflows/build-android.yml
+    with:
+      version:         ${{ needs.meta.outputs.version }}
+      build_number:    ${{ fromJson(needs.meta.outputs.build_number) }}
+      source_sha:      ${{ needs.meta.outputs.source_sha }}
+      action_run_id:   ${{ needs.meta.outputs.run_id }}
+      arch:            arm
+      rid:             android-arm
+      version_lyrics:  'flame build'
+      release_signing: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/') }}
+    secrets:
+      ANDROID_KEYSTORE_BASE64:  ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+      ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+      ANDROID_KEY_ALIAS:        ${{ secrets.ANDROID_KEY_ALIAS }}
+      ANDROID_KEY_PASSWORD:     ${{ secrets.ANDROID_KEY_PASSWORD }}
+
+  # ── x64 (emulator / chromebook) ────────────────────────────────────────────
+  android-x64:
+    name: Android x64
+    needs: meta
+    uses: ./.github/workflows/build-android.yml
+    with:
+      version:         ${{ needs.meta.outputs.version }}
+      build_number:    ${{ fromJson(needs.meta.outputs.build_number) }}
+      source_sha:      ${{ needs.meta.outputs.source_sha }}
+      action_run_id:   ${{ needs.meta.outputs.run_id }}
+      arch:            x64
+      rid:             android-x64
+      version_lyrics:  'flame build'
+      release_signing: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/') }}
+    secrets:
+      ANDROID_KEYSTORE_BASE64:  ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+      ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+      ANDROID_KEY_ALIAS:        ${{ secrets.ANDROID_KEY_ALIAS }}
+      ANDROID_KEY_PASSWORD:     ${{ secrets.ANDROID_KEY_PASSWORD }}

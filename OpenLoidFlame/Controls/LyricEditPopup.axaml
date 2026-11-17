@@ -1,0 +1,100 @@
+<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:foundation="clr-namespace:OpenLoidFlame.Themes.OpenLoidFlame.Tokens.Foundation"
+    xmlns:semantic="clr-namespace:OpenLoidFlame.Themes.OpenLoidFlame.Tokens.Semantic"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:OpenLoidFlame.ViewModels"
+    xmlns:dialogs="clr-namespace:OpenLoidFlame.Controls"
+    mc:Ignorable="d"
+    x:Class="OpenLoidFlame.Controls.LyricEditPopup"
+    d:DataContext="{d:DesignInstance Type=vm:LyricEditViewModel, IsDesignTimeCreatable=False}"
+    x:DataType="vm:LyricEditViewModel"
+    Height="480"
+    Classes="PopupDialogRoot DialogHeightList">
+    <UserControl.Styles>
+        <Style Selector="ListBoxItem">
+            <Setter Property="MinHeight" Value="{x:Static semantic:InteractionTokens.TouchTarget}" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+    </UserControl.Styles>
+    <dialogs:DialogShell CloseCommand="{Binding CancelCommand}" Header="{DynamicResource LyricEdit.Title}">
+        <dialogs:DialogShell.Footer>
+            <dialogs:DialogActionRow>
+                <Button
+                    Command="{Binding CancelCommand}"
+                    Classes="DialogAction"
+                    Content="{DynamicResource Common.Cancel}" />
+                <Button dialogs:DialogShell.IsDefaultAction="True"
+                    Command="{Binding NextCommand}"
+                    Classes="DialogAction"
+                    Content="{DynamicResource Common.Next}"
+                    ToolTip.Tip="{Binding NextButtonTooltip}" />
+                <Button
+                    Command="{Binding ConfirmCommand}"
+                    Classes="DialogAction DialogPrimary"
+                    Content="{DynamicResource Common.Confirm}" />
+            </dialogs:DialogActionRow>
+        </dialogs:DialogShell.Footer>
+        <Border Classes="DialogBodyBorder">
+            <!-- 输入区使用固定的 Auto 行，候选变化只影响下方星号行。 -->
+            <Grid RowDefinitions="Auto,Auto,*" RowSpacing="{x:Static foundation:LayoutTokens.SpaceSM}">
+                <TextBlock
+                    Grid.Row="0"
+                    Text="{Binding CurrentNoteInfo}"
+                    FontSize="13"
+                    Foreground="{DynamicResource Sem.Color.OnSurfaceVariant}" />
+                <TextBox
+                    x:Name="LyricInput"
+                    Grid.Row="1"
+                    Text="{Binding CurrentLyric, Mode=TwoWay}"
+                    PlaceholderText="{DynamicResource LyricEdit.Watermark}"
+                    TextInputOptions.ReturnKeyType="Next"
+                    CornerRadius="{x:Static foundation:ShapeTokens.CornerM}"
+                    FontSize="14"
+                    BorderThickness="1"
+                    Padding="12,8">
+                </TextBox>
+                <Grid Grid.Row="2" MinHeight="0">
+                    <ListBox
+                        ItemsSource="{Binding Suggestions}"
+                        SelectedItem="{Binding SelectedSuggestion, Mode=TwoWay}"
+                        SelectionMode="Single"
+                        Background="Transparent"
+                        ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate x:DataType="vm:LyricSuggestion">
+                                <Border Padding="{x:Static foundation:LayoutTokens.InsetS}">
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{x:Static foundation:LayoutTokens.SpaceS}">
+                                        <TextBlock
+                                            Grid.Column="0"
+                                            Text="{Binding Alias}"
+                                            VerticalAlignment="Center"
+                                            TextTrimming="CharacterEllipsis" />
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            MaxWidth="120"
+                                            Text="{Binding Source}"
+                                            VerticalAlignment="Center"
+                                            Foreground="{DynamicResource Sem.Color.OnSurfaceVariant}"
+                                            FontSize="12"
+                                            TextTrimming="CharacterEllipsis" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <TextBlock
+                        Text="{Binding SuggestionStatus}"
+                        IsVisible="{Binding SuggestionStatus, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        TextAlignment="Center"
+                        TextWrapping="Wrap"
+                        Foreground="{DynamicResource Sem.Color.OnSurfaceVariant}" />
+                </Grid>
+            </Grid>
+        </Border>
+    </dialogs:DialogShell>
+</UserControl>

@@ -1,0 +1,80 @@
+name: PR Build
+
+on:
+  pull_request:
+    branches:
+      - dev
+
+permissions:
+  contents: read
+
+jobs:
+  android-build:
+    name: PR build test for Android ARM64
+    env:
+      AVALONIA_TELEMETRY_OPTOUT: "1"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          persist-credentials: false
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Setup Android SDK command-line tools
+        uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools platforms;android-36 build-tools;36.0.0'
+          log-accepted-android-sdk-licenses: false
+
+      - name: Install Android workload
+        run: dotnet workload install android
+
+      - name: Setup native Bazel build tools
+        uses: ./.github/actions/setup-worldline
+
+      - name: Install Android native toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          command -v sdkmanager
+          NDK_VERSION="$(tr -d '\r\n' < native/game/android-ndk-version.txt)"
+          SDK_ROOT="${ANDROID_HOME:-${ANDROID_SDK_ROOT:?Android SDK is required}}"
+          sdkmanager --sdk_root="$SDK_ROOT" "ndk;$NDK_VERSION"
+          test -f "$SDK_ROOT/ndk/$NDK_VERSION/source.properties"
+          echo "OPUM_ANDROID_NDK=$SDK_ROOT/ndk/$NDK_VERSION" >> "$GITHUB_ENV"
+
+      - name: Restore
+        run: dotnet restore OpenLoidFlame.Android/OpenLoidFlame.Android.csproj -r android-arm64 -p:Configuration=Release
+
+      - name: Build Android ARM64
+        run: |
+          dotnet build OpenLoidFlame.Android/OpenLoidFlame.Android.csproj \
+            -c Release \
+            -f net10.0-android36.0 \
+            --no-restore \
+            -p:RuntimeIdentifier=android-arm64 \
+            -p:AndroidNdkDirectory="$OPUM_ANDROID_NDK"
+
+      - name: Verify Android native packaging
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t APKS < <(find OpenLoidFlame.Android/bin/Release/net10.0-android36.0/android-arm64 -maxdepth 1 -type f -iname '*-signed.apk')
+          if [ "${#APKS[@]}" -ne 1 ]; then
+            echo "::error::Expected exactly one signed APK; found ${#APKS[@]}"
+            exit 1
+          fi
+          python native/verify-android-runtime.py "${APKS[0]}" android-arm64

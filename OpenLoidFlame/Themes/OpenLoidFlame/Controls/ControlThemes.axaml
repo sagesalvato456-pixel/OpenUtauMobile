@@ -1,0 +1,91 @@
+<Styles
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:CompileBindings="False">
+
+    <Styles.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/AdornerLayer.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/Button.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/CommandBar.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/CarouselPage.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/ContentPage.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/DrawerPage.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/NavigationPage.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/TabbedPage.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/RadioButton.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/Expander.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/ProgressBar.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/AutoCompleteBox.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/ButtonSpinner.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/Calendar.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/CalendarButton.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/CalendarDatePicker.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/CalendarDayButton.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/CalendarItem.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/Carousel.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/CheckBox.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/FlyoutPresenter.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/GroupBox.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/GridSplitter.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/HyperlinkButton.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/ItemsControl.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/Label.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/ListBox.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/ListBoxItem.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/MenuScrollViewer.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/Menu.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/MenuItem.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/MenuFlyoutPresenter.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/NotificationCard.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/NumericUpDown.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/OverlayPopupHost.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/PopupRoot.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/PathIcon.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/PipsPager.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/RepeatButton.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/ScrollBar.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/ScrollViewer.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/Separator.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/SplitButton.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/SplitView.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/TabControl.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/TabItem.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/TableView.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/TableViewCell.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/TableViewColumnHeader.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/TableViewRow.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/TabStrip.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/TabStripItem.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/TextBox.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/ToggleButton.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/ToggleSwitch.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/ToolTip.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/TransitioningContentControl.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/TreeView.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/TreeViewItem.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/WindowNotificationManager.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/Window.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/WindowDrawnDecorations.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/ComboBox.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/ComboBoxItem.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/ContextMenu.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/DataValidationErrors.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/DateTimePickerShared.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/DatePicker.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/TimePicker.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/DropDownButton.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/EmbeddableControlRoot.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/Slider.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/ManagedFileChooser.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/SelectableTextBlock.axaml"/>
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/RefreshContainer.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/RefreshVisualizer.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/ThemeVariantScope.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/HeaderedContentControl.axaml" />
+                <MergeResourceInclude Source="avares://OpenLoidFlame/Themes/OpenLoidFlame/Controls/TextSelectionHandle.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Styles.Resources>
+</Styles>

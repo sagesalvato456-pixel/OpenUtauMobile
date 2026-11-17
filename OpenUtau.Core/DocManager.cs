@@ -1,0 +1,698 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.ExceptionServices;
+using System.Threading;
+using System.Threading.Tasks;
+using OpenUtau.Api;
+using OpenUtau.Classic;
+using OpenUtau.Core.DiffSinger;
+using OpenUtau.Core.Editing;
+using OpenUtau.Core.Lib;
+using OpenUtau.Core.Render;
+using OpenUtau.Core.Ustx;
+using OpenUtau.Core.Util;
+using Serilog;
+
+namespace OpenUtau.Core {
+    public struct ValidateOptions {
+        public bool SkipTiming;
+        public UPart Part;
+        public bool SkipPhonemizer;
+        public bool SkipPhoneme;
+    }
+
+    public class DocManager : SingletonBase<DocManager> {
+        DocManager() {
+            Project = new UProject();
+        }
+
+        private Thread mainThread;
+        private TaskScheduler mainScheduler;
+        [ThreadStatic]
+        private static bool synchronousMainThreadDispatch;
+
+        public int playPosTick = 0;
+        public int rangeStartTick = 0;
+        public int rangeEndTick = 0;
+
+        private readonly List<WarningNotification> warnings = new List<WarningNotification>();
+        public IReadOnlyList<WarningNotification> Warnings => warnings;
+
+        public TaskScheduler MainScheduler => mainScheduler;
+        public Action<Action> PostOnUIThread { get; set; }
+        /// <summary>
+        /// Set by the app to run an action at the start of the next frame, so
+        /// commands validate once per frame (see <see cref="QueueValidate"/>).
+        /// </summary>
+        public Action<Action>? RequestFrame { get; set; }
+
+        /// <summary>
+        /// Monotonic revision of the mutable document; bumped by every
+        /// committed write on the UI thread.
+        /// </summary>
+        public Pipeline.DocRevision Revision { get; private set; } = new Pipeline.DocRevision(0);
+        private void BumpRevision() {
+            Revision = new Pipeline.DocRevision(Revision.Value + 1);
+            Pipeline.DocumentSnapshotStore.Inst.SetRevision(Revision);
+        }
+
+        /// <summary>
+        /// Test seam: when set, commands are routed here instead of the normal
+        /// main-thread post/execute path.
+        /// </summary>
+        internal Action<UCommand> CommandSink { get; set; }
+
+        /// <summary>
+        /// Test seam: installs a project without the load notification; returns the
+        /// previous one for restoration.
+        /// </summary>
+        internal UProject TakeProjectForTest(UProject project) {
+            var previous = Project;
+            Project = project;
+            return previous;
+        }
+        public Plugin[] Plugins { get; private set; }
+        public PhonemizerFactory[] PhonemizerFactories { get; private set; }
+        public UProject Project { get; private set; }
+        public bool HasOpenUndoGroup => undoGroup != null;
+        public List<UPart>? PartsClipboard { get; set; }
+        public List<UNote>? NotesClipboard { get; set; }
+        public CurveSelection? CurvesClipboard { get; set; }
+        internal PhonemizerRunner PhonemizerRunner { get; private set; }
+
+        /// <summary>
+        /// Test seam: installs a phonemizer runner for the duration of a test.
+        /// </summary>
+        internal void SetPhonemizerRunnerForTest(PhonemizerRunner runner) {
+            PhonemizerRunner = runner;
+        }
+        public List<Type> ExternalBatchEditTypes { get; private set; } = new List<Type>();
+
+        public void Initialize(Thread mainThread, TaskScheduler mainScheduler) {
+            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler((sender, args) => {
+                CrashSave();
+            });
+            SearchAllPlugins();
+            SearchAllLegacyPlugins();
+            this.mainThread = mainThread;
+            this.mainScheduler = mainScheduler;
+            Util.ThreadGuard.SetUiThread(mainThread);
+            PhonemizerRunner = new PhonemizerRunner(mainScheduler);
+            // The phrase source builder installs itself as the current worker;
+            // without one, parts build their phrases inline.
+            new Pipeline.PhraseSourceBuilder(mainScheduler);
+            RealTimePitchGenerationService.Inst.Initialize();
+        }
+
+        public void SearchAllLegacyPlugins() {
+            try {
+                var stopWatch = Stopwatch.StartNew();
+                Plugins = PluginLoader.LoadAll(PathManager.Inst.PluginsPath);
+                stopWatch.Stop();
+                Log.Information("Search all legacy plugins: {Elapsed}", stopWatch.Elapsed);
+            } catch (Exception e) {
+                Log.Error(e, "Failed to search legacy plugins.");
+                Plugins = new Plugin[0];
+            }
+        }
+
+        public void SearchAllPlugins() {
+            const string kBuiltin = "OpenUtau.Plugin.Builtin.dll";
+            var stopWatch = Stopwatch.StartNew();
+            var files = new List<string>();
+            try {
+                string builtinPath = Path.Combine(AppContext.BaseDirectory, kBuiltin);
+                if (File.Exists(builtinPath)) {
+                    files.Add(builtinPath);
+                }
+                Directory.CreateDirectory(PathManager.Inst.PluginsPath);
+                string oldBuiltin = Path.Combine(PathManager.Inst.PluginsPath, kBuiltin);
+                if (File.Exists(oldBuiltin)) {
+                    File.Delete(oldBuiltin);
+                }
+                SearchPluginInternal(PathManager.Inst.PluginsPath, files);
+            } catch (Exception e) {
+                Log.Error(e, "Failed to search plugins.");
+            }
+            foreach (var file in files) {
+                Assembly assembly;
+                try {
+                    if (!LibraryLoader.IsManagedAssembly(file)) {
+                        Log.Debug("Skipping {File}", file);
+                        continue;
+                    }
+                    assembly = Assembly.LoadFile(file);
+                    // 遍历所有类型
+                    foreach (var type in assembly.GetExportedTypes()) {
+                        // 对于音素器
+                        if (!type.IsAbstract && type.IsSubclassOf(typeof(Phonemizer))) {
+                            PhonemizerFactory.Get(type);
+                        }
+                        // 对于批量编辑工具
+                        if (Path.GetFileName(file) != kBuiltin
+                            && typeof(BatchEdit).IsAssignableFrom(type)
+                            && !type.IsInterface
+                            && !type.IsAbstract
+                            && type.GetConstructor(Type.EmptyTypes) != null) {
+                            ExternalBatchEditTypes.Add(type);
+                        }
+                    }
+                } catch (Exception e) {
+                    Log.Warning(e, "Failed to load {File}.", file);
+                    continue;
+                }
+            }
+            foreach (var type in GetType().Assembly.GetExportedTypes()) {
+                if (!type.IsAbstract && type.IsSubclassOf(typeof(Phonemizer))) {
+                    PhonemizerFactory.Get(type);
+                }
+            }
+            PhonemizerFactory.BuildList();
+            stopWatch.Stop();
+            Log.Information("Search all plugins: {Elapsed}", stopWatch.Elapsed);
+        }
+        private void SearchPluginInternal(string path, List<string> result) {
+            if (Directory.EnumerateFiles(path, "plugin.txt", SearchOption.TopDirectoryOnly).Any()) {
+                return;
+            }
+            result.AddRange(Directory.EnumerateFiles(path, "*.dll", SearchOption.TopDirectoryOnly));
+            var directories = Directory.EnumerateDirectories(path, "*", SearchOption.TopDirectoryOnly);
+            foreach (var directory in directories) {
+                SearchPluginInternal(directory, result);
+            }
+        }
+
+        #region Command Queue
+
+        readonly Deque<UCommandGroup> undoQueue = new Deque<UCommandGroup>();
+        readonly Deque<UCommandGroup> redoQueue = new Deque<UCommandGroup>();
+        UCommandGroup? undoGroup = null;
+        // Validation owed by the commands since the last frame, merged into one.
+        ValidateOptions? pendingValidate;
+        UCommandGroup? savedPoint = null;
+        UCommandGroup? autosavedPoint = null;
+        public bool Recovered { get; set; } = false; // Flag to not overwrite backup file
+
+        public bool ChangesSaved {
+            get {
+                return (Project.Saved || (Project.tracks.Count <= 1 && Project.parts.Count == 0)) &&
+                    (undoQueue.Count > 0 && savedPoint == undoQueue.Last() || undoQueue.Count == 0 && savedPoint == null) &&
+                    !Recovered;
+            }
+        }
+
+
+        private void CrashSave() {
+            try {
+                if (Project == null) {
+                    Log.Warning("Crash save project is null.");
+                    return;
+                }
+                bool untitled = string.IsNullOrEmpty(Project.FilePath);
+                if (untitled) {
+                    Directory.CreateDirectory(PathManager.Inst.BackupsPath);
+                }
+                string dir = untitled
+                    ? PathManager.Inst.BackupsPath
+                    : Path.GetDirectoryName(Project.FilePath);
+                string filename = untitled
+                    ? "Untitled"
+                    : Path.GetFileNameWithoutExtension(Project.FilePath);
+                string backup = Path.Join(dir, filename + "-backup.ustx");
+                Log.Information("Saving backup {Backup}.", backup);
+                Format.Ustx.AutoSave(backup, Project);
+                Log.Information("Saved backup {Backup}.", backup);
+            } catch (Exception e) {
+                Log.Error(e, "Save backup failed.");
+            }
+        }
+
+        public void AutoSave() {
+            if (Project == null) {
+                return;
+            }
+            if (undoQueue.LastOrDefault() == autosavedPoint) {
+                Log.Debug("Autosave skipped.");
+                return;
+            }
+            try {
+                bool untitled = string.IsNullOrEmpty(Project.FilePath);
+                if (untitled) {
+                    Directory.CreateDirectory(PathManager.Inst.BackupsPath);
+                }
+                string dir = untitled
+                    ? PathManager.Inst.BackupsPath
+                    : Path.GetDirectoryName(Project.FilePath);
+                string filename = untitled
+                    ? "Untitled"
+                    : Path.GetFileNameWithoutExtension(Project.FilePath);
+
+                string backup = Path.Join(dir, filename + "-autosave.ustx");
+                Log.Information("Autosave {Backup}.", backup);
+                Format.Ustx.AutoSave(backup, Project);
+                Log.Information("Autosaved {Backup}.", backup);
+                autosavedPoint = undoQueue.LastOrDefault();
+            } catch (Exception e) {
+                Log.Error(e, "Autosave failed.");
+            }
+        }
+
+        // Every validate path: rebuild derived data, release unused singers,
+        // mark the render projections stale.
+        private void ValidateAndRefresh() {
+            // A full validate covers anything pending.
+            pendingValidate = null;
+            Project.ValidateFull();
+            SingerManager.Inst.ReleaseSingersNotInUse(Project);
+            RenderView.Inst.InvalidateAll();
+        }
+
+        public void ExecuteCmd(UCommand cmd) {
+            if (CommandSink != null) {
+                CommandSink(cmd);
+                return;
+            }
+            if (mainThread != Thread.CurrentThread) {
+                // 渲染进度和结果通知正常来自后台，仍由下方统一派发到主线程。
+                if (!synchronousMainThreadDispatch && cmd is not (
+                    ProgressBarNotification or WaveformReadyNotification or
+                    RealCurvesUpdatedNotification or RealCurveCoverageNotification or PartRenderedNotification)) {
+                    Log.Warning("{Command} not on main thread", cmd);
+                }
+                if (synchronousMainThreadDispatch) {
+                    DispatchToMainThreadAndWait(() => ExecuteCmd(cmd));
+                } else {
+                    PostOnUIThread(() => ExecuteCmd(cmd));
+                }
+                return;
+            }
+            Util.ThreadGuard.AssertUi();
+            if (cmd is UNotification) {
+                if (cmd is SaveProjectNotification saveProjectNotif) {
+                    if (undoQueue.Count > 0) {
+                        savedPoint = undoQueue.Last();
+                    }
+                    if (string.IsNullOrEmpty(saveProjectNotif.Path)) {
+                        Format.Ustx.Save(Project.FilePath, Project);
+                    } else {
+                        Format.Ustx.Save(saveProjectNotif.Path, Project);
+                    }
+                } else if (cmd is LoadProjectNotification notification) {
+                    undoQueue.Clear();
+                    redoQueue.Clear();
+                    undoGroup = null;
+                    pendingValidate = null;
+                    savedPoint = null;
+                    autosavedPoint = null;
+                    Project = notification.project;
+                    playPosTick = 0;
+                    rangeStartTick = 0;
+                    rangeEndTick = 0;
+                    SingerManager.Inst.ReleaseSingersNotInUse(Project);
+                    RenderView.Inst.ForgetAll();
+                    Pipeline.DocumentSnapshotStore.Inst.ForgetAll();
+                    BumpRevision();
+                    DiffSingerRealCurveScheduler.CancelAll();
+                } else if (cmd is PhonemizedNotification) {
+                    // Phonemized output is document content (UPhoneme list);
+                    // stamp a new revision for the snapshots taken from it.
+                    BumpRevision();
+                } else if (cmd is SetPlayPosTickNotification setPlayPosTickNotif) {
+                    playPosTick = setPlayPosTickNotif.playPosTick;
+                } else if (cmd is SetRangeSelectionNotification setRange) {
+                    rangeStartTick = setRange.startTick;
+                    rangeEndTick = setRange.endTick;
+                } else if (cmd is WarningNotification warning) {
+                    warnings.RemoveAll(w => w.Key == warning.Key);
+                    warnings.Add(warning);
+                } else if (cmd is ClearWarningsNotification clearWarnings) {
+                    warnings.RemoveAll(w => clearWarnings.key == null || w.Key == clearWarnings.key);
+                } else if (cmd is RealCurvesUpdatedNotification realCurvesNotif) {
+                    if (realCurvesNotif.part is UVoicePart voicePart) {
+                        RealCurveUpdater.Apply(Project, voicePart, realCurvesNotif.updates);
+                    }
+                } else if (cmd is RealCurveCoverageNotification coverageNotif) {
+                    if (coverageNotif.part is UVoicePart coveragePart) {
+                        RealCurveUpdater.TrimToCoverage(Project, coveragePart, coverageNotif.ranges);
+                    }
+                } else if (cmd is SingersChangedNotification) {
+                    SingerManager.Inst.SearchAllSingers();
+                    SingerManager.Inst.ReleaseSingersNotInUse(Project);
+                } else if (cmd is ValidateProjectNotification) {
+                    ValidateAndRefresh();
+                } else if (cmd is SingersRefreshedNotification || cmd is OtoChangedNotification) {
+                    foreach (var track in Project.tracks) {
+                        track.OnSingerRefreshed();
+                    }
+                    ValidateAndRefresh();
+                    if (cmd is OtoChangedNotification) {
+                        ExecuteCmd(new PreRenderNotification());
+                    }
+                }
+                if (cmd is WaveformReadyNotification) {
+                    RenderView.Inst.InvalidateAll();
+                    return;
+                }
+                Publish(cmd);
+                if (!cmd.Silent) {
+                    Log.Debug("Publish notification {Command}", cmd);
+                }
+                return;
+            }
+            if (undoGroup == null) {
+                Log.Error("No active UndoGroup {Command}", cmd);
+                return;
+            }
+            undoGroup.Commands.Add(cmd);
+            lock (Project) {
+                cmd.Execute();
+            }
+            if (!cmd.Silent) {
+                // A drag runs one command per pointer move; EndUndoGroup logs the
+                // group once at Information level.
+                Log.Debug("ExecuteCmd {Command}", cmd);
+            }
+            Publish(cmd);
+            if (!undoGroup.DeferValidate) {
+                Pipeline.DocumentSnapshotStore.Inst.Invalidate(cmd.Impact);
+                QueueValidate(cmd.ValidateOptions);
+                ScheduleRealCurveRefresh(cmd);
+            }
+        }
+
+        /// <summary>
+        /// The commands of a group in order of first appearance, with repeats
+        /// counted, e.g. "Move 1 notes x85, Change 1 notes duration x3".
+        /// </summary>
+        static string DescribeCommands(List<UCommand> commands) {
+            var counts = new Dictionary<string, int>();
+            var order = new List<string>();
+            foreach (var cmd in commands) {
+                string name = cmd.ToString() ?? cmd.GetType().Name;
+                if (counts.TryGetValue(name, out int n)) {
+                    counts[name] = n + 1;
+                } else {
+                    counts[name] = 1;
+                    order.Add(name);
+                }
+            }
+            return string.Join(", ", order.Select(name => counts[name] > 1 ? $"{name} x{counts[name]}" : name));
+        }
+
+        /// <summary>
+        /// Validates after a command at the start of the next frame, together with
+        /// any other commands before it. A drag runs a command on every pointer move,
+        /// often faster than the screen refreshes, and validating costs far more than
+        /// the command itself, so validating once per frame keeps the UI responsive.
+        /// </summary>
+        void QueueValidate(ValidateOptions options) {
+            if (RequestFrame == null) {
+                Project.Validate(options);
+                return;
+            }
+            if (pendingValidate is ValidateOptions pending) {
+                pendingValidate = Merge(pending, options);
+            } else {
+                pendingValidate = options;
+                RequestFrame(FlushValidation);
+            }
+        }
+
+        /// <summary>Runs the validation owed by queued commands, if any.</summary>
+        public void FlushValidation() {
+            if (pendingValidate is ValidateOptions options) {
+                pendingValidate = null;
+                Project.Validate(options);
+            }
+        }
+
+        /// <summary>Validation that covers both: skip a step only if both skip it.</summary>
+        static ValidateOptions Merge(ValidateOptions a, ValidateOptions b) {
+            return new ValidateOptions {
+                SkipTiming = a.SkipTiming && b.SkipTiming,
+                Part = a.Part == b.Part ? a.Part : null,
+                SkipPhonemizer = a.SkipPhonemizer && b.SkipPhonemizer,
+                SkipPhoneme = a.SkipPhoneme && b.SkipPhoneme,
+            };
+        }
+
+        void InvalidateGroup(IEnumerable<UCommand> commands) {
+            foreach (var cmd in commands) {
+                Pipeline.DocumentSnapshotStore.Inst.Invalidate(cmd.Impact);
+            }
+        }
+
+        void ScheduleRealCurveRefresh(UCommand cmd) {
+            if (cmd is not ExpCommand expCommand) {
+                return;
+            }
+            var part = expCommand.Part;
+            if (!Project.parts.Contains(part) ||
+                part.trackNo < 0 ||
+                part.trackNo >= Project.tracks.Count) {
+                return;
+            }
+            Project.tracks[part.trackNo].RendererSettings.Renderer
+                ?.ScheduleRealCurveRefresh(Project, part, cmd);
+        }
+
+        void ScheduleRealCurveRefresh(IEnumerable<UCommand> commands) {
+            foreach (var cmd in commands) {
+                ScheduleRealCurveRefresh(cmd);
+            }
+        }
+
+        public void StartUndoGroup(string? nameKey = null, bool deferValidate = false) {
+            if (mainThread != Thread.CurrentThread && synchronousMainThreadDispatch) {
+                DispatchToMainThreadAndWait(() => StartUndoGroup(nameKey, deferValidate));
+                return;
+            }
+            if (undoGroup != null) {
+                Log.Error("undoGroup already started");
+                EndUndoGroup();
+            }
+            undoGroup = new UCommandGroup(nameKey, deferValidate);
+            Log.Debug("undoGroup started");
+        }
+
+        public void EndUndoGroup() {
+            if (mainThread != Thread.CurrentThread && synchronousMainThreadDispatch) {
+                DispatchToMainThreadAndWait(EndUndoGroup);
+                return;
+            }
+            if (undoGroup == null) {
+                Log.Error("No active undoGroup to end.");
+                return;
+            }
+            FlushValidation();
+            if (undoGroup.Commands.Count > 0) {
+                // The group is committed: bump the document revision. Regular
+                // groups already invalidated per command before their
+                // validates; deferred groups invalidate once below.
+                BumpRevision();
+                undoQueue.AddToBack(undoGroup);
+                redoQueue.Clear();
+            }
+            while (undoQueue.Count > Util.Preferences.Default.UndoLimit) {
+                undoQueue.RemoveFromFront();
+            }
+            if (undoGroup.DeferValidate) {
+                // Deferred groups validated nothing per command: invalidate
+                // once, right before the single validate that follows.
+                InvalidateGroup(undoGroup.Commands);
+                ValidateAndRefresh();
+            }
+            if (undoGroup.Commands.Count > 0) {
+                Log.Information("Undo group {Name}: {Commands}", undoGroup.NameKey, DescribeCommands(undoGroup.Commands));
+            }
+            undoGroup.Merge();
+            ScheduleRealCurveRefresh(undoGroup.Commands);
+            undoGroup = null;
+            ExecuteCmd(new PreRenderNotification());
+        }
+
+        /// <summary>
+        /// 在后台运行批量逻辑，并按调用顺序等待其中的命令在主线程完成。
+        /// </summary>
+        public void RunWithSynchronousMainThreadDispatch(Action action) {
+            if (mainThread == Thread.CurrentThread) {
+                action();
+                return;
+            }
+
+            bool previousValue = synchronousMainThreadDispatch;
+            synchronousMainThreadDispatch = true;
+            try {
+                action();
+            } finally {
+                synchronousMainThreadDispatch = previousValue;
+            }
+        }
+
+        private void DispatchToMainThreadAndWait(Action action) {
+            using ManualResetEventSlim completed = new ManualResetEventSlim(false);
+            Exception? exception = null;
+            PostOnUIThread(() => {
+                try {
+                    action();
+                } catch (Exception caughtException) {
+                    exception = caughtException;
+                } finally {
+                    completed.Set();
+                }
+            });
+            completed.Wait();
+            if (exception != null) {
+                ExceptionDispatchInfo.Capture(exception).Throw();
+            }
+        }
+
+        /// <summary>
+        /// Apply commands without recording undo. Still notifies subscribers.
+        /// </summary>
+        public void ApplyTransient(IEnumerable<UCommand> commands, ValidateOptions? validateOptions = null, bool preRender = true) {
+            if (mainThread != Thread.CurrentThread) {
+                PostOnUIThread(() => ApplyTransient(commands, validateOptions, preRender));
+                return;
+            }
+            var commandList = commands.ToList();
+            BumpRevision();
+            InvalidateGroup(commandList);
+            RealTimePitchGenerationService.SuppressCallbacks = true;
+            try {
+                foreach (var cmd in commandList) {
+                    lock (Project) {
+                        cmd.Execute();
+                    }
+                    Publish(cmd);
+                }
+                if (validateOptions != null) {
+                    Project.Validate(validateOptions.Value);
+                    if (preRender) {
+                        ExecuteCmd(new PreRenderNotification());
+                    }
+                }
+            } finally {
+                RealTimePitchGenerationService.SuppressCallbacks = false;
+            }
+        }
+
+        public void RollBackUndoGroup() {
+            if (undoGroup == null) {
+                Log.Error("No active undoGroup to rollback.");
+                return;
+            }
+            BumpRevision();
+            InvalidateGroup(undoGroup.Commands);
+            for (int i = undoGroup.Commands.Count - 1; i >= 0; i--) {
+                var cmd = undoGroup.Commands[i];
+                cmd.Unexecute();
+                if (i == 0) {
+                    ValidateAndRefresh();
+                }
+                Publish(cmd, true);
+            }
+            ScheduleRealCurveRefresh(undoGroup.Commands);
+            undoGroup.Commands.Clear();
+            ExecuteCmd(new PreRenderNotification());
+        }
+
+        public void Undo() {
+            FlushValidation();
+            if (undoQueue.Count == 0) {
+                return;
+            }
+            var group = undoQueue.RemoveFromBack();
+            BumpRevision();
+            InvalidateGroup(group.Commands);
+            for (int i = group.Commands.Count - 1; i >= 0; i--) {
+                var cmd = group.Commands[i];
+                cmd.Unexecute();
+                if (i == 0) {
+                    ValidateAndRefresh();
+                }
+                Publish(cmd, true);
+            }
+            redoQueue.AddToBack(group);
+            ScheduleRealCurveRefresh(group.Commands);
+            ExecuteCmd(new PreRenderNotification());
+        }
+
+        public void Redo() {
+            FlushValidation();
+            if (redoQueue.Count == 0) {
+                return;
+            }
+            var group = redoQueue.RemoveFromBack();
+            BumpRevision();
+            InvalidateGroup(group.Commands);
+            for (var i = 0; i < group.Commands.Count; i++) {
+                var cmd = group.Commands[i];
+                cmd.Execute();
+                if (i == group.Commands.Count - 1) {
+                    ValidateAndRefresh();
+                }
+                Publish(cmd);
+            }
+            undoQueue.AddToBack(group);
+            ScheduleRealCurveRefresh(group.Commands);
+            ExecuteCmd(new PreRenderNotification());
+        }
+
+        public bool GetUndoState(out string? key) {
+            key = null;
+            if (undoQueue.Count > 0) {
+                key = undoQueue.Last().NameKey;
+                return true;
+            } else {
+                return false;
+            }
+        }
+        public bool GetRedoState(out string? key) {
+            key = null;
+            if (redoQueue.Count > 0) {
+                key = redoQueue.Last().NameKey;
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        # endregion
+
+        # region Command Subscribers
+
+        private readonly object lockObj = new object();
+        private readonly List<ICmdSubscriber> subscribers = new List<ICmdSubscriber>();
+
+        public void AddSubscriber(ICmdSubscriber sub) {
+            lock (lockObj) {
+                if (!subscribers.Contains(sub)) {
+                    subscribers.Add(sub);
+                }
+            }
+        }
+
+        public void RemoveSubscriber(ICmdSubscriber sub) {
+            lock (lockObj) {
+                if (subscribers.Contains(sub)) {
+                    subscribers.Remove(sub);
+                }
+            }
+        }
+
+        private void Publish(UCommand cmd, bool isUndo = false) {
+            lock (lockObj) {
+                foreach (var sub in subscribers) {
+                    sub.OnNext(cmd, isUndo);
+                }
+            }
+        }
+
+        #endregion
+    }
+}

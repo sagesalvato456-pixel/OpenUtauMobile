@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<animated-vector
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector
+                android:name="vector"
+                android:width="320dp"
+                android:height="320dp"
+                android:viewportWidth="512"
+                android:viewportHeight="512">
+            <path
+                    android:name="tile"
+                    android:pathData="M 96 0 L 416 0 A 96 96 0 0 1 512 96 L 512 416 A 96 96 0 0 1 416 512 L 96 512 A 96 96 0 0 1 0 416 L 0 96 A 96 96 0 0 1 96 0 Z"
+                    android:fillColor="#2f2e2e"/>
+            <path
+                    android:name="shade"
+                    android:pathData="M 0 430 L 512 312 L 512 416 A 96 96 0 0 1 416 512 L 96 512 A 96 96 0 0 1 0 416 Z"
+                    android:fillColor="#1c1c1c"/>
+            <path
+                    android:name="v"
+                    android:pathData="M 165 88 L 222 391 L 231 397 L 412 142 L 371 137 L 245 312 L 204 98 Z"
+                    android:fillColor="#ffffff"/>
+        </vector>
+    </aapt:attr>
+    <target android:name="tile">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                    android:propertyName="fillAlpha"
+                    android:duration="500"
+                    android:valueFrom="0"
+                    android:valueTo="1"
+                    android:valueType="floatType"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"/>
+        </aapt:attr>
+    </target>
+    <target android:name="v">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                    android:propertyName="pathData"
+                    android:duration="1200"
+                    android:startOffset="300"
+                    android:valueFrom="M 165 88 L 165 88 L 165 88 L 165 88 L 165 88 L 165 88 L 165 88 Z"
+                    android:valueTo="M 165 88 L 222 391 L 231 397 L 412 142 L 371 137 L 245 312 L 204 98 Z"
+                    android:valueType="pathType"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"/>
+        </aapt:attr>
+    </target>
+</animated-vector>

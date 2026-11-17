@@ -1,0 +1,2596 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Common.Back" xml:space="preserve">
+    <value>戻る</value>
+  </data>
+  <data name="Common.CollapseRail" xml:space="preserve">
+    <value>折りたたむ</value>
+  </data>
+  <data name="Common.Refresh" xml:space="preserve">
+    <value>更新</value>
+  </data>
+  <data name="Common.Cancel" xml:space="preserve">
+    <value>キャンセル</value>
+  </data>
+  <data name="Common.Confirm" xml:space="preserve">
+    <value>確認</value>
+  </data>
+  <data name="Common.Close" xml:space="preserve">
+    <value>閉じる</value>
+  </data>
+  <data name="Common.Next" xml:space="preserve">
+    <value>次へ</value>
+  </data>
+  <data name="Common.Previous" xml:space="preserve">
+    <value>前へ</value>
+  </data>
+  <data name="Common.Skip" xml:space="preserve">
+    <value>スキップ</value>
+  </data>
+  <data name="Common.Delete" xml:space="preserve">
+    <value>削除</value>
+  </data>
+  <data name="Common.Apply" xml:space="preserve">
+    <value>適用</value>
+  </data>
+  <data name="Common.File" xml:space="preserve">
+    <value>ファイル</value>
+  </data>
+  <data name="Common.Edit" xml:space="preserve">
+    <value>編集</value>
+  </data>
+  <data name="Common.Copy" xml:space="preserve">
+    <value>コピー</value>
+  </data>
+  <data name="Common.Cut" xml:space="preserve">
+    <value>カット</value>
+  </data>
+  <data name="Common.Paste" xml:space="preserve">
+    <value>ペースト</value>
+  </data>
+  <data name="Common.SelectAll" xml:space="preserve">
+    <value>すべて選択</value>
+  </data>
+  <data name="Common.Install" xml:space="preserve">
+    <value>インストール</value>
+  </data>
+  <data name="Common.Update" xml:space="preserve">
+    <value>アップデート</value>
+  </data>
+  <data name="Common.Installed" xml:space="preserve">
+    <value>インストール済み</value>
+  </data>
+  <data name="Common.Uninstall" xml:space="preserve">
+    <value>アンインストール</value>
+  </data>
+  <data name="Common.Unknown" xml:space="preserve">
+    <value>不明</value>
+  </data>
+  <data name="Common.Details" xml:space="preserve">
+    <value>詳細</value>
+  </data>
+  <data name="Settings.Title" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="Settings.Nav.EditAndBehaviour" xml:space="preserve">
+    <value>編集と動作</value>
+  </data>
+  <data name="Settings.Nav.EditAndBehaviour.Sub" xml:space="preserve">
+    <value>自動ページめくり…</value>
+  </data>
+  <data name="Settings.Nav.RenderAndPerformance" xml:space="preserve">
+    <value>レンダーとパフォーマンス</value>
+  </data>
+  <data name="Settings.Nav.RenderAndPerformance.Sub" xml:space="preserve">
+    <value>レンダラー、オーディオ出力、ML パラメータ…</value>
+  </data>
+  <data name="Settings.Nav.FileAndStorage" xml:space="preserve">
+    <value>ファイルとストレージ</value>
+  </data>
+  <data name="Settings.Nav.FileAndStorage.Sub" xml:space="preserve">
+    <value>シンガーパス、自動保存…</value>
+  </data>
+  <data name="Settings.Nav.AppearanceAndLanguage" xml:space="preserve">
+    <value>外観と言語</value>
+  </data>
+  <data name="Settings.Nav.AppearanceAndLanguage.Sub" xml:space="preserve">
+    <value>テーマ、言語、立ち絵…</value>
+  </data>
+  <data name="Settings.Edit.PianoKeyBehavior" xml:space="preserve">
+    <value>ピアノキーの動作</value>
+  </data>
+  <data name="Settings.Edit.PianoKeyBehavior.Desc" xml:space="preserve">
+    <value>ピアノキーを押したときの音声出力方式</value>
+  </data>
+  <data name="Settings.Edit.PianoKeyLabelMode" xml:space="preserve">
+    <value>ピアノキーに表示</value>
+  </data>
+  <data name="Settings.Edit.PianoKeyLabelMode.Desc" xml:space="preserve">
+    <value>ピアノキーの音高ラベルの表示方法を選択します</value>
+  </data>
+  <data name="Settings.Edit.SoundFontPath" xml:space="preserve">
+    <value>SoundFont ファイルパス</value>
+  </data>
+  <data name="Settings.Edit.SoundFontPath.Change" xml:space="preserve">
+    <value>選択</value>
+  </data>
+  <data name="Settings.Edit.SoundFontPath.Loaded" xml:space="preserve">
+    <value>✓ 読み込み済み</value>
+  </data>
+  <data name="Settings.Edit.SoundFontPath.NotLoaded" xml:space="preserve">
+    <value>⚠ 未読み込み - 有効な SF2 ファイルを選択してください</value>
+  </data>
+  <data name="Settings.Edit.VerticalScrollBehavior" xml:space="preserve">
+    <value>再生中の縦方向自動スクロール</value>
+  </data>
+  <data name="Settings.Edit.VerticalScrollBehavior.Desc" xml:space="preserve">
+    <value>再生中のノートを追従します。境界モードでは画面外のノートを対応する端から内側 10% の位置へ、中央モードでは画面中央へ滑らかに移動します。</value>
+  </data>
+  <data name="Settings.VerticalScroll.Disabled" xml:space="preserve">
+    <value>オフ</value>
+  </data>
+  <data name="Settings.VerticalScroll.Boundary" xml:space="preserve">
+    <value>境界でスクロール</value>
+  </data>
+  <data name="Settings.VerticalScroll.Center" xml:space="preserve">
+    <value>中央を維持</value>
+  </data>
+  <data name="Settings.Edit.AutoScrollBehavior" xml:space="preserve">
+    <value>自動スクロール動作</value>
+  </data>
+  <data name="Settings.Edit.AutoScrollBehavior.Desc" xml:space="preserve">
+    <value>再生中の自動ページめくり動作の設定</value>
+  </data>
+  <data name="Settings.Edit.AndroidFullscreenMode" xml:space="preserve"><value>全画面表示</value></data>
+  <data name="Settings.Edit.AndroidFullscreenMode.Desc" xml:space="preserve"><value>Android のシステムバーを非表示にするタイミングを選択します。</value></data>
+  <data name="Settings.AndroidFullscreen.Always" xml:space="preserve"><value>常に</value></data>
+  <data name="Settings.AndroidFullscreen.EditorOnly" xml:space="preserve"><value>編集画面のみ</value></data>
+  <data name="Settings.AndroidFullscreen.Off" xml:space="preserve"><value>オフ</value></data>
+  <data name="Settings.Edit.AndroidKeepScreenAwake" xml:space="preserve"><value>編集中は画面をオンに保つ</value></data>
+  <data name="Settings.Edit.AndroidKeepScreenAwake.Desc" xml:space="preserve"><value>編集画面を開いている間、画面のスリープを防ぎます。</value></data>
+  <data name="Settings.Edit.PitchPenCanvasDrag" xml:space="preserve">
+    <value>ピッチ編集時のキャンバスドラッグ</value>
+  </data>
+  <data name="Settings.Edit.PitchPenCanvasDrag.Desc" xml:space="preserve">
+    <value>有効にすると、拡張されたノート判定範囲の外側をドラッグしてキャンバスを移動し、内側ではピッチを編集します。</value>
+  </data>
+  <data name="Settings.Edit.PitchPenHitTickExtension" xml:space="preserve">
+    <value>横方向の判定拡張（Tick）</value>
+  </data>
+  <data name="Settings.Edit.PitchPenHitTickExtension.Desc" xml:space="preserve">
+    <value>ノートの前後の判定範囲を 0～960 Tick 拡張します。</value>
+  </data>
+  <data name="Settings.Edit.PitchPenHitToneExtension" xml:space="preserve">
+    <value>縦方向の判定拡張（半音）</value>
+  </data>
+  <data name="Settings.Edit.PitchPenHitToneExtension.Desc" xml:space="preserve">
+    <value>ノートの上下の判定範囲を 0～12 半音拡張します。</value>
+  </data>
+  <data name="Settings.Edit.PlaybackRefreshRate" xml:space="preserve">
+    <value>再生更新レート</value>
+  </data>
+  <data name="Settings.Edit.PlaybackRefreshRate.Desc" xml:space="preserve">
+    <value>再生中の UI 更新頻度。値が高いほど滑らかですが CPU 使用率が上がります。</value>
+  </data>
+  <data name="Settings.Edit.ShowPortrait" xml:space="preserve">
+    <value>立ち絵を表示</value>
+  </data>
+  <data name="Settings.Edit.ShowPortrait.Desc" xml:space="preserve">
+    <value>ピアノロールでシンガーの立ち絵を表示します。</value>
+  </data>
+  <data name="Settings.Edit.UndoLimit" xml:space="preserve">
+    <value>元に戻す上限</value>
+  </data>
+  <data name="Settings.Edit.UndoLimit.Desc" xml:space="preserve">
+    <value>メモリに保持する元に戻す履歴の最大ステップ数。</value>
+  </data>
+  <data name="Settings.Edit.AutoSave" xml:space="preserve">
+    <value>自動保存</value>
+  </data>
+  <data name="Settings.Edit.AutoSave.Enabled" xml:space="preserve">
+    <value>自動保存を有効にする</value>
+  </data>
+  <data name="Settings.Edit.AutoSave.Desc" xml:space="preserve">
+    <value>編集中にプロジェクトを自動保存する間隔。</value>
+  </data>
+  <data name="Settings.PianoKey.Silent" xml:space="preserve">
+    <value>サイレント</value>
+  </data>
+  <data name="Settings.PianoKey.SineWave" xml:space="preserve">
+    <value>サイン波</value>
+  </data>
+  <data name="Settings.PianoKey.SoundFont" xml:space="preserve">
+    <value>ピアノサンプル (SF2)</value>
+  </data>
+  <data name="Settings.PianoKeyLabel.PitchLabels" xml:space="preserve">
+    <value>音高ラベル</value>
+  </data>
+  <data name="Settings.PianoKeyLabel.TonicPitchLabels" xml:space="preserve">
+    <value>主音の音高ラベルのみ</value>
+  </data>
+  <data name="Settings.PianoKeyLabel.NumberedNotation" xml:space="preserve">
+    <value>数字譜</value>
+  </data>
+  <data name="Settings.AutoScroll.Disabled" xml:space="preserve">
+    <value>自動スクロール無効</value>
+  </data>
+  <data name="Settings.AutoScroll.Enabled" xml:space="preserve">
+    <value>自動スクロール有効</value>
+  </data>
+  <data name="Settings.AutoScroll.Smooth" xml:space="preserve">
+    <value>スムーズスクロール有効</value>
+  </data>
+  <data name="Settings.Edit.StopButtonBehavior" xml:space="preserve">
+    <value>停止ボタンの動作</value>
+  </data>
+  <data name="Settings.Edit.StopButtonBehavior.Desc" xml:space="preserve">
+    <value>再生中および再生後に停止ボタンを押したときの動作を設定します。</value>
+  </data>
+  <data name="Settings.StopButton.StartTickSelectedPartZero" xml:space="preserve">
+    <value>開始位置 → 選択部分 → 0（デフォルト）</value>
+  </data>
+  <data name="Settings.StopButton.StartTickZero" xml:space="preserve">
+    <value>開始位置 → 0</value>
+  </data>
+  <data name="Settings.StopButton.AlwaysZero" xml:space="preserve">
+    <value>常に 0 に移動</value>
+  </data>
+  <data name="Settings.Render.DiffSingerParams" xml:space="preserve">
+    <value>DiffSinger 推論パラメータ</value>
+  </data>
+  <data name="Settings.Render.AcousticSteps" xml:space="preserve">
+    <value>音質モデル推論ステップ数</value>
+  </data>
+  <data name="Settings.Render.AcousticSteps.Desc" xml:space="preserve">
+    <value>音質モデルの推論精度を制御します。値が大きいほど品質は向上しますが速度は低下します（推奨：5-20）</value>
+  </data>
+  <data name="Settings.Render.VarianceSteps" xml:space="preserve">
+    <value>バリアンスモデル推論ステップ数</value>
+  </data>
+  <data name="Settings.Render.VarianceSteps.Desc" xml:space="preserve">
+    <value>バリアンス/表現力モデルの推論精度を制御します（推奨：5-20）</value>
+  </data>
+  <data name="Settings.Render.PitchSteps" xml:space="preserve">
+    <value>ピッチモデル推論ステップ数</value>
+  </data>
+  <data name="Settings.Render.PitchSteps.Desc" xml:space="preserve">
+    <value>ピッチモデルの推論精度を制御します（推奨：5-20）</value>
+  </data>
+  <data name="Settings.Render.PreRender" xml:space="preserve">
+    <value>プリレンダー</value>
+  </data>
+  <data name="Settings.Render.PreRender.Desc" xml:space="preserve">
+    <value>バックグラウンドで事前にオーディオをレンダリングし、再生をスムーズにします</value>
+  </data>
+  <data name="Settings.Render.ThreadCount" xml:space="preserve">
+    <value>レンダースレッド数</value>
+  </data>
+  <data name="Settings.Render.ThreadCount.Desc" xml:space="preserve">
+    <value>同時に実行するレンダースレッド数。CPU コア数に応じて調整してください（推奨：2-4）</value>
+  </data>
+  <data name="Settings.Render.AudioOutput" xml:space="preserve">
+    <value>オーディオ出力</value>
+  </data>
+  <data name="Settings.Render.OnnxRunner" xml:space="preserve">
+    <value>ML ランナーバックエンド</value>
+  </data>
+  <data name="Settings.Render.OnnxRunner.Desc" xml:space="preserve">
+    <value>機械学習モデルに使用する ONNX Runtime 実行バックエンドを選択します。</value>
+  </data>
+  <data name="Settings.Render.OnnxDevice" xml:space="preserve">
+    <value>ハードウェアデバイス</value>
+  </data>
+  <data name="Settings.Render.OnnxDevice.Desc" xml:space="preserve">
+    <value>現在の ONNX ハードウェアバックエンドで使用する GPU を選択します。適用するにはアプリを再起動してください。</value>
+  </data>
+  <data name="Settings.Render.OnnxRunner.NnapiWarning" xml:space="preserve">
+    <value>一部の端末はハードウェアアクセラレーションに対応していません。NNAPI を選ぶとクラッシュする場合があります。</value>
+  </data>
+  <data name="Settings.Render.AudioBackend" xml:space="preserve">
+    <value>オーディオバックエンド</value>
+  </data>
+  <data name="Settings.Render.AudioBackend.Desc" xml:space="preserve">
+    <value>オーディオ出力バックエンドを選択します。自動はプラットフォームに最適なバックエンドを選択します</value>
+  </data>
+  <data name="Settings.Render.OutputDevice" xml:space="preserve">
+    <value>出力デバイス</value>
+  </data>
+  <data name="Settings.Render.OutputDevice.Desc" xml:space="preserve">
+    <value>オーディオ出力デバイスを選択</value>
+  </data>
+  <data name="Settings.Render.AudioBackend.RestartRequired" xml:space="preserve">
+    <value>オーディオバックエンドの変更にはアプリの再起動が必要です</value>
+  </data>
+  <data name="Settings.Audio.DefaultDevice" xml:space="preserve">
+    <value>デフォルトデバイス</value>
+  </data>
+  <data name="Settings.Audio.AutoSelect" xml:space="preserve">
+    <value>自動選択</value>
+  </data>
+  <data name="Settings.Audio.Dummy" xml:space="preserve">
+    <value>サイレント (Dummy)</value>
+  </data>
+  <data name="Settings.Audio.Device" xml:space="preserve">
+    <value>デバイス {0}</value>
+  </data>
+  <data name="Settings.File.AdditionalSingerPath" xml:space="preserve">
+    <value>追加シンガーパス</value>
+  </data>
+  <data name="Settings.File.AdditionalSingerPath.Desc" xml:space="preserve">
+    <value>シンガーを検索する追加ディレクトリを指定します</value>
+  </data>
+  <data name="Settings.File.AdditionalSingerPath.Change" xml:space="preserve">
+    <value>変更</value>
+  </data>
+  <data name="Settings.File.Cache" xml:space="preserve">
+    <value>アプリのキャッシュ</value>
+  </data>
+  <data name="Settings.File.Cache.Desc" xml:space="preserve">
+    <value>キャッシュフォルダー内のレンダリング結果や一時ファイルなどを削除します。使用中に再生成される場合があります。</value>
+  </data>
+  <data name="Settings.File.Cache.Clear" xml:space="preserve">
+    <value>キャッシュを削除</value>
+  </data>
+  <data name="Settings.File.Cache.Size" xml:space="preserve">
+    <value>現在のキャッシュサイズ</value>
+  </data>
+  <data name="Settings.Appearance.Theme" xml:space="preserve">
+    <value>テーマ</value>
+  </data>
+  <data name="Settings.Appearance.Theme.Desc" xml:space="preserve">
+    <value>ライト / ダークテーマの切り替え、システムテーマに従うなどの設定項目が表示されます。</value>
+  </data>
+  <data name="Settings.Appearance.Theme.System" xml:space="preserve">
+    <value>システム</value>
+  </data>
+  <data name="Settings.Appearance.Theme.Light" xml:space="preserve">
+    <value>明るい</value>
+  </data>
+  <data name="Settings.Appearance.Theme.Dark" xml:space="preserve">
+    <value>暗い</value>
+  </data>
+  <data name="Settings.Appearance.ThemeColor" xml:space="preserve">
+    <value>テーマカラー</value>
+  </data>
+  <data name="Settings.Appearance.ThemeColor.Desc" xml:space="preserve">
+    <value>システムのアクセントカラーに従うか、カスタムのシードカラーを選択します。</value>
+  </data>
+  <data name="Settings.Appearance.ThemeColor.Mode.FollowSystem" xml:space="preserve">
+    <value>システムに従う</value>
+  </data>
+  <data name="Settings.Appearance.ThemeColor.Mode.Custom" xml:space="preserve">
+    <value>カスタム</value>
+  </data>
+  <data name="Settings.Appearance.ThemeColor.OpenPicker" xml:space="preserve">
+    <value>カラーピッカー</value>
+  </data>
+  <data name="Settings.Appearance.ThemeColor.ResetDefault" xml:space="preserve">
+    <value>リセット</value>
+  </data>
+  <data name="Settings.Appearance.ThemeColor.Presets" xml:space="preserve">
+    <value>プリセット</value>
+  </data>
+  <data name="Settings.Appearance.ThemeColor.Picker.Title" xml:space="preserve">
+    <value>テーマカラー選択</value>
+  </data>
+  <data name="Settings.Appearance.ThemeColor.Picker.Hue" xml:space="preserve">
+    <value>色相</value>
+  </data>
+  <data name="Settings.Appearance.ThemeColor.Picker.Saturation" xml:space="preserve">
+    <value>彩度</value>
+  </data>
+  <data name="Settings.Appearance.ThemeColor.Picker.Value" xml:space="preserve">
+    <value>明度</value>
+  </data>
+  <data name="Settings.Appearance.ThemeColor.InvalidHex" xml:space="preserve">
+    <value>無効な HEX 色です。#RRGGBB を使用してください。</value>
+  </data>
+  <data name="Settings.Appearance.ThemeColor.FallbackToSystem" xml:space="preserve">
+    <value>無効なカスタムカラーのため、システムアクセントに戻しました。</value>
+  </data>
+  <data name="Settings.Appearance.ThemeColor.SystemUnavailable" xml:space="preserve">
+    <value>システムアクセントが利用できません。代替色を使用します。</value>
+  </data>
+  <data name="Settings.Appearance.ThemeColor.Source" xml:space="preserve">
+    <value>カラーソース</value>
+  </data>
+  <data name="Settings.Appearance.Language" xml:space="preserve">
+    <value>言語</value>
+  </data>
+  <data name="Settings.Appearance.Language.Desc" xml:space="preserve">
+    <value>UI 表示言語</value>
+  </data>
+  <data name="Settings.Appearance.Language.FollowSystem" xml:space="preserve">
+    <value>システムに従う</value>
+  </data>
+  <data name="FilePicker.Empty" xml:space="preserve">
+    <value>このフォルダーは空です</value>
+  </data>
+  <data name="FilePicker.NoMatch" xml:space="preserve">
+    <value>条件に一致するファイルがありません</value>
+  </data>
+  <data name="FilePicker.AccessDenied" xml:space="preserve">
+    <value>このフォルダーへのアクセスが拒否されました</value>
+  </data>
+  <data name="FilePicker.GoUp" xml:space="preserve">
+    <value>上のフォルダーへ移動</value>
+  </data>
+  <data name="FilePicker.SelectFolder" xml:space="preserve">
+    <value>このフォルダーを選択</value>
+  </data>
+  <data name="FilePicker.FileName" xml:space="preserve">
+    <value>ファイル名</value>
+  </data>
+  <data name="FilePicker.FileNameHint" xml:space="preserve">
+    <value>ファイル名を入力…</value>
+  </data>
+  <data name="FilePicker.Save" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="FilePicker.OpenProject" xml:space="preserve">
+    <value>プロジェクトファイルを開く</value>
+  </data>
+  <data name="FilePicker.SaveProjectAs" xml:space="preserve">
+    <value>プロジェクトに名前を付けて保存</value>
+  </data>
+  <data name="FilePicker.DefaultProjectName" xml:space="preserve">
+    <value>新しいプロジェクト</value>
+  </data>
+  <data name="FilePicker.OverwriteWarning" xml:space="preserve">
+    <value>このフォルダーに同名ファイルが存在するため、上書きされます。</value>
+  </data>
+  <data name="FilePicker.ImportAudio" xml:space="preserve">
+    <value>オーディオをインポート</value>
+  </data>
+  <data name="FilePicker.ImportMIDI" xml:space="preserve">
+    <value>MIDIをインポート</value>
+  </data>
+  <data name="FilePicker.SelectSingerFile" xml:space="preserve">
+    <value>シンガーファイルを選択</value>
+  </data>
+  <data name="FilePicker.SelectSF2" xml:space="preserve">
+    <value>SoundFont ファイルを選択</value>
+  </data>
+  <data name="FilePicker.SelectSingerDir" xml:space="preserve">
+    <value>追加シンガーディレクトリを選択</value>
+  </data>
+  <data name="Home.Action.New" xml:space="preserve">
+    <value>新規</value>
+  </data>
+  <data name="Home.Action.Open" xml:space="preserve">
+    <value>開く</value>
+  </data>
+  <data name="Home.Action.Singers" xml:space="preserve">
+    <value>シンガー</value>
+  </data>
+  <data name="Home.Action.Options" xml:space="preserve">
+    <value>オプション</value>
+  </data>
+  <data name="Home.Title" xml:space="preserve">
+    <value>ホーム</value>
+  </data>
+  <data name="Home.Recent.Title" xml:space="preserve">
+    <value>最近開いたもの</value>
+  </data>
+  <data name="Home.Recent.Empty" xml:space="preserve">
+    <value>最近開いたプロジェクトはありません</value>
+  </data>
+  <data name="Home.Recent.Remove" xml:space="preserve">
+    <value>リストから削除</value>
+  </data>
+  <data name="Home.Brand.Name" xml:space="preserve">
+    <value>OpenLoid-Flame</value>
+  </data>
+  <data name="Home.Recovery.Message" xml:space="preserve">
+    <value>前回の異常終了から復旧可能なプロジェクト：</value>
+  </data>
+  <data name="Home.Recovery.Open" xml:space="preserve">
+    <value> タップして開く</value>
+  </data>
+  <data name="Home.Recovery.OpenAction" xml:space="preserve">
+    <value>開く</value>
+  </data>
+  <data name="Home.Recovery.Dismiss" xml:space="preserve">
+    <value>閉じる</value>
+  </data>
+  <data name="Home.Toast.BackToExit" xml:space="preserve">
+    <value>もう一度戻るを押すとアプリを終了します</value>
+  </data>
+  <data name="SingerDetail.Title" xml:space="preserve">
+    <value>シンガー詳細</value>
+  </data>
+  <data name="SingerDetail.OpenWeb" xml:space="preserve">
+    <value>ウェブサイトを開く</value>
+  </data>
+  <data name="SingerDetail.Details" xml:space="preserve">
+    <value>詳細情報</value>
+  </data>
+  <data name="SingerDetail.Author" xml:space="preserve">
+    <value>作者</value>
+  </data>
+  <data name="SingerDetail.Voice" xml:space="preserve">
+    <value>声</value>
+  </data>
+  <data name="SingerDetail.Website" xml:space="preserve">
+    <value>ウェブサイト</value>
+  </data>
+  <data name="SingerDetail.DefaultPhonemizer" xml:space="preserve">
+    <value>デフォルトの音素変換器</value>
+  </data>
+  <data name="SingerDetail.OtherInfo" xml:space="preserve">
+    <value>その他の情報</value>
+  </data>
+  <data name="SingerDetail.Location" xml:space="preserve">
+    <value>保存場所</value>
+  </data>
+  <data name="SingerDetail.DangerZone" xml:space="preserve">
+    <value>危険ゾーン</value>
+  </data>
+  <data name="SingerDetail.DeleteWarning" xml:space="preserve">
+    <value>このシンガーを削除すると、関連するすべてのファイルが完全に削除されます。この操作は元に戻せません。</value>
+  </data>
+  <data name="SingerDetail.Delete" xml:space="preserve">
+    <value>シンガーを削除</value>
+  </data>
+  <data name="SingerDetail.Uninstalling" xml:space="preserve">
+    <value>シンガーをアンインストールしています…</value>
+  </data>
+  <data name="SingerDetail.UninstallSucceeded" xml:space="preserve">
+    <value>{0} をアンインストールしました</value>
+  </data>
+  <data name="SingerDetail.UninstallFailed" xml:space="preserve">
+    <value>{0} のアンインストールに失敗しました。</value>
+  </data>
+  <data name="SingerDetail.UninstallConfirmTitle" xml:space="preserve">
+    <value>シンガーをアンインストールしますか？</value>
+  </data>
+  <data name="SingerDetail.UninstallConfirmMessage" xml:space="preserve">
+    <value>{0} をアンインストールし、すべてのファイルを完全に削除しますか？この操作は元に戻せません。</value>
+  </data>
+  <data name="Editor.Undo" xml:space="preserve">
+    <value>元に戻す</value>
+  </data>
+  <data name="Editor.Redo" xml:space="preserve">
+    <value>やり直し</value>
+  </data>
+  <data name="Editor.More" xml:space="preserve">
+    <value>その他</value>
+  </data>
+  <data name="Editor.Quantize" xml:space="preserve">
+    <value>クオンタイズ（グローバル）</value>
+  </data>
+  <data name="Editor.Quantize.Auto" xml:space="preserve">
+    <value>自動</value>
+  </data>
+  <data name="Editor.Quantize.Off" xml:space="preserve">
+    <value>オフ</value>
+  </data>
+  <data name="Editor.Quantize.WholeNote" xml:space="preserve">
+    <value>全音符</value>
+  </data>
+  <data name="Editor.NormalMode" xml:space="preserve">
+    <value>通常</value>
+  </data>
+  <data name="Editor.MultiSelectMode" xml:space="preserve">
+    <value>複数選択</value>
+  </data>
+  <data name="Editor.Stop" xml:space="preserve">
+    <value>停止</value>
+  </data>
+  <data name="Editor.PlayPause" xml:space="preserve">
+    <value>再生/一時停止</value>
+  </data>
+  <data name="Editor.Save" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="Editor.Saved" xml:space="preserve">
+    <value>保存しました</value>
+  </data>
+  <data name="Editor.ToggleTrackHeader" xml:space="preserve">
+    <value>トラックヘッダーの展開/折りたたみ</value>
+  </data>
+  <data name="Editor.NoEditingPart" xml:space="preserve">
+    <value>編集中のパートはありません</value>
+  </data>
+  <data name="Editor.Rendering" xml:space="preserve">
+    <value>レンダリング中...</value>
+  </data>
+  <data name="Editor.Undone" xml:space="preserve">
+    <value>元に戻しました</value>
+  </data>
+  <data name="Editor.Redone" xml:space="preserve">
+    <value>やり直しました</value>
+  </data>
+  <data name="Editor.NewPart" xml:space="preserve">
+    <value>新規パート</value>
+  </data>
+  <data name="Editor.LoadingProject" xml:space="preserve">
+    <value>プロジェクトを読み込み中...</value>
+  </data>
+  <data name="Editor.ProjectLoaded" xml:space="preserve">
+    <value>プロジェクトの読み込み完了</value>
+  </data>
+  <data name="Editor.Action.Rename" xml:space="preserve">
+    <value>名前を変更</value>
+  </data>
+  <data name="Editor.Action.Split" xml:space="preserve">
+    <value>分割</value>
+  </data>
+  <data name="Editor.Action.AddTimeSig" xml:space="preserve">
+    <value>拍子記号を追加</value>
+  </data>
+  <data name="Editor.Action.AddTempo" xml:space="preserve">
+    <value>テンポマークを追加</value>
+  </data>
+  <data name="Editor.Action.PrevTimeSig" xml:space="preserve">
+    <value>前の拍子記号へ</value>
+  </data>
+  <data name="Editor.Action.NextTimeSig" xml:space="preserve">
+    <value>次の拍子記号へ</value>
+  </data>
+  <data name="Editor.Action.PrevTempo" xml:space="preserve">
+    <value>前のテンポマークへ</value>
+  </data>
+  <data name="Editor.Action.NextTempo" xml:space="preserve">
+    <value>次のテンポマークへ</value>
+  </data>
+  <data name="Editor.Action.DeleteTimeSig" xml:space="preserve">
+    <value>拍子記号を削除</value>
+  </data>
+  <data name="Editor.Action.DeleteTempo" xml:space="preserve">
+    <value>テンポマークを削除</value>
+  </data>
+  <data name="PianoRoll.DragSelect" xml:space="preserve">
+    <value>ドラッグ/選択</value>
+  </data>
+  <data name="PianoRoll.MultiSelect" xml:space="preserve">
+    <value>複数選択</value>
+  </data>
+  <data name="PianoRoll.NotePen" xml:space="preserve">
+    <value>ノートペン</value>
+  </data>
+  <data name="PianoRoll.PitchPen" xml:space="preserve">
+    <value>ピッチペン</value>
+  </data>
+  <data name="PianoRoll.Anchor" xml:space="preserve">
+    <value>アンカー</value>
+  </data>
+  <data name="PianoRoll.Vibrato" xml:space="preserve">
+    <value>ビブラート</value>
+  </data>
+  <data name="PianoRoll.Action.Properties" xml:space="preserve">
+    <value>プロパティ</value>
+  </data>
+  <data name="PianoRoll.Action.SelectionStart" xml:space="preserve">
+    <value>選択開始</value>
+  </data>
+  <data name="PianoRoll.Action.SelectionEnd" xml:space="preserve">
+    <value>選択終了</value>
+  </data>
+  <data name="PianoRoll.Action.Split" xml:space="preserve">
+    <value>ノートを分割</value>
+  </data>
+  <data name="PianoRoll.Action.Merge" xml:space="preserve">
+    <value>結合</value>
+  </data>
+  <data name="PianoRoll.Action.SwitchToPitchPen" xml:space="preserve">
+    <value>ピッチペンに切替</value>
+  </data>
+  <data name="PianoRoll.Action.SwitchToEraser" xml:space="preserve">
+    <value>消しゴムに切替</value>
+  </data>
+  <data name="PianoRoll.Action.AddControlPoint" xml:space="preserve">
+    <value>再生位置にコントロールポイントを追加</value>
+  </data>
+  <data name="PianoRoll.Action.Previous" xml:space="preserve">
+    <value>前へ</value>
+  </data>
+  <data name="PianoRoll.Action.Next" xml:space="preserve">
+    <value>次へ</value>
+  </data>
+  <data name="PianoRoll.Action.ControlPointShape" xml:space="preserve">
+    <value>コントロールポイント形状</value>
+  </data>
+  <data name="PianoRoll.Action.ToggleFirstAnchorSnap" xml:space="preserve">
+    <value>最初のアンカーのスナップを切り替え</value>
+  </data>
+  <data name="PianoRoll.Toast.AnchorShape" xml:space="preserve">
+    <value>アンカーの形状：{0}</value>
+  </data>
+  <data name="PianoRoll.AnchorShape.EaseInOut" xml:space="preserve">
+    <value>イーズイン・アウト</value>
+  </data>
+  <data name="PianoRoll.AnchorShape.Linear" xml:space="preserve">
+    <value>リニア</value>
+  </data>
+  <data name="PianoRoll.AnchorShape.EaseIn" xml:space="preserve">
+    <value>イーズイン</value>
+  </data>
+  <data name="PianoRoll.AnchorShape.EaseOut" xml:space="preserve">
+    <value>イーズアウト</value>
+  </data>
+  <data name="PianoRoll.Toast.FirstAnchorSnapEnabled" xml:space="preserve">
+    <value>最初のアンカーのスナップを有効にしました</value>
+  </data>
+  <data name="PianoRoll.Toast.FirstAnchorSnapDisabled" xml:space="preserve">
+    <value>最初のアンカーのスナップを無効にしました</value>
+  </data>
+  <data name="PianoRoll.Action.ResetVibrato" xml:space="preserve">
+    <value>ビブラートをリセット</value>
+  </data>
+  <data name="PianoRoll.Action.AddVibrato" xml:space="preserve">
+    <value>ビブラートを追加</value>
+  </data>
+  <data name="PianoRoll.Action.VibratoPreset" xml:space="preserve">
+    <value>ビブラートプリセット</value>
+  </data>
+  <data name="PianoRoll.Toast.Vibrato" xml:space="preserve">
+    <value>ビブラートモード</value>
+  </data>
+  <data name="PianoRoll.Toast.PitchEraser" xml:space="preserve">
+    <value>ピッチ消しゴムモード</value>
+  </data>
+  <data name="PianoRoll.Toast.PitchPen" xml:space="preserve">
+    <value>ピッチペンモード</value>
+  </data>
+  <data name="PianoRoll.Toast.AnchorEdit" xml:space="preserve">
+    <value>ピッチアンカー編集モード</value>
+  </data>
+  <data name="PianoRoll.Toast.DragMode" xml:space="preserve">
+    <value>ドラッグモード</value>
+  </data>
+  <data name="PianoRoll.Toast.MultiSelectMode" xml:space="preserve">
+    <value>複数選択モード</value>
+  </data>
+  <data name="PianoRoll.Toast.NoteMode" xml:space="preserve">
+    <value>ノートモード</value>
+  </data>
+  <data name="PianoRoll.Toast.VibratoNotReady" xml:space="preserve">
+    <value>ビブラートモードは準備中です</value>
+  </data>
+  <data name="PianoRoll.Selection.EndTip" xml:space="preserve">
+    <value>"|◀"を押して選択を終了</value>
+  </data>
+  <data name="PianoRoll.Selection.Cut" xml:space="preserve">
+    <value>{0} 個のノートをカット</value>
+  </data>
+  <data name="PianoRoll.Selection.Pasted" xml:space="preserve">
+    <value>{0} 個のノートをペースト</value>
+  </data>
+  <data name="PianoRoll.Toast.NotePropertiesNotImpl" xml:space="preserve">
+    <value>ノートプロパティエディターは未実装です</value>
+  </data>
+  <data name="PianoRoll.Toast.ControlPointNotFound" xml:space="preserve">
+    <value>挿入可能なコントロールポイントリストが見つかりません</value>
+  </data>
+  <data name="PianoRoll.Undone" xml:space="preserve">
+    <value>元に戻しました</value>
+  </data>
+  <data name="PianoRoll.Redone" xml:space="preserve">
+    <value>やり直しました</value>
+  </data>
+  <data name="SingerManagement.Title" xml:space="preserve">
+    <value>シンガー管理</value>
+  </data>
+  <data name="SingerManagement.Install" xml:space="preserve">
+    <value>シンガーをインストール</value>
+  </data>
+  <data name="DependencyManager.Title" xml:space="preserve">
+    <value>依存関係管理</value>
+  </data>
+  <data name="LoadingPopup.Title" xml:space="preserve">
+    <value>しばらくお待ちください</value>
+  </data>
+  <data name="LoadingPopup.DefaultMessage" xml:space="preserve">
+    <value>バックグラウンド処理を実行しています…</value>
+  </data>
+  <data name="DependencyManager.Refresh" xml:space="preserve">
+    <value>リストを更新</value>
+  </data>
+  <data name="DependencyManager.InstallFromFile" xml:space="preserve">
+    <value>ファイルからインストール</value>
+  </data>
+  <data name="DependencyManager.Available" xml:space="preserve">
+    <value>利用可能</value>
+  </data>
+  <data name="DependencyManager.InstalledTab" xml:space="preserve">
+    <value>インストール済み</value>
+  </data>
+  <data name="DependencyManager.Search" xml:space="preserve">
+    <value>パッケージを検索...</value>
+  </data>
+  <data name="DependencyManager.LoadingAvailable" xml:space="preserve">
+    <value>利用可能なパッケージを読み込み中...</value>
+  </data>
+  <data name="DependencyManager.NoAvailable" xml:space="preserve">
+    <value>利用可能なパッケージがありません</value>
+  </data>
+  <data name="DependencyManager.LoadingInstalled" xml:space="preserve">
+    <value>インストール済みリストを読み込み中...</value>
+  </data>
+  <data name="DependencyManager.NoInstalled" xml:space="preserve">
+    <value>インストール済みのパッケージがありません</value>
+  </data>
+  <data name="DependencyManager.Uninstalling" xml:space="preserve">
+    <value>アンインストール中...</value>
+  </data>
+  <data name="DependencyManager.UnknownDeveloper" xml:space="preserve">
+    <value>不明な開発者</value>
+  </data>
+  <data name="DependencyManager.Installing" xml:space="preserve">
+    <value>インストール中...</value>
+  </data>
+  <data name="DependencyManager.Toast.LoadFailed" xml:space="preserve">
+    <value>読み込み失敗: {0}</value>
+  </data>
+  <data name="DependencyManager.Toast.InstalledListFailed" xml:space="preserve">
+    <value>インストール済みリストの読み込みに失敗: {0}</value>
+  </data>
+  <data name="DependencyManager.FilePicker.SelectPackage" xml:space="preserve">
+    <value>依存関係パッケージを選択</value>
+  </data>
+  <data name="DependencyManager.Loading.InstallFromFile" xml:space="preserve">
+    <value>依存関係パッケージをインストールしています…</value>
+  </data>
+  <data name="DependencyManager.Toast.InstallFromFileSuccess" xml:space="preserve">
+    <value>依存関係パッケージ「{0}」をインストールしました</value>
+  </data>
+  <data name="DependencyManager.Error.InvalidPackage" xml:space="preserve">
+    <value>選択したファイルは有効な依存関係パッケージではないか、破損しています。</value>
+  </data>
+  <data name="DependencyManager.Error.AccessDenied" xml:space="preserve">
+    <value>パッケージの読み込みまたは依存関係ストレージへの書き込みができません。ストレージ権限を確認してください。</value>
+  </data>
+  <data name="DependencyManager.Error.FileUnavailable" xml:space="preserve">
+    <value>選択したパッケージは利用できなくなりました。ファイルを再度選択してください。</value>
+  </data>
+  <data name="DependencyManager.Error.Storage" xml:space="preserve">
+    <value>パッケージをインストールできません。空き容量とファイルが使用中でないか確認してください。</value>
+  </data>
+  <data name="DependencyManager.Toast.Uninstalled" xml:space="preserve">
+    <value>{0} をアンインストールしました</value>
+  </data>
+  <data name="DependencyManager.Toast.UninstallFailed" xml:space="preserve">
+    <value>アンインストール失敗: {0}</value>
+  </data>
+  <data name="DependencyManager.Toast.InstallSuccess" xml:space="preserve">
+    <value>{0} をインストールしました</value>
+  </data>
+  <data name="DependencyManager.Toast.InstallFailed" xml:space="preserve">
+    <value>インストール失敗: {0}</value>
+  </data>
+  <data name="Options.Title" xml:space="preserve">
+    <value>オプション</value>
+  </data>
+  <data name="Options.Settings" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="Options.Settings.Desc" xml:space="preserve">
+    <value>言語、オーディオ、外観…</value>
+  </data>
+  <data name="Options.DependencyManager" xml:space="preserve">
+    <value>依存関係管理</value>
+  </data>
+  <data name="Options.DependencyManager.Desc" xml:space="preserve">
+    <value>ボイスバンク、音素などの依存関係をインストール・管理</value>
+  </data>
+  <data name="Options.Help" xml:space="preserve">
+    <value>ヘルプとチュートリアル</value>
+  </data>
+  <data name="Options.Help.Desc" xml:space="preserve">
+    <value>使い方ガイドとFAQを見る</value>
+  </data>
+  <data name="Options.ExportLog" xml:space="preserve">
+    <value>ログをエクスポート</value>
+  </data>
+  <data name="Options.ExportLog.Desc" xml:space="preserve">
+    <value>トラブルシューティング用にログをエクスポート・共有</value>
+  </data>
+  <data name="Options.About" xml:space="preserve">
+    <value>このアプリについて</value>
+  </data>
+  <data name="Options.About.Desc" xml:space="preserve">
+    <value>バージョン、ライセンス、クレジット</value>
+  </data>
+  <data name="Options.Toast.HelpNotImpl" xml:space="preserve">
+    <value>ヘルプページは未実装です</value>
+  </data>
+  <data name="Options.Toast.ExportLogNotImpl" xml:space="preserve">
+    <value>ログエクスポートは未実装です</value>
+  </data>
+  <data name="About.Title" xml:space="preserve">
+    <value>このアプリについて</value>
+  </data>
+  <data name="About.Version" xml:space="preserve">
+    <value>バージョン </value>
+  </data>
+  <data name="About.CoreVersion" xml:space="preserve">
+    <value>コアバージョン </value>
+  </data>
+  <data name="About.BuildNumber" xml:space="preserve">
+    <value>ビルド番号 </value>
+  </data>
+  <data name="About.BuildTime" xml:space="preserve">
+    <value>ビルド日時 (UTC) </value>
+  </data>
+  <data name="About.BuildMachine" xml:space="preserve">
+    <value>ビルドシステム </value>
+  </data>
+  <data name="About.CommitId" xml:space="preserve">
+    <value>コミット ID </value>
+  </data>
+  <data name="About.ActionId" xml:space="preserve">
+    <value>Action 実行 ID </value>
+  </data>
+  <data name="About.ProjectHome" xml:space="preserve">
+    <value>プロジェクトホーム</value>
+  </data>
+  <data name="About.License" xml:space="preserve">
+    <value>オープンソースライセンス</value>
+  </data>
+  <data name="About.Credits" xml:space="preserve">
+    <value>クレジット</value>
+  </data>
+  <data name="About.Credits.Desc" xml:space="preserve">
+    <value>使用した外部ライブラリと貢献者</value>
+  </data>
+  <data name="About.Contribute" xml:space="preserve">
+    <value>OpenLoid-Flame をより良くする</value>
+  </data>
+  <data name="About.Contribute.Desc" xml:space="preserve">
+    <value>バグ報告 | 機能提案 | コード貢献</value>
+  </data>
+  <data name="About.Toast.LicenseNotImpl" xml:space="preserve">
+    <value>ライセンスページは未実装です</value>
+  </data>
+  <data name="About.Toast.CreditsNotImpl" xml:space="preserve">
+    <value>クレジットページは未実装です</value>
+  </data>
+  <data name="About.Toast.OpenLinkNotImpl" xml:space="preserve">
+    <value>外部リンクを開く機能は未実装です</value>
+  </data>
+  <data name="About.Toast.OpenLinkFailed" xml:space="preserve">
+    <value>リンクを開けませんでした</value>
+  </data>
+  <data name="ErrorDialog.Title" xml:space="preserve">
+    <value>OpenLoid-Flame 実行時エラー</value>
+  </data>
+  <data name="ErrorDialog.UnknownError" xml:space="preserve">
+    <value>不明なエラー</value>
+  </data>
+  <data name="EditorMore.Title" xml:space="preserve">
+    <value>その他の操作</value>
+  </data>
+  <data name="EditorMore.SaveAs" xml:space="preserve">
+    <value>名前を付けて保存</value>
+  </data>
+  <data name="EditorMore.ImportTab" xml:space="preserve">
+    <value>インポート</value>
+  </data>
+  <data name="EditorMore.ExportTab" xml:space="preserve">
+    <value>エクスポート</value>
+  </data>
+  <data name="EditorMore.ImportAudio" xml:space="preserve">
+    <value>オーディオをインポート</value>
+  </data>
+  <data name="EditorMore.ImportMIDI" xml:space="preserve">
+    <value>MIDI をインポート</value>
+  </data>
+  <data name="EditorMore.ImportTrack" xml:space="preserve">
+    <value>トラックをインポート</value>
+  </data>
+  <data name="EditorMore.ExportAudio" xml:space="preserve">
+    <value>オーディオとしてエクスポート</value>
+  </data>
+  <data name="EditorMore.Toast.ExportAudio" xml:space="preserve">
+    <value>TODO: オーディオをエクスポート</value>
+  </data>
+  <data name="ExportAudioPopup.Title" xml:space="preserve">
+    <value>オーディオを書き出し</value>
+  </data>
+  <data name="ExportAudioPopup.PathLabel" xml:space="preserve">
+    <value>出力ファイルパス</value>
+  </data>
+  <data name="ExportAudioPopup.PathPlaceholder" xml:space="preserve">
+    <value>出力先の .wav ファイルパスを選択してください</value>
+  </data>
+  <data name="ExportAudioPopup.SelectPath" xml:space="preserve">
+    <value>パスを選択</value>
+  </data>
+  <data name="ExportAudioPopup.ModeLabel" xml:space="preserve">
+    <value>書き出しモード</value>
+  </data>
+  <data name="ExportAudioPopup.Mode.Mixdown" xml:space="preserve">
+    <value>ミックスダウン（単一ファイル）</value>
+  </data>
+  <data name="ExportAudioPopup.Mode.Tracks" xml:space="preserve">
+    <value>トラック別（複数ファイル）</value>
+  </data>
+  <data name="ExportAudioPopup.Mode.TracksHint" xml:space="preserve">
+    <value>トラック別書き出しでは、選択したファイル名を基に複数の wav ファイルが生成されます。</value>
+  </data>
+  <data name="ExportAudioPopup.Start" xml:space="preserve">
+    <value>書き出し開始</value>
+  </data>
+  <data name="ExportAudioPopup.Exporting" xml:space="preserve">
+    <value>書き出し中です。しばらくお待ちください...</value>
+  </data>
+  <data name="ExportAudioPopup.SaveDialogTitle" xml:space="preserve">
+    <value>オーディオ書き出しファイルを選択</value>
+  </data>
+  <data name="ExportAudioPopup.PathRequired" xml:space="preserve">
+    <value>先に書き出し先を選択してください</value>
+  </data>
+  <data name="ExportAudioPopup.Toast.Success.Mixdown" xml:space="preserve">
+    <value>ミックスダウンの書き出しが完了しました</value>
+  </data>
+  <data name="ExportAudioPopup.Toast.Success.Tracks" xml:space="preserve">
+    <value>トラック別書き出しが完了しました</value>
+  </data>
+  <data name="ExportAudioPopup.Toast.Failed" xml:space="preserve">
+    <value>オーディオの書き出しに失敗しました</value>
+  </data>
+  <data name="Editor.BackConfirm.Title" xml:space="preserve">
+    <value>編集を終了</value>
+  </data>
+  <data name="Editor.BackConfirm.Message" xml:space="preserve">
+    <value>現在のプロジェクトには未保存の変更があります。</value>
+  </data>
+  <data name="Editor.BackConfirm.ExitWithoutSave" xml:space="preserve">
+    <value>保存せずに終了</value>
+  </data>
+  <data name="Editor.BackConfirm.SaveAndExit" xml:space="preserve">
+    <value>保存して終了</value>
+  </data>
+  <data name="LyricEdit.Title" xml:space="preserve">
+    <value>歌詞を編集</value>
+  </data>
+  <data name="LyricEdit.Watermark" xml:space="preserve">
+    <value>歌詞を入力</value>
+  </data>
+  <data name="LyricEdit.NoteInfo" xml:space="preserve">
+    <value>ノート {0}/{1}</value>
+  </data>
+  <data name="LyricEdit.NextNote" xml:space="preserve">
+    <value>次のノート: {0}</value>
+  </data>
+  <data name="LyricEdit.LastNote" xml:space="preserve">
+    <value>最後のノートです</value>
+  </data>
+  <data name="LyricEdit.PhoneticSource" xml:space="preserve"><value>音素</value></data>
+  <data name="LyricEdit.NoSinger" xml:space="preserve"><value>シンガーが割り当てられていないか、読み込まれていません</value></data>
+  <data name="LyricEdit.NoSuggestions" xml:space="preserve"><value>一致する候補はありません</value></data>
+  <data name="Settings.Edit.DesktopMode" xml:space="preserve">
+    <value>デスクトップモード</value>
+  </data>
+  <data name="Settings.Edit.DesktopMode.Desc" xml:space="preserve">
+    <value>デスクトップ用の画面を使用します。オフにするとモバイル用の画面になります。変更はアプリの再起動後に適用されます。</value>
+  </data>
+  <data name="Settings.Edit.LyricsHelper" xml:space="preserve"><value>歌詞ヘルパー</value></data>
+  <data name="Settings.Edit.LyricsHelper.Desc" xml:space="preserve"><value>入力した歌詞を仮名、ローマ字、または音素に変換します。</value></data>
+  <data name="Settings.Edit.LyricsHelper.Brackets" xml:space="preserve"><value>角括弧付きの変換結果も候補に追加</value></data>
+  <data name="Picker.Singer.Title" xml:space="preserve">
+    <value>シンガーを選択</value>
+  </data>
+  <data name="Picker.Phonemizer.Title" xml:space="preserve">
+    <value>音素変換器を選択</value>
+  </data>
+  <data name="Picker.Renderer.Title" xml:space="preserve">
+    <value>レンダラーを選択</value>
+  </data>
+  <data name="Picker.TrackRename.Title" xml:space="preserve">
+    <value>トラック名を変更</value>
+  </data>
+  <data name="Picker.TrackRename.Placeholder" xml:space="preserve">
+    <value>トラック名を入力</value>
+  </data>
+  <data name="Picker.TrackColor.Title" xml:space="preserve">
+    <value>トラックカラーを選択</value>
+  </data>
+  <data name="ProjectEdit.Tempo" xml:space="preserve">
+    <value>テンポを編集</value>
+  </data>
+  <data name="ProjectEdit.TimeSignature" xml:space="preserve">
+    <value>拍子記号を編集</value>
+  </data>
+  <data name="ProjectEdit.KeySignature" xml:space="preserve">
+    <value>調号を編集</value>
+  </data>
+  <data name="ProjectEdit.TempoLabel" xml:space="preserve">
+    <value>テンポ (BPM)</value>
+  </data>
+  <data name="ProjectEdit.TempoWatermark" xml:space="preserve">
+    <value>例：120</value>
+  </data>
+  <data name="ProjectEdit.Beats" xml:space="preserve">
+    <value>拍数（分子）</value>
+  </data>
+  <data name="ProjectEdit.NoteValue" xml:space="preserve">
+    <value>音価（分母）</value>
+  </data>
+  <data name="ProjectEdit.KeySignature.Hint" xml:space="preserve">
+    <value>音名をタップして選択</value>
+  </data>
+  <data name="ProjectEdit.Toast.BeatsValidation" xml:space="preserve">
+    <value>拍数は 1 ~ 32 の整数でなければなりません</value>
+  </data>
+  <data name="ProjectEdit.Toast.NoteValueValidation" xml:space="preserve">
+    <value>音価は 1/2/4/8/16/32 でなければなりません</value>
+  </data>
+  <data name="Vibrato.Title" xml:space="preserve">
+    <value>ビブラートパラメータ</value>
+  </data>
+  <data name="Vibrato.Depth" xml:space="preserve">
+    <value>深さ</value>
+  </data>
+  <data name="Vibrato.Period" xml:space="preserve">
+    <value>周期</value>
+  </data>
+  <data name="Vibrato.FadeIn" xml:space="preserve">
+    <value>フェードイン</value>
+  </data>
+  <data name="Vibrato.FadeOut" xml:space="preserve">
+    <value>フェードアウト</value>
+  </data>
+  <data name="Vibrato.Phase" xml:space="preserve">
+    <value>位相</value>
+  </data>
+  <data name="Vibrato.Pitch" xml:space="preserve">
+    <value>ピッチ</value>
+  </data>
+  <data name="Vibrato.VolLink" xml:space="preserve">
+    <value>音量連動</value>
+  </data>
+  <data name="Vibrato.Length" xml:space="preserve">
+    <value>長さ</value>
+  </data>
+  <data name="TrackHeader.Singer" xml:space="preserve">
+    <value>シンガーを切替</value>
+  </data>
+  <data name="TrackHeader.Phonemizer" xml:space="preserve">
+    <value>音素変換器を切替</value>
+  </data>
+  <data name="TrackHeader.Renderer" xml:space="preserve">
+    <value>レンダラーを切替</value>
+  </data>
+  <data name="TrackHeader.Rename" xml:space="preserve">
+    <value>トラック名を変更</value>
+  </data>
+  <data name="TrackHeader.ChangeColor" xml:space="preserve">
+    <value>トラックカラーを変更</value>
+  </data>
+  <data name="TrackHeader.Volume" xml:space="preserve">
+    <value>レベル (dB)</value>
+  </data>
+  <data name="TrackHeader.Pan" xml:space="preserve">
+    <value>パン</value>
+  </data>
+  <data name="TrackHeader.Mute" xml:space="preserve">
+    <value>ミュート切替</value>
+  </data>
+  <data name="TrackRename.Toast.Empty" xml:space="preserve">
+    <value>トラック名は空にできません</value>
+  </data>
+  <data name="TrackAdder.AddTrack" xml:space="preserve">
+    <value>トラックを追加</value>
+  </data>
+  <data name="ContextAction.ToggleExpand" xml:space="preserve">
+    <value>操作を展開/折りたたみ</value>
+  </data>
+  <data name="SingerSetup.Title" xml:space="preserve">
+    <value>シンガーセットアップウィザード</value>
+  </data>
+  <data name="SingerSetup.Step1.Title" xml:space="preserve">
+    <value>アーカイブファイルを選択</value>
+  </data>
+  <data name="SingerSetup.Step1.Desc" xml:space="preserve">
+    <value>シンガーデータを含む ZIP、RAR、UAR などのアーカイブファイルを選択してください</value>
+  </data>
+  <data name="SingerSetup.Step1.ArchiveEncoding" xml:space="preserve">
+    <value>アーカイブエンコーディング</value>
+  </data>
+  <data name="SingerSetup.Step1.Preview" xml:space="preserve">
+    <value>アーカイブ内容プレビュー:</value>
+  </data>
+  <data name="SingerSetup.Step2.Title" xml:space="preserve">
+    <value>テキストファイルエンコーディング</value>
+  </data>
+  <data name="SingerSetup.Step2.Desc" xml:space="preserve">
+    <value>テキストファイルの正しいエンコーディングを選択してください。プレビューで表示を確認できます</value>
+  </data>
+  <data name="SingerSetup.Step2.Preview" xml:space="preserve">
+    <value>テキストファイルプレビュー:</value>
+  </data>
+  <data name="SingerSetup.Step3.SingerType" xml:space="preserve">
+    <value>シンガータイプ</value>
+  </data>
+  <data name="SingerSetup.Step3.ManualDesc" xml:space="preserve">
+    <value>シンガー情報が不完全です。シンガータイプを手動で選択してください</value>
+  </data>
+  <data name="SingerSetup.Step3.SingerInfo" xml:space="preserve">
+    <value>シンガー情報</value>
+  </data>
+  <data name="SingerSetup.Step3.AutoDesc" xml:space="preserve">
+    <value>シンガー情報が自動検出されました。確認して続行してください</value>
+  </data>
+  <data name="SingerSetup.Step3.TypeHelp" xml:space="preserve">
+    <value>シンガータイプの説明</value>
+  </data>
+  <data name="SingerSetup.Step3.TypeUtau" xml:space="preserve">
+    <value>• utau: クラシック UTAU シンガー（最も一般的）</value>
+  </data>
+  <data name="SingerSetup.Step3.TypeEnunu" xml:space="preserve">
+    <value>• enunu: ENUNU 合成エンジンを使用</value>
+  </data>
+  <data name="SingerSetup.Step3.TypeDiffSinger" xml:space="preserve">
+    <value>• diffsinger: DiffSinger AI 合成エンジンを使用</value>
+  </data>
+  <data name="SingerSetup.Step3.TypeNeutrino" xml:space="preserve">
+    <value>• neutrino: NEUTRINO v3 AI 合成エンジンを使用</value>
+  </data>
+  <data name="SingerSetup.Step3.TypeVocaloid" xml:space="preserve">
+    <value>• vocaloid: VOCALOID 1〜5 のボイスバンク (.ddb/.ddi/.vvd) または .vcld パッケージ。VOCALOID:AI は非対応</value>
+  </data>
+  <data name="SingerManagement.VocaloidInstalled" xml:space="preserve">
+    <value>VOCALOID ボイスバンクをインストールしました</value>
+  </data>
+  <data name="SingerSetup.Step4.Title" xml:space="preserve">
+    <value>インストールの概要</value>
+  </data>
+  <data name="SingerSetup.Step4.Desc" xml:space="preserve">
+    <value>インストール情報を確認し、問題なければインストールをタップしてください</value>
+  </data>
+  <data name="SingerSetup.Step4.FileInfo" xml:space="preserve">
+    <value>ファイル情報</value>
+  </data>
+  <data name="SingerSetup.Step4.File" xml:space="preserve">
+    <value>ファイル: </value>
+  </data>
+  <data name="SingerSetup.Step4.EncodingInfo" xml:space="preserve">
+    <value>エンコーディング情報</value>
+  </data>
+  <data name="SingerSetup.Step4.ArchiveEncoding" xml:space="preserve">
+    <value>アーカイブエンコーディング: </value>
+  </data>
+  <data name="SingerSetup.Step4.TextEncoding" xml:space="preserve">
+    <value>テキストファイルエンコーディング: </value>
+  </data>
+  <data name="SingerSetup.Step4.Type" xml:space="preserve">
+    <value>タイプ: </value>
+  </data>
+  <data name="SingerSetup.ConfirmInstall" xml:space="preserve">
+    <value>インストールを確認</value>
+  </data>
+  <data name="SingerSetup.Success" xml:space="preserve">
+    <value>インストール完了</value>
+  </data>
+  <data name="SingerSetup.Success.Desc" xml:space="preserve">
+    <value>シンガーが正常にインストールされました。エディターで使用できます</value>
+  </data>
+  <data name="SingerSetup.Failed" xml:space="preserve">
+    <value>インストール失敗</value>
+  </data>
+  <data name="SingerSetup.Error.Encrypted" xml:space="preserve">
+    <value>暗号化されたアーカイブはサポートされていません</value>
+  </data>
+  <data name="SingerSetup.Error.VocaloidAI" xml:space="preserve">
+    <value>VOCALOID:AI（V6ネイティブ）バンクはサポートされていません。V1〜V5のクラシック音声ライブラリ（.ddb/.ddi/.vvd）のみインストール可能です。</value>
+  </data>
+  <data name="SingerSetup.Installing" xml:space="preserve">
+    <value>インストール準備中...</value>
+  </data>
+  <data name="SingerSetup.InstallComplete" xml:space="preserve">
+    <value>インストール完了</value>
+  </data>
+  <data name="SingerSetup.InstallFailed" xml:space="preserve">
+    <value>インストール失敗: {0}</value>
+  </data>
+  <data name="SingerSetup.StepFormat" xml:space="preserve">
+    <value>ステップ {0} / 4</value>
+  </data>
+  <data name="Splash.DocManager" xml:space="preserve">
+    <value>ドキュメントマネージャーを初期化中</value>
+  </data>
+  <data name="Splash.Phonemizer" xml:space="preserve">
+    <value>音素変換器プラグインを読み込み中</value>
+  </data>
+  <data name="Splash.ToolManager" xml:space="preserve">
+    <value>ツールマネージャーを初期化中</value>
+  </data>
+  <data name="Splash.SingerManager" xml:space="preserve">
+    <value>シンガーマネージャーを初期化中</value>
+  </data>
+  <data name="Splash.AudioBackend" xml:space="preserve">
+    <value>オーディオバックエンドを初期化中</value>
+  </data>
+  <data name="Splash.Localization" xml:space="preserve">
+    <value>ローカライゼーションを初期化中</value>
+  </data>
+  <data name="Splash.Complete" xml:space="preserve">
+    <value>初期化完了</value>
+  </data>
+  <data name="SingerManagement.VogenNotImplemented" xml:space="preserve">
+    <value>Vogenシンガーセットアップウィザードは未実装です。手動でインストールしてください</value>
+  </data>
+  <data name="ProjectEdit.BpmRange" xml:space="preserve">
+    <value>BPMは10〜1000の間の数値である必要があります</value>
+  </data>
+  <data name="PianoRoll.PortraitLoadFailed" xml:space="preserve">
+    <value>立ち絵の読み込みに失敗しました</value>
+  </data>
+  <data name="Editor.Action.Merge" xml:space="preserve">
+    <value>合并</value>
+  </data>
+  <data name="SetupWizard.Title" xml:space="preserve">
+    <value>セットアップウィザード</value>
+  </data>
+  <data name="SetupWizard.Step0.Title" xml:space="preserve">
+    <value>ようこそ</value>
+  </data>
+  <data name="SetupWizard.Step0.Desc" xml:space="preserve">
+    <value>OpenLoid-Flame は、UTAU、DiffSinger、Vogen など複数のエンジンに対応したクロスプラットフォームの歌声合成エディタです。基本設定を行い、すぐに創作を始めましょう。</value>
+  </data>
+  <data name="SetupWizard.Step0.Skip" xml:space="preserve">
+    <value>スキップ</value>
+  </data>
+  <data name="SetupWizard.Step1.Title" xml:space="preserve">
+    <value>ストレージ権限</value>
+  </data>
+  <data name="SetupWizard.Step1.Desc" xml:space="preserve">
+    <value>以下の権限はアプリの正常な動作に役立ちます。許可しなくても制限付きで使用できます。</value>
+  </data>
+  <data name="SetupWizard.Step1.Card.Storage" xml:space="preserve">
+    <value>ファイルストレージ</value>
+  </data>
+  <data name="SetupWizard.Step1.Card.Storage.Desc" xml:space="preserve">
+    <value>シンガーライブラリの読み取り、プロジェクトファイルの開く/保存に使用します。</value>
+  </data>
+  <data name="SetupWizard.Step1.Grant" xml:space="preserve">
+    <value>許可する</value>
+  </data>
+  <data name="SetupWizard.Step1.PermissionGranted" xml:space="preserve">
+    <value>許可済み</value>
+  </data>
+  <data name="SetupWizard.Step1.DesktopReady" xml:space="preserve">
+    <value>このプラットフォームでは追加の権限設定は不要です。ファイルアクセスは準備完了です。</value>
+  </data>
+  <data name="SetupWizard.Step2.Title" xml:space="preserve">
+    <value>シンガーストレージパス</value>
+  </data>
+  <data name="SetupWizard.Step2.Desc" xml:space="preserve">
+    <value>シンガーの保存方法を選択してください。設定からいつでも変更できます。</value>
+  </data>
+  <data name="SetupWizard.Step2.Builtin" xml:space="preserve">
+    <value>内蔵</value>
+  </data>
+  <data name="SetupWizard.Step2.Builtin.Desc" xml:space="preserve">
+    <value>アプリ付属のデフォルトシンガーディレクトリを使用します。追加設定は不要です。</value>
+  </data>
+  <data name="SetupWizard.Step2.External" xml:space="preserve">
+    <value>外部フォルダ</value>
+  </data>
+  <data name="SetupWizard.Step2.External.Desc" xml:space="preserve">
+    <value>カスタムフォルダを選択してシンガーを保存・読み取りします。既存のUTAU音源をお持ちのユーザーに最適です。</value>
+  </data>
+  <data name="SetupWizard.Step2.Selected" xml:space="preserve">
+    <value>選択中</value>
+  </data>
+  <data name="SetupWizard.Step2.SelectFolder" xml:space="preserve">
+    <value>フォルダを選択</value>
+  </data>
+  <data name="SetupWizard.Step3.Title" xml:space="preserve">
+    <value>セットアップ完了</value>
+  </data>
+  <data name="SetupWizard.Step3.Desc" xml:space="preserve">
+    <value>OpenLoid-Flame を使い始める準備ができました！</value>
+  </data>
+  <data name="SetupWizard.Finish" xml:space="preserve">
+    <value>完了</value>
+  </data>
+  <data name="BatchEdit.Title" xml:space="preserve">
+    <value>Batch edit</value>
+  </data>
+  <data name="BatchEdit.Tab.Lyrics" xml:space="preserve">
+    <value>Lyrics</value>
+  </data>
+  <data name="BatchEdit.Tab.Notes" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="BatchEdit.Tab.Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="BatchEdit.Scope.Selected" xml:space="preserve">
+    <value>{0} selected notes</value>
+  </data>
+  <data name="BatchEdit.Scope.Part" xml:space="preserve">
+    <value>All {0} notes in the current part</value>
+  </data>
+  <data name="BatchEdit.Run" xml:space="preserve">
+    <value>Run</value>
+  </data>
+  <data name="BatchEdit.Pin" xml:space="preserve">
+    <value>ピン留め</value>
+  </data>
+  <data name="BatchEdit.Unpin" xml:space="preserve">
+    <value>ピン留めを解除</value>
+  </data>
+  <data name="BatchEdit.Pinned" xml:space="preserve">
+    <value>ピン留め</value>
+  </data>
+  <data name="BatchEdit.Confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="BatchEdit.Parameter.Lyric" xml:space="preserve">
+    <value>Lyric</value>
+  </data>
+  <data name="BatchEdit.Parameter.Semitones" xml:space="preserve">
+    <value>Semitones</value>
+  </data>
+  <data name="BatchEdit.Parameter.Ticks" xml:space="preserve">
+    <value>Ticks</value>
+  </data>
+  <data name="BatchEdit.Parameter.Ratio" xml:space="preserve">
+    <value>Ratio (0–1)</value>
+  </data>
+  <data name="BatchEdit.Parameter.Cents" xml:space="preserve">
+    <value>Maximum cents</value>
+  </data>
+  <data name="BatchEdit.Validation.Required" xml:space="preserve">
+    <value>Enter a value.</value>
+  </data>
+  <data name="BatchEdit.Validation.Number" xml:space="preserve">
+    <value>Enter a valid number in the allowed range.</value>
+  </data>
+  <data name="BatchEdit.Validation.Confirm" xml:space="preserve">
+    <value>This operation changes or resets note data. Select Confirm to continue.</value>
+  </data>
+  <data name="BatchEdit.Status.Running" xml:space="preserve">
+    <value>Running {0}…</value>
+  </data>
+  <data name="BatchEdit.Status.Progress" xml:space="preserve">
+    <value>{0} / {1}</value>
+  </data>
+  <data name="BatchEdit.Action.RomajiToHiragana" xml:space="preserve">
+    <value>Romaji to Hiragana</value>
+  </data>
+  <data name="BatchEdit.Action.HiraganaToRomaji" xml:space="preserve">
+    <value>Hiragana to Romaji</value>
+  </data>
+  <data name="BatchEdit.Action.JapaneseVcvToCv" xml:space="preserve">
+    <value>Japanese VCV to CV</value>
+  </data>
+  <data name="BatchEdit.Action.RemoveToneSuffix" xml:space="preserve">
+    <value>Remove tone suffix</value>
+  </data>
+  <data name="BatchEdit.Action.RemoveLetterSuffix" xml:space="preserve">
+    <value>Remove letter suffix</value>
+  </data>
+  <data name="BatchEdit.Action.MoveSuffixToVoiceColor" xml:space="preserve">
+    <value>Move suffix to voice color</value>
+  </data>
+  <data name="BatchEdit.Action.RemovePhoneticHint" xml:space="preserve">
+    <value>Remove phonetic hint</value>
+  </data>
+  <data name="BatchEdit.Action.DashToPlus" xml:space="preserve">
+    <value>Convert dash to plus</value>
+  </data>
+  <data name="BatchEdit.Action.DashToPlusTilde" xml:space="preserve">
+    <value>Convert dash to plus-tilde</value>
+  </data>
+  <data name="BatchEdit.Action.InsertSlur" xml:space="preserve">
+    <value>Insert slur</value>
+  </data>
+  <data name="BatchEdit.Action.AddTailNote" xml:space="preserve">
+    <value>Add tail note</value>
+  </data>
+  <data name="BatchEdit.Action.RemoveTailNote" xml:space="preserve">
+    <value>Remove tail note</value>
+  </data>
+  <data name="BatchEdit.Action.AddBreathNote" xml:space="preserve">
+    <value>Add breath note</value>
+  </data>
+  <data name="BatchEdit.Action.Transpose" xml:space="preserve">
+    <value>Transpose</value>
+  </data>
+  <data name="BatchEdit.Action.Quantize" xml:space="preserve">
+    <value>Quantize notes</value>
+  </data>
+  <data name="BatchEdit.Action.AutoLegato" xml:space="preserve">
+    <value>Auto legato</value>
+  </data>
+  <data name="BatchEdit.Action.FixOverlap" xml:space="preserve">
+    <value>Fix overlapping notes</value>
+  </data>
+  <data name="BatchEdit.Action.CommonNoteCopy" xml:space="preserve">
+    <value>Copy as CommonNote</value>
+  </data>
+  <data name="BatchEdit.Action.CommonNotePaste" xml:space="preserve">
+    <value>Paste CommonNote</value>
+  </data>
+  <data name="BatchEdit.Action.HanziToPinyin" xml:space="preserve">
+    <value>Hanzi to Pinyin</value>
+  </data>
+  <data name="BatchEdit.Action.LengthenCrossfade" xml:space="preserve">
+    <value>Lengthen crossfade</value>
+  </data>
+  <data name="BatchEdit.Action.RandomizeTiming" xml:space="preserve">
+    <value>Randomize timing</value>
+  </data>
+  <data name="BatchEdit.Action.RandomizePhonemeOffset" xml:space="preserve">
+    <value>Randomize phoneme offset</value>
+  </data>
+  <data name="BatchEdit.Action.RandomizeTuning" xml:space="preserve">
+    <value>Randomize tuning</value>
+  </data>
+  <data name="BatchEdit.Action.LoadRenderedPitch" xml:space="preserve">
+    <value>Load rendered pitch</value>
+  </data>
+  <data name="BatchEdit.Action.BakePitch" xml:space="preserve">
+    <value>Bake pitch</value>
+  </data>
+  <data name="BatchEdit.Action.RefreshRealCurves" xml:space="preserve">
+    <value>Refresh rendered curves</value>
+  </data>
+  <data name="BatchEdit.Action.ResetPitchBends" xml:space="preserve">
+    <value>Reset pitch bends</value>
+  </data>
+  <data name="BatchEdit.Action.ResetExpressions" xml:space="preserve">
+    <value>Reset expressions</value>
+  </data>
+  <data name="BatchEdit.Action.ClearVibratos" xml:space="preserve">
+    <value>Clear vibratos</value>
+  </data>
+  <data name="BatchEdit.Action.ResetVibratos" xml:space="preserve">
+    <value>Reset vibratos</value>
+  </data>
+  <data name="BatchEdit.Action.ClearTimings" xml:space="preserve">
+    <value>Clear phoneme timings</value>
+  </data>
+  <data name="BatchEdit.Action.ResetAliases" xml:space="preserve">
+    <value>Reset phoneme aliases</value>
+  </data>
+  <data name="BatchEdit.Action.ResetAll" xml:space="preserve">
+    <value>Reset all note data</value>
+  </data>
+  <data name="BatchEdit.Validation.SelectionUnavailable" xml:space="preserve">
+    <value>The selected notes are no longer in the current part.</value>
+  </data>
+  <data name="Settings.Render.PerformanceMonitor" xml:space="preserve"><value>パフォーマンスモニター</value></data>
+  <data name="Settings.Render.PerformanceMonitor.Desc" xml:space="preserve"><value>右上の隅にリアルタイムのリソース使用量を表示します。</value></data>
+  <data name="PerformanceMonitor.AppMemory" xml:space="preserve"><value>アプリメモリ</value></data>
+  <data name="PerformanceMonitor.ManagedHeap" xml:space="preserve"><value>マネージドヒープ</value></data>
+  <data name="PerformanceMonitor.SystemMemory" xml:space="preserve"><value>システムメモリ</value></data>
+  <data name="PerformanceMonitor.Cpu" xml:space="preserve"><value>CPU</value></data>
+  <data name="PerformanceMonitor.AppShort" xml:space="preserve"><value>アプリ</value></data>
+  <data name="PerformanceMonitor.SystemShort" xml:space="preserve"><value>システム</value></data>
+  <data name="PerformanceMonitor.Fps" xml:space="preserve"><value>FPS</value></data>
+  <data name="PhonemePanel.EditMode.Switch" xml:space="preserve">
+    <value>音素・パラメータ編集モードの切替</value>
+  </data>
+  <data name="PhonemePanel.Mode.Simple" xml:space="preserve">
+    <value>シンプル音素</value>
+  </data>
+  <data name="PhonemePanel.Mode.Advanced" xml:space="preserve">
+    <value>詳細音素</value>
+  </data>
+  <data name="PhonemePanel.Mode.Draw" xml:space="preserve">
+    <value>パラメータ描画</value>
+  </data>
+  <data name="PhonemePanel.Mode.Erase" xml:space="preserve">
+    <value>パラメータ消しゴム</value>
+  </data>
+  <data name="PhonemePanel.Toast.Simple" xml:space="preserve">
+    <value>シンプル音素モード</value>
+  </data>
+  <data name="PhonemePanel.Toast.Advanced" xml:space="preserve">
+    <value>詳細音素モード</value>
+  </data>
+  <data name="PhonemePanel.Toast.Draw" xml:space="preserve">
+    <value>パラメータ描画モード</value>
+  </data>
+  <data name="PhonemePanel.Toast.Erase" xml:space="preserve">
+    <value>パラメータ消しゴムモード</value>
+  </data>
+  <data name="PhonemePanel.Param.Primary" xml:space="preserve">
+    <value>主パラメータ</value>
+  </data>
+  <data name="PhonemePanel.Param.Secondary" xml:space="preserve">
+    <value>背景パラメータ</value>
+  </data>
+  <data name="PhonemePanel.Param.Swap" xml:space="preserve">
+    <value>主/背景パラメータの入れ替え</value>
+  </data>
+  <data name="PhonemePanel.Param.None" xml:space="preserve">
+    <value>なし</value>
+  </data>
+  <data name="PhonemePanel.Split.Tooltip" xml:space="preserve">
+    <value>ドラッグしてパネル高さを調整</value>
+  </data>
+  <data name="PhonemeEdit.Title" xml:space="preserve">
+    <value>音素エイリアスの編集</value>
+  </data>
+  <data name="PhonemeEdit.Watermark" xml:space="preserve">
+    <value>デフォルト（空欄で自動）</value>
+  </data>
+  <data name="PhonemeEdit.Reset" xml:space="preserve">
+    <value>初期化</value>
+  </data>
+  <data name="PhonemeEdit.Info" xml:space="preserve">
+    <value>ノート: {0} | 音素 #{1}</value>
+  </data>
+  <data name="PhonemeEdit.ViewError" xml:space="preserve">
+    <value>エラーを表示</value>
+  </data>
+  <data name="PhonemeEdit.UnknownError" xml:space="preserve">
+    <value>この音素にエラーがありますが、詳しい原因は不明です。歌詞、音素変換器、音源の設定を確認してください。</value>
+  </data>
+  <data name="PhonemePanel.Reset.ReleaseHint" xml:space="preserve">
+    <value>指を離すとパラメーターをリセット</value>
+  </data>
+  <data name="ErrorDialog.CopySucceeded" xml:space="preserve">
+    <value>エラー情報をコピーしました</value>
+  </data>
+  <data name="ErrorDialog.CopyFailed" xml:space="preserve">
+    <value>エラー情報をコピーできませんでした</value>
+  </data>
+  <data name="BulkLyricEdit.Title" xml:space="preserve">
+    <value>歌詞を一括編集</value>
+  </data>
+  <data name="BulkLyricEdit.Watermark" xml:space="preserve">
+    <value>歌詞を入力します。空白や文字列をまとめるには引用符を使用します</value>
+  </data>
+  <data name="BulkLyricEdit.SelectedOnly" xml:space="preserve">
+    <value>選択したノートにのみ適用</value>
+  </data>
+  <data name="ImportTracks.FilesSelected" xml:space="preserve"><value>{0} 個のファイルを選択</value></data>
+  <data name="ImportTracks.ImportCount" xml:space="preserve"><value>{0} トラックをインポート</value></data>
+  <data name="ImportTracks.SourceSummary" xml:space="preserve"><value>{0} トラック</value></data>
+  <data name="ImportTracks.TrackSummary" xml:space="preserve"><value>歌声パート {0} · 音声パート {1}</value></data>
+  <data name="ImportTracks.MissingSinger" xml:space="preserve"><value>シンガーが未指定または未インストール：{0}</value></data>
+  <data name="ImportTracks.Unassigned" xml:space="preserve"><value>未指定</value></data>
+  <data name="ImportTracks.MissingAudio" xml:space="preserve"><value>音声ファイルが見つかりません：{0}</value></data>
+  <data name="ImportTracks.ColorMismatch" xml:space="preserve"><value>音色設定が現在のシンガーと異なります。インポート後に確認してください。</value></data>
+  <data name="ImportTracks.AppendHint" xml:space="preserve"><value>既存のトラックを置き換えず、元の位置を保って新しいトラックとして追加します。</value></data>
+  <data name="ImportTracks.ExpressionsHint" xml:space="preserve"><value>同名の表現は現在のプロジェクト、次に先の選択ファイルを優先します。不足する定義を追加します。</value></data>
+  <data name="ImportTracks.UseSourceTiming" xml:space="preserve"><value>元のテンポと拍子を使用（オフ：現在の設定を保持）</value></data>
+  <data name="ImportTracks.TimingSource" xml:space="preserve"><value>テンポと拍子の参照元</value></data>
+  <data name="ImportTracks.TimingSummary" xml:space="preserve"><value>初期 {0} BPM · {1}/{2}、テンポ {3} 個・拍子 {4} 個のマーカー</value></data>
+  <data name="ImportTracks.TempoMarker" xml:space="preserve"><value>位置 {0} tick：{1} BPM</value></data>
+  <data name="ImportTracks.SignatureMarker" xml:space="preserve"><value>第 {0} 小節：{1}/{2}</value></data>
+  <data name="ImportTracks.ReplaceTimingWarning" xml:space="preserve"><value>既存トラックを含むプロジェクト全体のテンポと拍子を置き換えます。</value></data>
+  <data name="ImportTracks.MarkerDetails" xml:space="preserve"><value>すべてのマーカー</value></data>
+  <data name="ImportTracks.SelectAll" xml:space="preserve"><value>すべて選択</value></data>
+  <data name="ImportTracks.SelectNone" xml:space="preserve"><value>選択を解除</value></data>
+  <data name="ImportTracks.RemoveFile" xml:space="preserve"><value>このファイルを除外</value></data>
+  <data name="ImportTracks.Reading" xml:space="preserve"><value>トラックファイルを読み込み中…</value></data>
+  <data name="ImportTracks.Importing" xml:space="preserve"><value>トラックをインポート中…</value></data>
+  <data name="ImportTracks.Success" xml:space="preserve"><value>{0} トラックをインポートしました</value></data>
+  <data name="ImportTracks.ProjectChanged" xml:space="preserve"><value>現在のプロジェクトが変更されました。もう一度インポートしてください。</value></data>
+  <data name="ImportTracks.HistoryNotice" xml:space="preserve"><value>デスクトップ版と同様に、インポートすると元に戻す・やり直しの履歴と再生位置がリセットされます。テンポと拍子は最初のインポート元を使用します。</value></data>
+  <data name="VoiceMapping.Title" xml:space="preserve"><value>音色マッピング</value></data>
+  <data name="VoiceMapping.VocalModesTitle" xml:space="preserve"><value>インポートした歌唱スタイルのマッピング</value></data>
+  <data name="VoiceMapping.Hint" xml:space="preserve"><value>元の音色を現在のシンガーに割り当てます。スキップしてもインポート済みのトラックは残ります。</value></data>
+  <data name="VoiceMapping.VocalModesHint" xml:space="preserve"><value>歌唱スタイルのカーブを DiffSinger の音色に割り当てます。デフォルトは変換しません。既存のカーブは保持します。</value></data>
+  <data name="VoiceMapping.Default" xml:space="preserve"><value>デフォルト</value></data>
+  <data name="VoiceMapping.Apply" xml:space="preserve"><value>適用</value></data>
+  <data name="VoiceMapping.NoNotes" xml:space="preserve"><value>割り当てる音符または音色がありません。</value></data>
+  <data name="VoiceMapping.Undo" xml:space="preserve"><value>音色を再割り当て</value></data>
+  <data name="DependencyManager.Sort" xml:space="preserve"><value>並べ替え</value></data>
+  <data name="Settings.Edit.Magnifier" xml:space="preserve"><value>拡大鏡</value></data>
+  <data name="Settings.Edit.MagnifierFactor" xml:space="preserve"><value>表示倍率</value></data>
+  <data name="Settings.Edit.MagnifierFactor.Desc" xml:space="preserve"><value>ピッチとパラメーターカーブの編集に適用します。1× 未満では広い範囲を表示し、1× は元の倍率です。</value></data>
+  <data name="Mixer.Close" xml:space="preserve"><value>ミキサーを閉じる</value></data>
+  <data name="Mixer.Compressor" xml:space="preserve"><value>圧縮</value></data>
+  <data name="Mixer.Effects" xml:space="preserve"><value>エフェクト</value></data>
+  <data name="Mixer.Empty" xml:space="preserve"><value>トラックなし</value></data>
+  <data name="Mixer.High" xml:space="preserve"><value>高域</value></data>
+  <data name="Mixer.Low" xml:space="preserve"><value>低域</value></data>
+  <data name="Mixer.MeterPending" xml:space="preserve"><value>メーター未接続</value></data>
+  <data name="Mixer.Mid" xml:space="preserve"><value>中域</value></data>
+  <data name="Mixer.Mute" xml:space="preserve"><value>ミュート</value></data>
+  <data name="Mixer.Order" xml:space="preserve"><value>固定順序：EQ → 圧縮 → リバーブ</value></data>
+  <data name="Mixer.Preview" xml:space="preserve"><value>音声設定はプレビューです。名前と色はプロジェクトに反映されます</value></data>
+  <data name="Mixer.Ratio" xml:space="preserve"><value>比率</value></data>
+  <data name="Mixer.Reverb" xml:space="preserve"><value>リバーブ</value></data>
+  <data name="Mixer.Size" xml:space="preserve"><value>減衰の長さ</value></data>
+  <data name="Mixer.Solo" xml:space="preserve"><value>ソロ</value></data>
+  <data name="Mixer.Threshold" xml:space="preserve"><value>しきい値</value></data>
+  <data name="Mixer.Title" xml:space="preserve"><value>ミキサー</value></data>
+  <data name="Mixer.Wet" xml:space="preserve"><value>残響量（プリセット倍率）</value></data>
+  <data name="Mixer.ResetHint" xml:space="preserve"><value>スライダーをダブルタップすると初期値に戻ります</value></data>
+  <data name="Mixer.ToggleFx" xml:space="preserve"><value>エフェクト有効 / バイパス（点灯時は有効）</value></data>
+  <data name="Mixer.FxOn" xml:space="preserve"><value>有効</value></data>
+  <data name="History.Edit" xml:space="preserve"><value>編集操作</value></data>
+  <data name="Mixer.MidFrequency" xml:space="preserve"><value>中域中心周波数 (Hz)</value></data>
+  <data name="Mixer.Makeup" xml:space="preserve"><value>メイクアップゲイン (dB)</value></data>
+  <data name="Mixer.Damp" xml:space="preserve"><value>高域減衰</value></data>
+  <data name="Mixer.PreDelay" xml:space="preserve"><value>プリディレイ (ms)</value></data>
+  <data name="Mixer.EqGraph" xml:space="preserve"><value>3 バンド EQ · 周波数 Hz → / ゲイン dB ↑</value></data>
+  <data name="Mixer.EqGraphHint" xml:space="preserve"><value>点を上下に動かしてゲイン、中央の点を左右に動かして周波数を調整。</value></data>
+  <data name="Mixer.CompGraph" xml:space="preserve"><value>デジタルコンプレッサー · 入力 dB → / 出力 dB ↑</value></data>
+  <data name="Mixer.CompGraphHint" xml:space="preserve"><value>左の点を左右に動かしてスレッショルド、右を上下に動かして比率を調整。ゲイン補正込みの静特性。</value></data>
+  <data name="Mixer.ReverbGraph" xml:space="preserve"><value>Freeverb · 時間 s → / ウェットピーク dB ↑</value></data>
+  <data name="Mixer.ReverbGraphHint" xml:space="preserve"><value>左右のインパルス減衰プレビュー（4 秒、ウェットのみ）。実時間表示ではなく、長い残響は範囲外に続きます。</value></data>
+  <data name="Mixer.Preset" xml:space="preserve"><value>エフェクトプリセット</value></data>
+  <data name="Mixer.ApplyPresetUndo" xml:space="preserve"><value>エフェクトプリセットを適用</value></data>
+  <data name="Mixer.PresetLibrary" xml:space="preserve"><value>エフェクトチェーンのプリセット</value></data>
+  <data name="Mixer.DefaultPreset" xml:space="preserve"><value>標準チェーンを適用</value></data>
+  <data name="Mixer.PresetName" xml:space="preserve"><value>プリセット名</value></data>
+  <data name="Mixer.SavePreset" xml:space="preserve"><value>保存（同名は上書き）</value></data>
+  <data name="Mixer.PresetNameRequired" xml:space="preserve"><value>プリセット名を入力してください</value></data>
+  <data name="Mixer.PresetSaved" xml:space="preserve"><value>プリセット保存：{0}</value></data>
+  <data name="Mixer.Preset.off" xml:space="preserve"><value>オフ</value></data>
+  <data name="Mixer.Preset.vocal_air" xml:space="preserve"><value>ボーカルの空気感</value></data>
+  <data name="Mixer.Preset.warm" xml:space="preserve"><value>ウォーム</value></data>
+  <data name="Mixer.Preset.demud" xml:space="preserve"><value>濁りを軽減</value></data>
+  <data name="Mixer.Preset.telephone" xml:space="preserve"><value>電話</value></data>
+  <data name="Mixer.Preset.gentle" xml:space="preserve"><value>穏やか</value></data>
+  <data name="Mixer.Preset.pop" xml:space="preserve"><value>ポップボーカル</value></data>
+  <data name="Mixer.Preset.limit" xml:space="preserve"><value>強い圧縮（10:1）</value></data>
+  <data name="Mixer.Preset.small_room" xml:space="preserve"><value>小部屋</value></data>
+  <data name="Mixer.Preset.vocal_plate" xml:space="preserve"><value>ボーカルプレート風</value></data>
+  <data name="Mixer.Preset.hall" xml:space="preserve"><value>ホール</value></data>
+  <data name="Mixer.Preset.ambient" xml:space="preserve"><value>アンビエント</value></data>
+  <data name="Mixer.ChoosePreset" xml:space="preserve"><value>選択して適用</value></data>
+  <data name="Mixer.UpdatePreset" xml:space="preserve"><value>更新</value></data>
+  <data name="Mixer.AddPreset" xml:space="preserve"><value>追加</value></data>
+  <data name="Mixer.LoadPreset" xml:space="preserve"><value>プリセットを読み込む</value></data>
+  <data name="Mixer.PresetDefault" xml:space="preserve"><value>標準</value></data>
+  <data name="Mixer.NewPresetTitle" xml:space="preserve"><value>エフェクトプリセットを追加</value></data>
+  <data name="Mixer.NewPresetHint" xml:space="preserve"><value>このトラックの EQ、コンプレッサー、リバーブを保存します。</value></data>
+  <data name="Mixer.PresetNameExists" xml:space="preserve"><value>同名があります。上書きには「更新」を使用してください。</value></data>
+  <data name="Mixer.Axis.Frequency" xml:space="preserve"><value>周波数 (Hz)</value></data>
+  <data name="Mixer.Axis.Gain" xml:space="preserve"><value>ゲイン (dB)</value></data>
+  <data name="Mixer.Axis.Input" xml:space="preserve"><value>入力 (dB)</value></data>
+  <data name="Mixer.Axis.Output" xml:space="preserve"><value>出力 (dB)</value></data>
+  <data name="Mixer.Axis.Time" xml:space="preserve"><value>時間 (s)</value></data>
+  <data name="Mixer.Axis.WetPeak" xml:space="preserve"><value>ウェットピーク (dB)</value></data>
+  <data name="PerformanceMonitor.AudioLatency" xml:space="preserve"><value>音声キュー遅延</value></data>
+  <data name="Expressions.Title" xml:space="preserve"><value>表情</value></data>
+  <data name="Expressions.Project" xml:space="preserve"><value>Project Expressions</value></data>
+  <data name="Expressions.Track" xml:space="preserve"><value>Track Expressions (override)</value></data>
+  <data name="Expressions.Name" xml:space="preserve"><value>名前</value></data>
+  <data name="Expressions.Abbr" xml:space="preserve"><value>パラメータの略称</value></data>
+  <data name="Expressions.Type" xml:space="preserve"><value>タイプ</value></data>
+  <data name="Expressions.Numerical" xml:space="preserve"><value>数値</value></data>
+  <data name="Expressions.Options" xml:space="preserve"><value>オプション</value></data>
+  <data name="Expressions.Curve" xml:space="preserve"><value>カーブ</value></data>
+  <data name="Expressions.MaskedCurve" xml:space="preserve"><value>マスク付きカーブ</value></data>
+  <data name="Expressions.IsFlag" xml:space="preserve"><value>エンジン内フラグ</value></data>
+  <data name="Expressions.Flag" xml:space="preserve"><value>フラグ</value></data>
+  <data name="Expressions.Min" xml:space="preserve"><value>最小</value></data>
+  <data name="Expressions.Max" xml:space="preserve"><value>最大</value></data>
+  <data name="Expressions.Default" xml:space="preserve"><value>初期値</value></data>
+  <data name="Expressions.SystemDefault" xml:space="preserve"><value>System Default</value></data>
+  <data name="Expressions.ProjectDefault" xml:space="preserve"><value>Project Default</value></data>
+  <data name="Expressions.TrackDefault" xml:space="preserve"><value>Track Default</value></data>
+  <data name="Expressions.SkipOutput" xml:space="preserve"><value>Skip flag output when the value is system default</value></data>
+  <data name="Expressions.OptionValues" xml:space="preserve"><value>カスタム値</value></data>
+  <data name="Expressions.CommaHint" xml:space="preserve"><value>カスタム値は &apos;,&apos;で区切ってください。</value></data>
+  <data name="Expressions.Apply" xml:space="preserve"><value>Apply</value></data>
+  <data name="Expressions.Error.Name" xml:space="preserve"><value>表情名を入力してください</value></data>
+  <data name="Expressions.Error.Abbr" xml:space="preserve"><value>パラメータの略称を入力してください</value></data>
+  <data name="Expressions.Error.AbbrLength" xml:space="preserve"><value>パラメータの略称は1～4文字で入力してください</value></data>
+  <data name="Expressions.Error.Range" xml:space="preserve"><value>最小値は最大値より小さくしてください</value></data>
+  <data name="Expressions.Error.Default" xml:space="preserve"><value>デフォルト値は最小値以上、最大値以下にしてください</value></data>
+  <data name="Expressions.Error.CustomDefault" xml:space="preserve"><value>Project/Track default value must be between min and max</value></data>
+  <data name="Expressions.Error.DuplicateAbbr" xml:space="preserve"><value>パラメータの略称が重複しています</value></data>
+  <data name="Expressions.Error.DuplicateFlag" xml:space="preserve"><value>フラグが重複しています</value></data>
+  <data name="Expressions.Add" xml:space="preserve"><value>追加</value></data>
+  <data name="Expressions.Remove" xml:space="preserve"><value>削除</value></data>
+  <data name="Expressions.Suggestions" xml:space="preserve"><value>提案を取得</value></data>
+  <data name="Expressions.ProjectScope" xml:space="preserve"><value>プロジェクト</value></data>
+  <data name="Expressions.TrackScope" xml:space="preserve"><value>トラック</value></data>
+  <data name="Expressions.RendererUnsupported" xml:space="preserve">
+    <value>現在のレンダラーは以下のエクスプレッションに対応していません。</value>
+  </data>
+  <data name="NoteExtraction.Title" xml:space="preserve"><value>音符抽出</value></data>
+<data name="NoteExtraction.Running" xml:space="preserve"><value>音符を抽出中…</value></data>
+  <data name="NoteExtraction.Empty" xml:space="preserve"><value>音符が検出されませんでした。</value></data>
+  <data name="NoteExtraction.Unsupported" xml:space="preserve"><value>このプラットフォームでは音符抽出に対応していません。</value></data>
+  <data name="NoteExtraction.MissingOnnx" xml:space="preserve"><value>依存関係の管理で GAME ONNX モデル（game）をインストールしてください。</value></data>
+  <data name="NoteExtraction.MissingGgml" xml:space="preserve"><value>GGUF モデルを1つ含む GAME GGML パッケージ（game-ggml-medium）をインストールしてください。</value></data>
+  <data name="NoteExtraction.MissingNative" xml:space="preserve"><value>このアプリには互換性のある GAME GGML ランタイムが含まれていません。GGML 対応版を使用するか、ONNX を選択してください。</value></data>
+  <data name="NoteExtraction.BackendStatus" xml:space="preserve"><value>{0} · {1}：{2}</value></data>
+  <data name="NoteExtraction.NotInstalled" xml:space="preserve"><value>未導入または不完全</value></data>
+  <data name="NoteExtraction.LanguageUnavailable" xml:space="preserve"><value>選択言語は非対応</value></data>
+  <data name="NoteExtraction.RmvpeInstalled" xml:space="preserve"><value>rmvpe：インストール済み</value></data>
+  <data name="NoteExtraction.RmvpeMissing" xml:space="preserve"><value>音高抽出には依存パッケージ rmvpe が必要です</value></data>
+  <data name="NoteExtraction.ExtractPitch" xml:space="preserve"><value>RMVPE で音高カーブを抽出</value></data>
+  <data name="NoteExtraction.Universal" xml:space="preserve"><value>汎用</value></data>
+  <data name="NoteExtraction.Language" xml:space="preserve"><value>言語</value></data>
+  <data name="NoteExtraction.SamplingSteps" xml:space="preserve"><value>サンプリングステップ数</value></data>
+  <data name="NoteExtraction.BoundaryThreshold" xml:space="preserve"><value>音符境界のしきい値</value></data>
+  <data name="NoteExtraction.BoundaryRadius" xml:space="preserve"><value>境界検出半径（フレーム）</value></data>
+  <data name="NoteExtraction.ScoreThreshold" xml:space="preserve"><value>音符信頼度のしきい値</value></data>
+  <data name="NoteExtraction.BatchSize" xml:space="preserve"><value>バッチ内の区間数</value></data>
+  <data name="NoteExtraction.BatchDuration" xml:space="preserve"><value>バッチ最大補完時間（秒）</value></data>
+  <data name="NoteExtraction.BatchHint" xml:space="preserve"><value>ONNX のみ。最長区間に揃えた時間で計算。1 区間は個別処理、0 秒は時間制限なし。</value></data>
+  <data name="NoteExtraction.RunOnnx" xml:space="preserve"><value>ONNX で抽出</value></data>
+  <data name="NoteExtraction.RunGgml" xml:space="preserve"><value>GGML で抽出</value></data>
+  <data name="NoteExtraction.ExtractingPitch" xml:space="preserve"><value>音高カーブを抽出中…</value></data>
+  <data name="NoteExtraction.InvalidSettings" xml:space="preserve"><value>有効な値を入力してください。半径と区間数は整数です。</value></data>
+  <data name="NoteProperties.Summary" xml:space="preserve"><value>{0} 個のノートを選択中</value></data>
+  <data name="NoteProperties.Hint" xml:space="preserve"><value>変更した項目のみ適用します。空欄は異なる値を示します。</value></data>
+  <data name="NoteProperties.Mixed" xml:space="preserve"><value>異なる値</value></data>
+  <data name="NoteProperties.Choose" xml:space="preserve"><value>値を選択</value></data>
+  <data name="NoteProperties.Reset" xml:space="preserve"><value>表現を既定値に戻す</value></data>
+  <data name="NoteProperties.Basic" xml:space="preserve"><value>基本</value></data>
+  <data name="NoteProperties.Lyric" xml:space="preserve"><value>歌詞</value></data>
+  <data name="NoteProperties.Tone" xml:space="preserve"><value>音高</value></data>
+  <data name="NoteProperties.Tuning" xml:space="preserve"><value>微調整（セント）</value></data>
+  <data name="NoteProperties.Phonemizer" xml:space="preserve"><value>音素変換器</value></data>
+  <data name="NoteProperties.TrackDefault" xml:space="preserve"><value>トラックの音素変換器を使用</value></data>
+  <data name="NoteProperties.Portamento" xml:space="preserve"><value>ポルタメント</value></data>
+  <data name="NoteProperties.PortamentoLength" xml:space="preserve"><value>長さ（ms）</value></data>
+  <data name="NoteProperties.PortamentoStart" xml:space="preserve"><value>開始（ms）</value></data>
+  <data name="NoteProperties.Shape" xml:space="preserve"><value>曲線の形状</value></data>
+  <data name="NoteProperties.EaseInOut" xml:space="preserve"><value>イーズイン・アウト</value></data>
+  <data name="NoteProperties.Linear" xml:space="preserve"><value>線形</value></data>
+  <data name="NoteProperties.EaseIn" xml:space="preserve"><value>イーズイン</value></data>
+  <data name="NoteProperties.EaseOut" xml:space="preserve"><value>イーズアウト</value></data>
+  <data name="NoteProperties.Smooth" xml:space="preserve"><value>スムーズ</value></data>
+  <data name="NoteProperties.Preset" xml:space="preserve"><value>プリセット</value></data>
+  <data name="NoteProperties.Vibrato" xml:space="preserve"><value>ビブラート</value></data>
+  <data name="NoteProperties.VibratoLength" xml:space="preserve"><value>長さ（%）· 0 で無効</value></data>
+  <data name="NoteProperties.Period" xml:space="preserve"><value>周期（ms）</value></data>
+  <data name="NoteProperties.Depth" xml:space="preserve"><value>深さ（セント）</value></data>
+  <data name="NoteProperties.FadeIn" xml:space="preserve"><value>フェードイン（%）</value></data>
+  <data name="NoteProperties.FadeOut" xml:space="preserve"><value>フェードアウト（%）</value></data>
+  <data name="NoteProperties.Shift" xml:space="preserve"><value>位相（%）</value></data>
+  <data name="NoteProperties.Drift" xml:space="preserve"><value>ドリフト（%）</value></data>
+  <data name="NoteProperties.VolumeLink" xml:space="preserve"><value>音量連動（%）</value></data>
+  <data name="NoteProperties.Expressions" xml:space="preserve"><value>表現</value></data>
+  <data name="NoteProperties.Stale" xml:space="preserve"><value>編集中のパートまたはノートがありません。ダイアログを開き直してください。</value></data>
+  <data name="NoteProperties.Invalid" xml:space="preserve"><value>入力範囲、空欄、整数の指定を確認してください。</value></data>
+  <data name="NoteProperties.Title" xml:space="preserve"><value>ノートのプロパティ</value></data>
+  <data name="NoteProperties.ToneHint" xml:space="preserve"><value>C4、F#4、MIDI 番号、または相対半音数 +2 / -2 を入力します。</value></data>
+  <data name="NoteProperties.InvalidTone" xml:space="preserve"><value>音名、MIDI 番号、または相対半音数を入力してください。結果は MIDI 0–127 の範囲です。</value></data>
+  <data name="NoteProperties.PhonemizerHint" xml:space="preserve"><value>歌詞が + で始まる延長ノートは前のノートの音素変換器を使用します。</value></data>
+  <data name="NoteProperties.NoExpressions" xml:space="preserve"><value>このトラックには編集可能な非曲線の表現がありません。</value></data>
+  <data name="NoteProperties.VibratoEnabled" xml:space="preserve"><value>ビブラートを有効にする</value></data>
+  <data name="NoteProperties.AutoVibrato" xml:space="preserve"><value>長いノートのみビブラートを有効にする</value></data>
+  <data name="NoteProperties.AutoDuration" xml:space="preserve"><value>最小ノート長（tick）</value></data>
+  <data name="NoteProperties.AutoHint" xml:space="preserve"><value>長さの変更または有効化時に使用します。デスクトップ版と同様、最初の選択ノートは長さ制限の対象外です。</value></data>
+  <data name="NoteProperties.PresetName" xml:space="preserve"><value>プリセット名</value></data>
+  <data name="NoteProperties.SavePreset" xml:space="preserve"><value>プリセットを保存</value></data>
+  <data name="NoteProperties.RemovePreset" xml:space="preserve"><value>プリセットを削除</value></data>
+  <data name="NoteProperties.PresetHint" xml:space="preserve"><value>最初の選択ノートの編集内容を保存します。プリセットの変更は「適用」で保存されます。</value></data>
+  <data name="NoteProperties.PresetNameRequired" xml:space="preserve"><value>プリセット名を入力してください。</value></data>
+  <data name="NoteProperties.On" xml:space="preserve"><value>オン</value></data>
+  <data name="NoteProperties.Off" xml:space="preserve"><value>オフ</value></data>
+  <data name="NoteProperties.Tab.Basic" xml:space="preserve"><value>基本</value></data>
+  <data name="NoteProperties.Tab.Portamento" xml:space="preserve"><value>滑音</value></data>
+  <data name="NoteProperties.Tab.Vibrato" xml:space="preserve"><value>ビブラート</value></data>
+  <data name="NoteProperties.Tab.Expressions" xml:space="preserve"><value>表現</value></data>
+  <data name="EditorMore.SaveAsTemplate" xml:space="preserve"><value>テンプレートとして保存</value></data>
+  <data name="ProjectTemplates.Title" xml:space="preserve"><value>プロジェクトテンプレート</value></data>
+  <data name="ProjectTemplates.Empty" xml:space="preserve"><value>テンプレートはありません。編集画面の「その他 → ファイル」から保存できます。</value></data>
+  <data name="ProjectTemplates.Name" xml:space="preserve"><value>テンプレート名</value></data>
+  <data name="ProjectTemplates.HoldHint" xml:space="preserve"><value>長押しでテンプレートを開く</value></data>
+  <data name="Picker.PartRename.Title" xml:space="preserve"><value>パート名を変更</value></data>
+  <data name="Picker.PartRename.Placeholder" xml:space="preserve"><value>パート名を入力</value></data>
+  <data name="PartRename.Error.Empty" xml:space="preserve"><value>パート名を入力してください</value></data>
+  <data name="PianoRoll.RenderDisplay.Toggle" xml:space="preserve"><value>歌声の波形とレンダリング進捗を切り替える</value></data>
+  <data name="ExportLogs.Title" xml:space="preserve"><value>ログをエクスポート</value></data>
+  <data name="ExportLogs.Refresh" xml:space="preserve"><value>ログ一覧を更新</value></data>
+  <data name="ExportLogs.Hint" xml:space="preserve"><value>問題調査に使用するログを選択してください。アーカイブには端末情報やファイルパスが含まれる場合があります。共有前に内容をご確認ください。</value></data>
+  <data name="ExportLogs.Available" xml:space="preserve"><value>利用可能なログ</value></data>
+  <data name="ExportLogs.SelectNone" xml:space="preserve"><value>選択を解除</value></data>
+  <data name="ExportLogs.SelectionSummary" xml:space="preserve"><value>{1} 件中 {0} 件を選択</value></data>
+  <data name="ExportLogs.Export" xml:space="preserve"><value>エクスポート</value></data>
+  <data name="ExportLogs.Loading" xml:space="preserve"><value>ログを読み込み中…</value></data>
+  <data name="ExportLogs.EmptyTitle" xml:space="preserve"><value>ログはありません</value></data>
+  <data name="ExportLogs.EmptyDescription" xml:space="preserve"><value>アプリがログを作成すると、ここに表示されます。</value></data>
+  <data name="ExportLogs.LoadFailed" xml:space="preserve"><value>ログ一覧を読み込めませんでした。</value></data>
+  <data name="ExportLogs.Retry" xml:space="preserve"><value>再試行</value></data>
+  <data name="ExportLogs.SaveDialogTitle" xml:space="preserve"><value>ログアーカイブの保存先を選択</value></data>
+  <data name="ExportLogs.ExportSuccess" xml:space="preserve"><value>{0} 件のログファイルをエクスポートしました</value></data>
+  <data name="ExportLogs.ExportFailed" xml:space="preserve"><value>ログをエクスポートできませんでした</value></data>
+  <data name="ExportLogs.ExportCrashLogs" xml:space="preserve"><value>Android クラッシュログをエクスポート</value></data>
+  <data name="ExportLogs.CrashSaveDialogTitle" xml:space="preserve"><value>クラッシュログアーカイブの保存先を選択</value></data>
+  <data name="ExportLogs.CrashExportSuccess" xml:space="preserve"><value>クラッシュ診断情報をエクスポートしました（異常終了記録: {0} 件）</value></data>
+  <data name="ExportLogs.CrashExportFailed" xml:space="preserve"><value>クラッシュログをエクスポートできませんでした</value></data>
+  <data name="Editor.Split.NotesInTheWay" xml:space="preserve">
+    <value>再生ヘッドと重なっているノートがあります。再生ヘッドより後で、ノートと重ならない最も近い位置で分割しますか？</value>
+  </data>
+  <data name="PianoRoll.Split.NoIntersection" xml:space="preserve">
+    <value>分割するには、再生ヘッドを選択したノートの内側に移動してください。</value>
+  </data>
+  <data name="PianoRoll.Split.TooShort" xml:space="preserve">
+    <value>分割後の各ノートには最低 10 tick が必要です。分割位置は変更していません。</value>
+  </data>
+  <data name="Settings.Graphics.Title" xml:space="preserve">
+    <value>UI グラフィックスバックエンド</value>
+  </data>
+  <data name="Settings.Graphics.Auto" xml:space="preserve">
+    <value>自動（推奨）</value>
+  </data>
+  <data name="Settings.Graphics.Vulkan" xml:space="preserve">
+    <value>Vulkan を優先</value>
+  </data>
+  <data name="Settings.Graphics.OpenGLES" xml:space="preserve">
+    <value>OpenGL ES を優先</value>
+  </data>
+  <data name="Settings.Graphics.Software" xml:space="preserve">
+    <value>ソフトウェア描画（トラブルシューティング）</value>
+  </data>
+  <data name="Settings.Graphics.ANGLE" xml:space="preserve">
+    <value>ANGLE を優先</value>
+  </data>
+  <data name="Settings.Graphics.OpenGL" xml:space="preserve">
+    <value>OpenGL を優先</value>
+  </data>
+  <data name="Settings.Graphics.GLX" xml:space="preserve">
+    <value>OpenGL（GLX）を優先</value>
+  </data>
+  <data name="Settings.Graphics.EGL" xml:space="preserve">
+    <value>EGL を優先</value>
+  </data>
+  <data name="Settings.Graphics.Metal" xml:space="preserve">
+    <value>Metal を優先</value>
+  </data>
+  <data name="Settings.Graphics.MetalExperimental" xml:space="preserve">
+    <value>Metal を優先（実験的）</value>
+  </data>
+  <data name="Settings.Graphics.WebGL2" xml:space="preserve">
+    <value>WebGL 2 を優先</value>
+  </data>
+  <data name="Settings.Graphics.WebGL1" xml:space="preserve">
+    <value>WebGL 1 を優先</value>
+  </data>
+  <data name="Settings.Graphics.Custom" xml:space="preserve">
+    <value>カスタム</value>
+  </data>
+  <data name="Settings.Graphics.Default" xml:space="preserve">
+    <value>Avalonia が自動的に選択</value>
+  </data>
+  <data name="Settings.Graphics.RestartRequired" xml:space="preserve">
+    <value>変更後はアプリの再起動が必要です。</value>
+  </data>
+  <data name="Settings.Graphics.ReloadRequired" xml:space="preserve">
+    <value>変更後はページの再読み込みが必要です。</value>
+  </data>
+  <data name="Settings.Graphics.RestartPending" xml:space="preserve">
+    <value>保存しました。アプリの再起動後に適用されます。</value>
+  </data>
+  <data name="Settings.Graphics.ReloadPending" xml:space="preserve">
+    <value>保存しました。ページの再読み込み後に適用されます。</value>
+  </data>
+  <data name="Settings.Graphics.StorageUnavailable" xml:space="preserve">
+    <value>設定の保存先にアクセスできないため、グラフィックスバックエンドを変更できません。</value>
+  </data>
+  <data name="Settings.Graphics.SaveFailed" xml:space="preserve">
+    <value>保存できませんでした。もう一度お試しください。</value>
+  </data>
+  <data name="Settings.Graphics.InvalidConfiguration" xml:space="preserve">
+    <value>無効または重複したバックエンドを無視しました。保存済みの設定は変更されていません。</value>
+  </data>
+  <data name="Splash.Failed" xml:space="preserve">
+    <value>初期化に失敗しました</value>
+  </data>
+  <data name="FilePicker.InvalidFileName" xml:space="preserve">
+    <value>ディレクトリ区切りを含まない有効なファイル名を入力してください。</value>
+  </data>
+  <data name="PhonemePanel.Param.ClearValue" xml:space="preserve"><value>描画した値を消去</value></data>
+  <data name="Editor.Split.MaskedGridAdjustment" xml:space="preserve"><value>パート「{0}」：マスク付きカーブの5 tickグリッドを維持し、ノートの途中を避けるため、分割位置をパート先頭から{1} tickの位置から{2} tickの位置に移動します。続行しますか？</value></data>
+  <data name="Editor.Split.NoValidPosition" xml:space="preserve"><value>パート「{0}」はここで分割できません。パートの終端までに有効な分割位置がありません。</value></data>
+  <data name="Expressions.GraphCalculatedValues" xml:space="preserve"><value>破線：グラフの計算値</value></data>
+  <data name="EditorMore.MergeNearbyPhrases" xml:space="preserve">
+    <value>DiffSinger の近接フレーズを結合</value>
+  </data>
+  <data name="EditorMore.MergeNearbyPhrases.Desc" xml:space="preserve">
+    <value>既定ではオフです。有効にすると、短い休符の前後をまとめて合成するため、歌い方が変わる場合があります。すべての DiffSinger トラックに適用され、変更時にフレーズを再分割します。</value>
+  </data>
+  <data name="Mixer.EnableEffect" xml:space="preserve"><value>このエフェクトを有効化</value></data>
+  <data name="Mixer.FxBypassed" xml:space="preserve"><value>FX 全体をバイパス中</value></data>
+  <data name="Mixer.ModuleBypassed" xml:space="preserve"><value>このエフェクトをバイパス中</value></data>
+  <data name="ErrorDialog.MissingPackage" xml:space="preserve">
+    <value>依存パッケージが見つかりません：{0}</value>
+  </data>
+  <data name="PianoRoll.PitchTarget.FollowGraph" xml:space="preserve"><value>編集対象：グラフに従う（{0}）</value></data>
+  <data name="PianoRoll.PitchTarget.Deviation" xml:space="preserve"><value>編集対象：音高偏差（PITD）</value></data>
+  <data name="PianoRoll.PitchTarget.Override" xml:space="preserve"><value>編集対象：音高上書き（PITO）</value></data>
+  <data name="Settings.Edit.ShowPitchPenHitArea" xml:space="preserve"><value>音高ブラシの範囲を表示</value></data>
+  <data name="RendererSettings.Title" xml:space="preserve">
+    <value>トラックのレンダリング設定</value>
+  </data>
+  <data name="RendererSettings.Renderer" xml:space="preserve">
+    <value>レンダラー</value>
+  </data>
+  <data name="RendererSettings.Resampler" xml:space="preserve">
+    <value>リサンプラー</value>
+  </data>
+  <data name="RendererSettings.Wavtool" xml:space="preserve">
+    <value>Wavtool</value>
+  </data>
+  <data name="RendererSettings.Apply" xml:space="preserve">
+    <value>適用</value>
+  </data>
+  <data name="RendererSettings.Graph.Title" xml:space="preserve">
+    <value>表情グラフ（Graph）</value>
+  </data>
+  <data name="RendererSettings.Graph.Default" xml:space="preserve">
+    <value>プロジェクトの既定値を使用</value>
+  </data>
+  <data name="RendererSettings.Graph.Unavailable" xml:space="preserve">
+    <value>使用不可：{0}</value>
+  </data>
+  <data name="RendererSettings.Graph.NoEffective" xml:space="preserve">
+    <value>有効な表情グラフはありません。</value>
+  </data>
+  <data name="RendererSettings.Graph.DefaultEffective" xml:space="preserve">
+    <value>プロジェクトの既定値：{0}</value>
+  </data>
+  <data name="RendererSettings.Graph.Effective" xml:space="preserve">
+    <value>現在のグラフ：{0}</value>
+  </data>
+  <data name="RendererSettings.Graph.Empty" xml:space="preserve">
+    <value>現在のレンダラーに対応する表情グラフがプロジェクトにありません。</value>
+  </data>
+  <data name="RendererSettings.Graph.Missing" xml:space="preserve">
+    <value>表情グラフ「{0}」が見つかりません。別の項目を選択してください。</value>
+  </data>
+  <data name="RendererSettings.Graph.Incompatible" xml:space="preserve">
+    <value>表情グラフ「{0}」は現在のレンダラーに対応していません。</value>
+  </data>
+  <data name="RendererSettings.Graph.Invalid" xml:space="preserve">
+    <value>表情グラフ「{0}」を実行できません：{1}</value>
+  </data>
+  <data name="RendererSettings.Warning.HifiSampler" xml:space="preserve">
+    <value>警告：これは OpenLoid-Flame 内蔵の HIFISAMPLER 実装です。公式実装を使用するには、CLASSIC → hifisampler への切り替えを推奨します。</value>
+  </data>
+  <data name="RendererSettings.Warning.WorldlineR2" xml:space="preserve">
+    <value>警告：Worldline-R2 は開発未完了のまま廃止されました。使用は推奨しません。</value>
+  </data>
+  <data name="RendererSettings.Error.Renderer" xml:space="preserve">
+    <value>現在のレンダラーが見つからないか、互換性がありません。互換性のあるものを選択してください。</value>
+  </data>
+  <data name="RendererSettings.Error.Resampler" xml:space="preserve">
+    <value>互換性のあるリサンプラーを選択してください。外部 Wavtool は Worldline リサンプラーに対応していません。</value>
+  </data>
+  <data name="RendererSettings.Error.Wavtool" xml:space="preserve">
+    <value>Wavtool を選択してください。</value>
+  </data>
+  <data name="RendererSettings.Error.NoResamplers" xml:space="preserve">
+    <value>互換性のあるリサンプラーがありません。設定画面でツールを確認してください。</value>
+  </data>
+  <data name="RendererSettings.Error.NoWavtools" xml:space="preserve">
+    <value>利用可能な Wavtool がありません。設定画面でツールを確認してください。</value>
+  </data>
+  <data name="RendererSettings.Error.Stale" xml:space="preserve">
+    <value>トラック、歌手、または設定が変更されました。この画面を開き直してください。</value>
+  </data>
+  <data name="RendererSettings.Error.NoSinger" xml:space="preserve">
+    <value>先にトラックの歌手を選択してください。</value>
+  </data>
+  <data name="RendererSettings.Error.MissingSinger" xml:space="preserve">
+    <value>歌手が見つかりません。利用可能な歌手を選択してください。</value>
+  </data>
+  <data name="Options.PluginManager" xml:space="preserve">
+    <value>プラグイン管理</value>
+  </data>
+  <data name="Options.PluginManager.Desc" xml:space="preserve">
+    <value>DLL プラグインのインストールと削除</value>
+  </data>
+  <data name="PluginManager.Title" xml:space="preserve">
+    <value>プラグイン管理</value>
+  </data>
+  <data name="PluginManager.Install" xml:space="preserve">
+    <value>プラグインをインストール</value>
+  </data>
+  <data name="PluginManager.Empty" xml:space="preserve">
+    <value>DLL プラグインはありません。右下の＋ボタンで追加できます。</value>
+  </data>
+  <data name="PluginManager.RefreshFailed" xml:space="preserve">
+    <value>プラグイン一覧を読み込めません：{0}</value>
+  </data>
+  <data name="PluginManager.SelectFile" xml:space="preserve">
+    <value>DLL プラグインを選択</value>
+  </data>
+  <data name="PluginManager.Checking" xml:space="preserve">
+    <value>マネージドアセンブリを確認中…</value>
+  </data>
+  <data name="PluginManager.Copying" xml:space="preserve">
+    <value>プラグインをインストール中…</value>
+  </data>
+  <data name="PluginManager.Completed" xml:space="preserve">
+    <value>インストール完了</value>
+  </data>
+  <data name="PluginManager.InvalidAssembly" xml:space="preserve">
+    <value>選択したファイルは有効なマネージド DLL アセンブリではありません。</value>
+  </data>
+  <data name="PluginManager.BuiltinNotAllowed" xml:space="preserve">
+    <value>内蔵プラグインはアプリが管理するため、ここではインストールできません。</value>
+  </data>
+  <data name="PluginManager.AlreadyExists" xml:space="preserve">
+    <value>同名のプラグインが存在するか、削除待ちです。削除してアプリを再起動してからインストールしてください。</value>
+  </data>
+  <data name="PluginManager.InstallFailed" xml:space="preserve">
+    <value>プラグインのインストールに失敗しました</value>
+  </data>
+  <data name="PluginManager.InstallSucceeded" xml:space="preserve">
+    <value>プラグインをインストールしました</value>
+  </data>
+  <data name="PluginManager.RestartToActivate" xml:space="preserve">
+    <value>プラグインをインストールしました。アプリを再起動すると有効になります。</value>
+  </data>
+  <data name="PluginManager.DeleteTitle" xml:space="preserve">
+    <value>プラグインを削除</value>
+  </data>
+  <data name="PluginManager.DeleteMessage" xml:space="preserve">
+    <value>「{0}」を削除予定にしますか？&#10;&#10;この DLL は次回起動時、プラグインの読み込み前に削除されます。読み込み済みの機能を完全に削除するにはアプリを再起動してください。</value>
+  </data>
+  <data name="PluginManager.PendingDeletion" xml:space="preserve">
+    <value>再起動時に削除予定</value>
+  </data>
+  <data name="PluginManager.DeleteFailed" xml:space="preserve">
+    <value>プラグインの削除に失敗しました</value>
+  </data>
+  <data name="PluginManager.PendingDeletionFailed" xml:space="preserve">
+    <value>一部のプラグインを削除できませんでした。プラグイン管理で確認してください。</value>
+  </data>
+  <data name="PluginManager.LoadFailedTitle" xml:space="preserve">
+    <value>プラグインの読み込みに失敗しました</value>
+  </data>
+  <data name="PluginManager.LoadFailed" xml:space="preserve">
+    <value>以下の DLL プラグイン、またはそのディレクトリの読み込みに失敗しました：&#10;{0}&#10;&#10;エラーの詳細、必要なアセンブリ、このバージョンのアプリとの互換性を確認してください。</value>
+  </data>
+  <data name="PluginManager.CancelDeletion" xml:space="preserve">
+    <value>削除予定を取り消す</value>
+  </data>
+  <data name="PluginManager.DeletionCancelled" xml:space="preserve">
+    <value>削除予定を取り消しました</value>
+  </data>
+  <data name="PluginManager.CancelDeletionFailed" xml:space="preserve">
+    <value>削除予定の取り消しに失敗しました</value>
+  </data>
+  <data name="Desktop.Workspace" xml:space="preserve"><value>ワークスペース</value></data>
+  <data name="Desktop.Arrangement" xml:space="preserve"><value>アレンジ</value></data>
+  <data name="Desktop.PianoRoll" xml:space="preserve"><value>ピアノロール</value></data>
+  <data name="Desktop.TuningMode" xml:space="preserve"><value>調声</value></data>
+  <data name="Desktop.ArrangementAndPianoRoll" xml:space="preserve"><value>アレンジ + ピアノロール</value></data>
+  <data name="Desktop.ArrangementHint" xml:space="preserve"><value>クリック: 選択 · Ctrl＋クリック: 選択切替 · Shift＋クリック: 選択追加 · 空白をドラッグ: 範囲選択 · ダブルクリック: 作成 / 編集 · 中ボタンでドラッグ: 移動 · Ctrl/Cmd＋ホイール: ズーム</value></data>
+  <data name="Desktop.InputHint" xml:space="preserve"><value>クリック: 選択 · Shift/Ctrl: 選択追加 · 空白をドラッグ: 範囲選択 · ダブルクリック: 作成 / 歌詞編集 · 中ボタンでドラッグ: 移動 · Ctrl/Cmd + ホイール: ズーム</value></data>
+  <data name="Desktop.Tools" xml:space="preserve"><value>外部ツール</value></data>
+  <data name="Desktop.View" xml:space="preserve"><value>表示</value></data>
+  <data name="Desktop.Project" xml:space="preserve"><value>プロジェクト</value></data>
+  <data name="Desktop.Transport" xml:space="preserve"><value>トランスポート</value></data>
+  <data name="Desktop.Help" xml:space="preserve"><value>ヘルプ</value></data>
+  <data name="Desktop.CloseProject" xml:space="preserve"><value>プロジェクトを閉じる</value></data>
+  <data name="Desktop.NoteProperties" xml:space="preserve"><value>ノートプロパティ</value></data>
+  <data name="Desktop.Inspector" xml:space="preserve"><value>インスペクター</value></data>
+  <data name="Desktop.ResetLayout" xml:space="preserve"><value>レイアウトをリセット</value></data>
+  <data name="Desktop.DropOneProject" xml:space="preserve"><value>プロジェクトは一度に1つだけドロップできます。音声は複数選択できます。</value></data>
+  <data name="Desktop.Templates" xml:space="preserve"><value>テンプレート</value></data>
+  <data name="Desktop.NoTemplates" xml:space="preserve"><value>保存したテンプレートはここに表示されます。</value></data>
+  <data name="Desktop.Search" xml:space="preserve"><value>検索</value></data>
+  <data name="Desktop.InstallFile" xml:space="preserve"><value>ツールファイルを追加</value></data>
+  <data name="Desktop.InstallFolder" xml:space="preserve"><value>ツールフォルダーを追加</value></data>
+  <data name="Desktop.OpenFolder" xml:space="preserve"><value>フォルダーを開く</value></data>
+  <data name="Desktop.Resamplers" xml:space="preserve"><value>リサンプラー</value></data>
+  <data name="Desktop.Wavtools" xml:space="preserve"><value>Wavtool</value></data>
+  <data name="Desktop.WinePath" xml:space="preserve"><value>Wine 実行ファイル</value></data>
+  <data name="Desktop.Builtin" xml:space="preserve"><value>内蔵</value></data>
+  <data name="Desktop.Discovered" xml:space="preserve"><value>検出済み</value></data>
+  <data name="Desktop.Unavailable" xml:space="preserve"><value>この環境では利用不可、またはランタイムがありません</value></data>
+  <data name="Desktop.ExperimentalWine" xml:space="preserve"><value>実験的・Wine が必要</value></data>
+  <data name="Desktop.NativeWavtoolUnavailable" xml:space="preserve"><value>現在のバッチエンジンでは Unix ネイティブ wavtool は利用できません</value></data>
+  <data name="Desktop.ToolChangesQueued" xml:space="preserve"><value>保留中。プロジェクトを閉じると変更を適用します。</value></data>
+  <data name="Desktop.ToolsCompatibility" xml:space="preserve"><value>ツールは OS と CPU に適合する必要があります。インストールは動作保証ではありません。単一ファイルのインストールでは YAML マニフェストと MoReSampler の moreconfig.txt のみコピーします。依存ファイルにはフォルダーを選択してください。</value></data>
+  <data name="Desktop.InvalidToolFolder" xml:space="preserve"><value>管理フォルダー以外の通常のフォルダーを選択してください。リンクは非対応です。</value></data>
+  <data name="Desktop.InvalidToolFile" xml:space="preserve"><value>対応しているツールの実行ファイルまたはスクリプトを選択してください。</value></data>
+  <data name="Desktop.ReplaceTool" xml:space="preserve"><value>既存のツールファイルを置換しますか？</value></data>
+  <data name="Desktop.Replace" xml:space="preserve"><value>置換</value></data>
+  <data name="Desktop.ToolInUse" xml:space="preserve"><value>使用中のツールは削除できません。</value></data>
+  <data name="Desktop.Track" xml:space="preserve"><value>トラック</value></data>
+  <data name="Desktop.Notes" xml:space="preserve"><value>ノート</value></data>
+  <data name="Desktop.Phoneme" xml:space="preserve"><value>音素</value></data>
+  <data name="Desktop.NoNotes" xml:space="preserve"><value>ノートを選択して編集します。</value></data>
+  <data name="Desktop.NoTrack" xml:space="preserve"><value>トラックを追加または選択します。</value></data>
+  <data name="Desktop.NoPhoneme" xml:space="preserve"><value>音素が生成されたノートを選択します。</value></data>
+  <data name="Desktop.Color" xml:space="preserve"><value>トラックの色</value></data>
+  <data name="Desktop.UseDefault" xml:space="preserve"><value>既定にする</value></data>
+  <data name="Desktop.Alias" xml:space="preserve"><value>エイリアス</value></data>
+  <data name="Desktop.Offset" xml:space="preserve"><value>オフセット（tick）</value></data>
+  <data name="Desktop.Preutter" xml:space="preserve"><value>先行発声差分（ms）</value></data>
+  <data name="Desktop.Overlap" xml:space="preserve"><value>オーバーラップ差分（ms）</value></data>
+  <data name="Desktop.Attack" xml:space="preserve"><value>アタック差分（ms）</value></data>
+  <data name="Desktop.Release" xml:space="preserve"><value>リリース差分（ms）</value></data>
+  <data name="Desktop.ToolChangesApplied" xml:space="preserve"><value>ツールの変更を適用しました。</value></data>
+  <data name="Desktop.NotExecutable" xml:space="preserve"><value>実行権限がありません</value></data>
+  <data name="Desktop.NoteTool" xml:space="preserve"><value>ノート · 選択、移動、長さ変更、作成</value></data>
+  <data name="Desktop.TuningTool" xml:space="preserve"><value>調声 · ピッチアンカーとビブラート</value></data>
+  <data name="Desktop.TuningHint" xml:space="preserve"><value>ドラッグ: ピッチ点／ビブラートハンドルを移動 · 曲線をクリック: 点を追加 · ビブラートをダブルクリック: 切替 · 中ボタン: 移動 · Ctrl/Cmd＋ホイール: ズーム</value></data>
+  <data name="Desktop.PitchHint" xml:space="preserve"><value>ドラッグ: ピッチを描画 · 右クリックドラッグ: 消去 · 中ボタン: 移動 · Ctrl/Cmd＋ホイール: ズーム</value></data>
+  <data name="Desktop.AllLanguages" xml:space="preserve"><value>すべての言語</value></data>
+  <data name="Desktop.DropOneInstaller" xml:space="preserve"><value>インストールファイルは一度に1つドロップしてください。</value></data>
+  <data name="Desktop.Parameters" xml:space="preserve"><value>パラメータパネル</value></data>
+  <data name="Desktop.EditExpressionLane" xml:space="preserve"><value>パラメータパネルで表情を編集</value></data>
+  <data name="DependencyManager.SortByName" xml:space="preserve"><value>名前で並べ替え</value></data>
+  <data name="DependencyManager.SortByDeveloper" xml:space="preserve"><value>開発者で並べ替え</value></data>
+  <data name="DependencyManager.LatestVersion" xml:space="preserve"><value>最新バージョン</value></data>
+  <data name="DependencyManager.InstalledVersion" xml:space="preserve"><value>インストール済みバージョン</value></data>
+  <data name="DependencyManager.EmptyAvailable" xml:space="preserve"><value>利用可能なパッケージはありません。</value></data>
+  <data name="DependencyManager.EmptyInstalled" xml:space="preserve"><value>インストール済みパッケージはありません。</value></data>
+  <data name="DependencyManager.NoResults" xml:space="preserve"><value>検索結果がありません。</value></data>
+  <data name="Desktop.Window" xml:space="preserve"><value>OUM</value></data>
+  <data name="Desktop.SurfaceUnavailable" xml:space="preserve"><value>このデスクトップ画面はまだ利用できません。</value></data>
+  <data name="Desktop.Favorite" xml:space="preserve"><value>お気に入り</value></data>
+  <data name="Home.Action.OpenTemplate" xml:space="preserve"><value>選択したテンプレートから作成</value></data>
+  <data name="Desktop.NavigationHint" xml:space="preserve"><value>中ボタン: 移動 · Ctrl/Cmd＋ホイール: ズーム</value></data>
+  <data name="Desktop.PitchEraserHint" xml:space="preserve"><value>ドラッグ: ピッチを消去 · 中ボタン: 移動 · Ctrl/Cmd＋ホイール: ズーム</value></data>
+  <data name="BulkLyricEdit.TargetCount" xml:space="preserve"><value>更新するノート数：{0}</value></data>
+  <data name="Editor.Selection.Copied" xml:space="preserve">
+    <value>{0} 個のパートをコピー</value>
+  </data>
+  <data name="PianoRoll.Selection.Selected" xml:space="preserve">
+    <value>{0} 個のノートを選択</value>
+  </data>
+  <data name="PianoRoll.Selection.AllSelected" xml:space="preserve">
+    <value>全 {0} 個のノートを選択</value>
+  </data>
+  <data name="PianoRoll.Selection.Copied" xml:space="preserve">
+    <value>{0} 個のノートをコピー</value>
+  </data>
+  <data name="TrackSettings.Title" xml:space="preserve"><value>トラック設定</value></data>
+  <data name="TrackSettings.HoldHint" xml:space="preserve"><value>トラック名または背景を長押しして設定を開きます</value></data>
+  <data name="TrackSettings.Singer" xml:space="preserve"><value>シンガー</value></data>
+  <data name="TrackSettings.ChooseSinger" xml:space="preserve"><value>シンガーを選択</value></data>
+  <data name="TrackSettings.Phonemizer" xml:space="preserve"><value>音素変換器</value></data>
+  <data name="TrackSettings.ChoosePhonemizer" xml:space="preserve"><value>音素変換器を選択</value></data>
+  <data name="TrackSettings.Renderer" xml:space="preserve"><value>レンダラー</value></data>
+  <data name="TrackSettings.Resampler" xml:space="preserve"><value>リサンプラー</value></data>
+  <data name="TrackSettings.Wavtool" xml:space="preserve"><value>Wavtool</value></data>
+  <data name="TrackSettings.Expressions" xml:space="preserve"><value>表情の既定値…</value></data>
+  <data name="TrackSettings.Done" xml:space="preserve"><value>完了</value></data>
+  <data name="TrackSettings.NoSinger" xml:space="preserve"><value>シンガーが選択されていません</value></data>
+  <data name="TrackSettings.NoRenderers" xml:space="preserve"><value>このシンガーに対応するレンダラーはありません。</value></data>
+  <data name="TrackSettings.MissingSinger" xml:space="preserve"><value>レンダリング設定にはシンガーを選択してください。</value></data>
+  <data name="TrackSettings.NoCompatibleTools" xml:space="preserve"><value>互換性のあるリサンプラーとWavtoolがありません。</value></data>
+  <data name="TrackSettings.Error.Stale" xml:space="preserve"><value>設定を開いている間にトラックが変更されました。設定を閉じて開き直してください。</value></data>
+  <data name="TrackSettings.Error.Busy" xml:space="preserve"><value>別の編集が進行中です。トラック設定を適用する前に終了してください。</value></data>
+  <data name="TrackSettings.Error.MissingSinger" xml:space="preserve"><value>レンダリング設定を変更する前に、インストール済みのシンガーを選択してください。</value></data>
+  <data name="TrackSettings.Error.SingerUnavailable" xml:space="preserve"><value>選択したシンガーは利用できません。もう一度選択してください。</value></data>
+  <data name="TrackSettings.Error.PhonemizerUnavailable" xml:space="preserve"><value>選択した音素変換器は利用できません。もう一度選択してください。</value></data>
+  <data name="TrackSettings.Error.Renderer" xml:space="preserve"><value>このシンガーが使用できるレンダラーを選択してください。</value></data>
+  <data name="TrackSettings.Error.Tools" xml:space="preserve"><value>互換性のあるリサンプラーとWavtoolを選択してください。</value></data>
+  <data name="TrackSettings.Error.Apply" xml:space="preserve"><value>トラック設定を適用できませんでした。</value></data>
+  <data name="NoteProperties.PhonemizerUnavailable" xml:space="preserve"><value>音素変換器「{0}」は利用できません。</value></data>
+  <data name="Picker.Phonemizer.Empty" xml:space="preserve"><value>利用できる音素変換器がありません。</value></data>
+  <data name="SingerManagement.NoResults" xml:space="preserve"><value>検索に一致するシンガーがありません。</value></data>
+  <data name="ExpressionGraph.Title" xml:space="preserve"><value>Expression graphs</value></data>
+  <data name="ExpressionGraph.LibraryTitle" xml:space="preserve"><value>プロジェクト表情グラフ管理</value></data>
+  <data name="ExpressionGraph.AllRenderers" xml:space="preserve"><value>All renderers</value></data>
+  <data name="ExpressionGraph.RendererFilter" xml:space="preserve"><value>Filter by renderer</value></data>
+  <data name="ExpressionGraph.OtherRenderers" xml:space="preserve"><value>Other renderers</value></data>
+  <data name="ExpressionGraph.Create" xml:space="preserve"><value>Create expression graph</value></data>
+  <data name="ExpressionGraph.CreateHint" xml:space="preserve"><value>Choose a renderer to create a graph. If its family has no default, a new preset graph becomes the default for tracks following it.</value></data>
+  <data name="ExpressionGraph.NewName" xml:space="preserve"><value>{0} graph</value></data>
+  <data name="ExpressionGraph.CopyName" xml:space="preserve"><value>{0} (copy)</value></data>
+  <data name="ExpressionGraph.Copy" xml:space="preserve"><value>クローン</value></data>
+  <data name="ExpressionGraph.NoRenderer" xml:space="preserve"><value>No renderer specified</value></data>
+  <data name="ExpressionGraph.ReferenceCount" xml:space="preserve"><value>Referenced by {0} tracks</value></data>
+  <data name="ExpressionGraph.Valid" xml:space="preserve"><value>Status: valid</value></data>
+  <data name="ExpressionGraph.Invalid" xml:space="preserve"><value>Status: invalid — {0}</value></data>
+  <data name="ExpressionGraph.DefaultBadge" xml:space="preserve"><value>{0} の既定グラフ</value></data>
+  <data name="ExpressionGraph.DefaultFor" xml:space="preserve"><value>Default for {0}</value></data>
+  <data name="ExpressionGraph.FollowingTrack" xml:space="preserve"><value>{0} · follows default</value></data>
+  <data name="ExpressionGraph.ExplicitTrack" xml:space="preserve"><value>{0} · explicit reference</value></data>
+  <data name="ExpressionGraph.Unused" xml:space="preserve"><value>No tracks reference this graph.</value></data>
+  <data name="ExpressionGraph.FollowDefault" xml:space="preserve"><value>Follows default</value></data>
+  <data name="ExpressionGraph.Explicit" xml:space="preserve"><value>Explicit selection</value></data>
+  <data name="ExpressionGraph.Builtin" xml:space="preserve"><value>Uses built-in behavior</value></data>
+  <data name="ExpressionGraph.DefaultProblem" xml:space="preserve"><value>Default for {0}: {1}</value></data>
+  <data name="ExpressionGraph.Empty" xml:space="preserve"><value>This project has no expression graphs. Use the floating button to create one.</value></data>
+  <data name="ExpressionGraph.FilterEmpty" xml:space="preserve"><value>No expression graphs for this renderer family.</value></data>
+  <data name="ExpressionGraph.Settings" xml:space="preserve"><value>Graph settings</value></data>
+  <data name="ExpressionGraph.Name" xml:space="preserve"><value>Graph name</value></data>
+  <data name="ExpressionGraph.PitchTarget" xml:space="preserve"><value>Curve for editing and loading pitch</value></data>
+  <data name="ExpressionGraph.PitchDeviation" xml:space="preserve"><value>Pitch deviation (PITD)</value></data>
+  <data name="ExpressionGraph.PitchOverride" xml:space="preserve"><value>Pitch override (PITO)</value></data>
+  <data name="ExpressionGraph.SetDefault" xml:space="preserve"><value>Default graph for this renderer family</value></data>
+  <data name="ExpressionGraph.References" xml:space="preserve"><value>References and usage</value></data>
+  <data name="ExpressionGraph.DefaultImpact" xml:space="preserve"><value>Applying will change the default graph for these tracks: {0}</value></data>
+  <data name="ExpressionGraph.PageActions" xml:space="preserve"><value>Library actions</value></data>
+  <data name="ExpressionGraph.GraphActions" xml:space="preserve"><value>Graph actions</value></data>
+  <data name="ExpressionGraph.UndoProject" xml:space="preserve"><value>Undo project action</value></data>
+  <data name="ExpressionGraph.RedoProject" xml:space="preserve"><value>Redo project action</value></data>
+  <data name="ExpressionGraph.DeleteTitle" xml:space="preserve"><value>Delete expression graph</value></data>
+  <data name="ExpressionGraph.DeleteMessage" xml:space="preserve"><value>Deleting “{0}” clears its default and track override references.
+
+{1}
+
+Affected tracks will resolve their remaining references or use built-in behavior. You can undo this action.</value></data>
+  <data name="ExpressionGraph.StaleProject" xml:space="preserve"><value>The project changed. Return to the editor and reopen the library.</value></data>
+  <data name="ExpressionGraph.StaleSettings" xml:space="preserve"><value>The graph or its references changed. Close and reopen settings before editing.</value></data>
+  <data name="ExpressionGraph.Busy" xml:space="preserve"><value>Another project action is being committed. Try again shortly.</value></data>
+  <data name="ExpressionGraph.NameRequired" xml:space="preserve"><value>Enter a graph name.</value></data>
+  <data name="FabMenu.Close" xml:space="preserve"><value>Close creation menu</value></data>
+  <data name="FabMenu.Expanded" xml:space="preserve"><value>Menu expanded</value></data>
+  <data name="FabMenu.Collapsed" xml:space="preserve"><value>Menu collapsed</value></data>
+  <data name="ExpressionGraph.ReferenceWarnings" xml:space="preserve"><value>Reference warnings ({0})</value></data>
+  <data name="ExpressionGraph.Import" xml:space="preserve"><value>表情グラフをインポート</value></data>
+  <data name="ExpressionGraph.Export" xml:space="preserve"><value>表情グラフをエクスポート</value></data>
+  <data name="ExpressionGraph.Imported" xml:space="preserve"><value>「{0}」をインポートしました。</value></data>
+  <data name="ExpressionGraph.ImportAdded" xml:space="preserve"><value>追加された表情定義：{0}</value></data>
+  <data name="ExpressionGraph.ImportConflicts" xml:space="preserve"><value>次の表情定義は競合するため、プロジェクトの定義を保持しました：{0}</value></data>
+  <data name="ExpressionGraph.ImportFailed" xml:space="preserve"><value>インポートに失敗しました：{0}</value></data>
+  <data name="ExpressionGraph.ExportFailed" xml:space="preserve"><value>エクスポートに失敗しました：{0}</value></data>
+  <data name="ExpressionGraph.Exported" xml:space="preserve"><value>表情グラフのエクスポート先：{0}</value></data>
+  <data name="ExpressionGraph.InvalidFileData" xml:space="preserve"><value>グラフファイルに破損または重複したデータがあります。</value></data>
+  <data name="GraphViewer.ReadOnly" xml:space="preserve"><value>Read-only view</value></data>
+  <data name="GraphViewer.Search" xml:space="preserve"><value>Search</value></data>
+  <data name="GraphViewer.Fit" xml:space="preserve"><value>Fit graph</value></data>
+  <data name="GraphViewer.Locate" xml:space="preserve"><value>Locate</value></data>
+  <data name="GraphViewer.ZoomIn" xml:space="preserve"><value>Zoom in</value></data>
+  <data name="GraphViewer.ZoomOut" xml:space="preserve"><value>Zoom out</value></data>
+  <data name="GraphViewer.Canvas" xml:space="preserve"><value>Expression graph canvas</value></data>
+  <data name="GraphViewer.Details" xml:space="preserve"><value>Details</value></data>
+  <data name="GraphViewer.SearchHint" xml:space="preserve"><value>Node type, ID or parameter</value></data>
+  <data name="GraphViewer.SearchLimit" xml:space="preserve"><value>Up to 50 results. Type to narrow the search.</value></data>
+  <data name="GraphViewer.Input" xml:space="preserve"><value>Input</value></data>
+  <data name="GraphViewer.Output" xml:space="preserve"><value>Output</value></data>
+  <data name="GraphViewer.Fallback" xml:space="preserve"><value>Fallback</value></data>
+  <data name="GraphViewer.Diagnostic" xml:space="preserve"><value>Graph diagnostics</value></data>
+  <data name="GraphViewer.GraphMissing" xml:space="preserve"><value>This graph was removed from the project.</value></data>
+  <data name="GraphViewer.InvalidNode" xml:space="preserve"><value>Damaged node record</value></data>
+  <data name="GraphViewer.InvalidPosition" xml:space="preserve"><value>Invalid coordinates; displayed at the origin</value></data>
+  <data name="GraphViewer.UnknownNode" xml:space="preserve"><value>Unsupported node type</value></data>
+  <data name="GraphViewer.DuplicateId" xml:space="preserve"><value>Duplicate node ID; connected links are ambiguous</value></data>
+  <data name="GraphViewer.InvalidLink" xml:space="preserve"><value>Damaged or unsupported link</value></data>
+  <data name="GraphViewer.Unconnected" xml:space="preserve"><value>Unconnected</value></data>
+  <data name="GraphViewer.Empty" xml:space="preserve"><value>This graph has no nodes.</value></data>
+  <data name="GraphEdit.Parameters" xml:space="preserve"><value>Node parameters</value></data>
+  <data name="GraphEdit.Apply" xml:space="preserve"><value>Apply</value></data>
+  <data name="GraphEdit.Reload" xml:space="preserve"><value>Cancel / reload</value></data>
+  <data name="GraphEdit.Conflict" xml:space="preserve"><value>This node changed while you were editing. Cancel / reload before editing again.</value></data>
+  <data name="GraphEdit.MissingChoice" xml:space="preserve"><value>{0} (unavailable)</value></data>
+  <data name="GraphEdit.InvalidNumber" xml:space="preserve"><value>Enter a finite number using a decimal point.</value></data>
+  <data name="GraphEdit.InvalidChoice" xml:space="preserve"><value>Select an available value.</value></data>
+  <data name="GraphEdit.Range" xml:space="preserve"><value>Enter a value between {0} and {1}.</value></data>
+  <data name="GraphEdit.OverriddenFallback" xml:space="preserve"><value>Fallback value. The connected source currently overrides this value.</value></data>
+  <data name="GraphEdit.OptionalNumber" xml:space="preserve"><value>Leave empty to use the node's built-in fallback.</value></data>
+  <data name="GraphTopology.AddNode" xml:space="preserve"><value>Add node</value></data>
+  <data name="GraphTopology.DeleteNode" xml:space="preserve"><value>Delete node</value></data>
+  <data name="GraphTopology.ChangeSource" xml:space="preserve"><value>Change source</value></data>
+  <data name="GraphTopology.Disconnect" xml:space="preserve"><value>Disconnect</value></data>
+  <data name="GraphTopology.DeleteMessage" xml:space="preserve"><value>Delete {0} and its {1} connected links? You can undo this.</value></data>
+  <data name="GraphTopology.Stale" xml:space="preserve"><value>The graph changed. Cancel and reopen this operation.</value></data>
+  <data name="GraphTopology.InvalidLink" xml:space="preserve"><value>Cannot connect: invalid port or a cycle would form. The existing connection is unchanged.</value></data>
+  <data name="GraphTopology.SourceMessage" xml:space="preserve"><value>{0} · {1}
+Current source: {2}
+Applying replaces the source of this input.</value></data>
+  <data name="GraphTopology.Search" xml:space="preserve"><value>Search type, node ID or output port</value></data>
+  <data name="GraphTopology.Results" xml:space="preserve"><value>{0} results</value></data>
+  <data name="GraphTopology.MoreResults" xml:space="preserve"><value>{0} results; showing the first 100. Search to narrow the list.</value></data>
+  <data name="GraphTopology.TemplateHint" xml:space="preserve"><value>Add nodes and connections to an empty graph to produce outputs. It is not automatically made the default.</value></data>
+  <data name="GraphTopology.PresetGraph" xml:space="preserve"><value>Preset graph</value></data>
+  <data name="GraphTopology.EmptyGraph" xml:space="preserve"><value>Empty graph</value></data>
+  <data name="GraphTopology.EmptyName" xml:space="preserve"><value>{0} empty graph</value></data>
+  <data name="GraphTopology.Editing" xml:space="preserve"><value>Graph editing</value></data>
+  <data name="GraphTopology.Unavailable" xml:space="preserve"><value>Incomplete or unavailable</value></data>
+  <data name="GraphTopology.NoOutputs" xml:space="preserve"><value>No connected outputs yet</value></data>
+  <data name="GraphEdit.Title" xml:space="preserve"><value>グラフエディター</value></data>
+  <data name="GraphEdit.ResizePanel" xml:space="preserve"><value>プロパティパネルのサイズ変更</value></data>
+  <data name="Warning.Center" xml:space="preserve"><value>警告センター</value></data>
+  <data name="Warning.Close" xml:space="preserve"><value>警告センターを閉じる</value></data>
+  <data name="Warning.ClearAll" xml:space="preserve"><value>すべての警告を消去</value></data>
+  <data name="Warning.Ignore" xml:space="preserve"><value>無視</value></data>
+  <data name="Warning.OrbName" xml:space="preserve"><value>警告センター、警告 {0} 件</value></data>
+  <data name="warnings.singers.duplicate" xml:space="preserve"><value>音源 ID が重複しています：{0}</value></data>
+  <data name="warnings.singers.duplicate.detail" xml:space="preserve"><value>使用中：{1}。同じ ID の他のフォルダーはスキップされました：{2}</value></data>
+  <data name="Warning.FallbackTitle" xml:space="preserve"><value>アプリの警告</value></data>
+  <data name="Warning.Dismiss" xml:space="preserve"><value>警告を削除</value></data>
+  <data name="errors.failed.prerender" xml:space="preserve">
+    <value>バックグラウンドの事前レンダリングに失敗しました。</value>
+  </data>
+  <data name="Editor.Action.ReplaceAudio" xml:space="preserve"><value>音声を置き換え</value></data>
+  <data name="AudioReplacement.Loading" xml:space="preserve"><value>置き換える音声を読み込み中…</value></data>
+  <data name="AudioReplacement.Success" xml:space="preserve"><value>音声を置き換えました</value></data>
+  <data name="AudioReplacement.Unreadable" xml:space="preserve"><value>音声ファイルを読み込めません：{0}</value></data>
+  <data name="AudioReplacement.ProjectChanged" xml:space="preserve"><value>プロジェクトまたはパートが変更されました。パートを選択し直して音声を置き換えてください。</value></data>
+  <data name="ImportTracks.UnreadableAudio" xml:space="preserve"><value>読み込めない音声ファイル：{0}</value></data>
+  <data name="GraphSelection.Count" xml:space="preserve"><value>{0} 件選択中</value></data>
+  <data name="GraphSelection.Enter" xml:space="preserve"><value>複数のノードを選択</value></data>
+  <data name="GraphSelection.Exit" xml:space="preserve"><value>選択モードを終了</value></data>
+  <data name="GraphSelection.All" xml:space="preserve"><value>すべて選択</value></data>
+  <data name="GraphSelection.Invert" xml:space="preserve"><value>選択を反転</value></data>
+  <data name="GraphSelection.Clear" xml:space="preserve"><value>選択を解除</value></data>
+  <data name="GraphSelection.Copy" xml:space="preserve"><value>ノードをコピー</value></data>
+  <data name="GraphSelection.Paste" xml:space="preserve"><value>ノードを貼り付け</value></data>
+  <data name="GraphSelection.Delete" xml:space="preserve"><value>選択したノードを削除</value></data>
+  <data name="GraphSelection.DeleteMessage" xml:space="preserve"><value>{0} 個のノードと、それらに接続された {1} 本のリンクを削除しますか？</value></data>
+  <data name="GraphSelection.InvalidNode" xml:space="preserve"><value>選択に重複 ID、不明なノード型、または無効な座標が含まれています。グラフの診断を確認してください。</value></data>
+  <data name="GraphSelection.Copied" xml:space="preserve"><value>{0} 個のノードをコピーしました</value></data>
+  <data name="GraphSelection.CopiedWithoutExternal" xml:space="preserve"><value>{0} 個のノードをコピーしました。外部リンクは含まれません</value></data>
+  <data name="GraphSelection.IncompatibleRenderer" xml:space="preserve"><value>異なるレンダラーファミリーのグラフには貼り付けできません。互換性のあるグラフに切り替えてください。</value></data>
+  <data name="GraphSelection.InvalidTarget" xml:space="preserve"><value>貼り付け先のグラフにエラーがあります。先に診断を確認してください。</value></data>
+  <data name="GraphSelection.IdOverflow" xml:space="preserve"><value>貼り付け先のノード ID が上限に達しています。</value></data>
+  <data name="GraphSelection.MissingExpression" xml:space="preserve"><value>貼り付け先にエクスプレッション「{0}」がないか、対応していません。</value></data>
+  <data name="GraphSelection.OutputConflict" xml:space="preserve"><value>貼り付け先に同じ出力があります。出力ノードの選択を解除して再度コピーしてください。グラフ全体を複製するにはライブラリでコピーを作成してください。</value></data>
+  <data name="GraphSelection.Selected" xml:space="preserve"><value>選択済み</value></data>
+  <data name="Sandbox.Title" xml:space="preserve"><value>サンドボックスのファイル</value></data>
+  <data name="Sandbox.Description" xml:space="preserve"><value>アプリ内ファイルの読み込み・書き出し・整理</value></data>
+  <data name="Sandbox.Root" xml:space="preserve"><value>アプリのファイル</value></data>
+  <data name="Sandbox.ImportFiles" xml:space="preserve"><value>ファイルを読み込む</value></data>
+  <data name="Sandbox.ImportFolder" xml:space="preserve"><value>フォルダーを読み込む</value></data>
+  <data name="Sandbox.ImportZip" xml:space="preserve"><value>ZIP からフォルダーを読み込む</value></data>
+  <data name="Sandbox.Export" xml:space="preserve"><value>書き出す</value></data>
+  <data name="Sandbox.ExportCurrent" xml:space="preserve"><value>現在のフォルダーを書き出す</value></data>
+  <data name="Sandbox.SaveToDevice" xml:space="preserve"><value>端末に保存</value></data>
+  <data name="Sandbox.NewFolder" xml:space="preserve"><value>新規フォルダー</value></data>
+  <data name="Sandbox.Rename" xml:space="preserve"><value>名前を変更</value></data>
+  <data name="Sandbox.Delete" xml:space="preserve"><value>削除</value></data>
+  <data name="Sandbox.More" xml:space="preserve"><value>その他の操作</value></data>
+  <data name="Sandbox.ToggleSelection" xml:space="preserve"><value>すべて選択 / 選択解除</value></data>
+  <data name="Sandbox.SelectionSummary" xml:space="preserve"><value>{1} 件中 {0} 件選択</value></data>
+  <data name="Sandbox.Folder" xml:space="preserve"><value>フォルダー</value></data>
+  <data name="Sandbox.Name" xml:space="preserve"><value>名前</value></data>
+  <data name="Sandbox.NameHint" xml:space="preserve"><value>名前を入力してください。ファイルには必要な拡張子も含めてください。</value></data>
+  <data name="Sandbox.Working" xml:space="preserve"><value>処理中…</value></data>
+  <data name="Sandbox.Saving" xml:space="preserve"><value>変更を保存中…</value></data>
+  <data name="Sandbox.Completed" xml:space="preserve"><value>完了しました。変更の反映に再起動が必要な場合があります。</value></data>
+  <data name="Sandbox.Cancelled" xml:space="preserve"><value>キャンセルしました。完了した項目は保持されます。</value></data>
+  <data name="Sandbox.OperationFailed" xml:space="preserve"><value>一部の処理が完了しませんでした：{0}</value></data>
+  <data name="Sandbox.Imported" xml:space="preserve"><value>{0} 件を読み込みました。反映に再起動が必要な場合があります。</value></data>
+  <data name="Sandbox.Deleted" xml:space="preserve"><value>{0} 件を削除しました。</value></data>
+  <data name="Sandbox.Exported" xml:space="preserve"><value>端末に保存しました。</value></data>
+  <data name="Sandbox.DownloadStarted" xml:space="preserve"><value>ダウンロードを開始しました。ブラウザーで保存結果を確認してください。</value></data>
+  <data name="Sandbox.ExportReady" xml:space="preserve"><value>書き出すファイルの準備ができました。</value></data>
+  <data name="Sandbox.PersistenceFailed" xml:space="preserve"><value>変更は永続ストレージに未保存です。保存を再試行してから閉じてください。</value></data>
+  <data name="Sandbox.RetrySave" xml:space="preserve"><value>保存を再試行</value></data>
+  <data name="Sandbox.ConflictTitle" xml:space="preserve"><value>同じ名前の項目があります</value></data>
+  <data name="Sandbox.ConflictMessage" xml:space="preserve"><value>「{0}」は既に存在します。両方を保持すると読み込む名前に番号が付き、既存の項目は保持されます。</value></data>
+  <data name="Sandbox.KeepBoth" xml:space="preserve"><value>両方を保持</value></data>
+  <data name="Sandbox.KeepAll" xml:space="preserve"><value>すべて両方を保持</value></data>
+  <data name="Sandbox.Skip" xml:space="preserve"><value>スキップ</value></data>
+  <data name="Sandbox.SkipAll" xml:space="preserve"><value>競合をすべてスキップ</value></data>
+  <data name="Sandbox.DeleteTitle" xml:space="preserve"><value>選択項目を削除しますか？</value></data>
+  <data name="Sandbox.DeleteMessage" xml:space="preserve"><value>{0} 件と選択フォルダーの全内容を完全に削除します。元に戻せません。
+
+{1}</value></data>
+  <data name="Sandbox.InvalidName" xml:space="preserve"><value>無効な名前です。パス、予約記号、前後の空白、末尾のピリオドは使えません。</value></data>
+  <data name="Sandbox.AlreadyExists" xml:space="preserve"><value>その名前は既に使われています。</value></data>
+  <data name="Sandbox.OutsideWorkspace" xml:space="preserve"><value>アプリの作業領域外のパスです。</value></data>
+  <data name="Sandbox.LinkNotAllowed" xml:space="preserve"><value>シンボリックリンクや再解析ポイントには対応していません。</value></data>
+  <data name="Sandbox.Protected" xml:space="preserve"><value>アプリが管理する項目のため変更できません。プラグインは管理ページを使用してください。</value></data>
+  <data name="Sandbox.CloseEditor" xml:space="preserve"><value>削除や名前変更の前にプロジェクトを閉じてください。</value></data>
+  <data name="Sandbox.ImportLimit" xml:space="preserve"><value>項目数またはフォルダーの階層数が上限を超えました。分けて処理してください。</value></data>
+  <data name="Sandbox.ZipFilesOnly" xml:space="preserve"><value>ZIP ファイルを選択してください。通常のファイルには「ファイルを読み込む」を使用してください。</value></data>
+  <data name="Sandbox.TransferUnavailable" xml:space="preserve"><value>システムのファイル選択を開けません。後で再試行してください。</value></data>
+  <data name="Sandbox.FolderUnavailable" xml:space="preserve"><value>フォルダーを選択できません。ZIP を読み込んでください。</value></data>
+  <data name="Sandbox.SelectionActions" xml:space="preserve"><value>選択操作</value></data>
+  <data name="Sandbox.InvertSelection" xml:space="preserve"><value>選択を反転</value></data>
+  <data name="Sandbox.ClearSelection" xml:space="preserve"><value>選択を解除</value></data>
+  <data name="Sandbox.Add" xml:space="preserve"><value>新規作成・読み込み</value></data>
+  <data name="Sandbox.StopTitle" xml:space="preserve"><value>現在の処理を中止しますか？</value></data>
+  <data name="Sandbox.StopMessage" xml:space="preserve"><value>ファイル処理が実行中です。中止して現在の手順、一時ファイルの削除、保存の完了を待ってから戻りますか？完了済みの項目は保持されます。</value></data>
+  <data name="Sandbox.ContinueTask" xml:space="preserve"><value>処理を続ける</value></data>
+  <data name="Sandbox.StopAndLeave" xml:space="preserve"><value>中止して戻る</value></data>
+  <data name="Sandbox.Stopping" xml:space="preserve"><value>中止して一時ファイルを削除中…</value></data>
+  <data name="Editor.Modes.Track" xml:space="preserve"><value>アレンジ編集モード</value></data>
+  <data name="Editor.Modes.PianoRoll" xml:space="preserve"><value>ピアノロール編集モード</value></data>
+  <data name="Editor.Modes.Parameters" xml:space="preserve"><value>音素・パラメーター編集モード</value></data>
+  <data name="Editor.Metronome" xml:space="preserve"><value>メトロノーム</value></data>
+  <data name="Editor.Repeat" xml:space="preserve"><value>リピート</value></data>
+  <data name="Editor.Record" xml:space="preserve"><value>録音</value></data>
+  <data name="Editor.RecordTodo" xml:space="preserve"><value>TODO: 録音機能</value></data>
+</root>

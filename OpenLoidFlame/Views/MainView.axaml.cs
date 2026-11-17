@@ -1,0 +1,99 @@
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Interactivity;
+using DialogHostAvalonia;
+using OpenLoidFlame.Controls;
+using OpenLoidFlame.Services;
+using OpenLoidFlame.Services.Dialogs;
+using OpenLoidFlame.ViewModels;
+
+namespace OpenLoidFlame.Views;
+
+public partial class MainView : UserControl
+{
+    public MainView()
+    {
+        InitializeComponent();
+        WarningOverlay.SetPageHost(PageHost);
+        WarningOverlay.SetPresentationReady(false);
+        PageHost.PropertyChanged += (_, change) =>
+        {
+            if (change.Property == ContentControl.ContentProperty)
+                WarningOverlay.SetPresentationReady(PageHost.Content is ViewModelBase and not SplashScreenViewModel);
+        };
+        WarningOverlay.CenterVisibilityChanged += open =>
+        {
+            ToastOverlay.IsPaused = open;
+            PerformanceLayer.IsVisible = !open;
+        };
+    }
+
+    public MainView(Avalonia.Controls.Templates.IDataTemplate pageTemplate) : this()
+    {
+        PageHost.ContentTemplate = pageTemplate;
+    }
+
+    protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnAttachedToVisualTree(e);
+        WarningOverlay.SetPresentationReady(PageHost.Content is ViewModelBase and not SplashScreenViewModel);
+        // Android 的 Material You 色值在 TopLevel 建立后才可由平台设置读取。
+        App.RefreshSystemThemeColor();
+        TopLevel? topLevel = AppService.GetTopLevel();
+        topLevel?.BackRequested += OnBackRequested;
+        ToastService.Register(ToastOverlay.ConsumeAsync);
+        ErrorDialogService.Register(
+            async vm => { await PopupService.Show<object>(new ErrorDialogPopup(), vm); },
+            () =>
+            {
+                if (DataContext is MainViewModel navigator)
+                {
+                    navigator.Navigate(new DependencyManagerViewModel(navigator));
+                }
+            });
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        TopLevel? topLevel = AppService.GetTopLevel();
+        topLevel?.BackRequested -= OnBackRequested;
+        ToastService.Unregister();
+        ErrorDialogService.Unregister();
+    }
+
+    private void OnBackRequested(object? sender, RoutedEventArgs e)
+    {
+        if (DialogHost.IsDialogOpen(null))
+        {
+            DialogSession? session = DialogHost.GetDialogSession(null);
+            if (session != null)
+            {
+                IPopupContext? popup = session.Content switch
+                {
+                    IPopupContext context => context, // 使用ViewLocator解析的Dialog会直接是IDialogContext
+                    ContentControl { DataContext: IPopupContext pvm } => pvm, // 手动绑定
+                    _ => null
+                };
+                popup?.RequestBack();
+            }
+
+            e.Handled = true;
+            return;
+        }
+
+        if (WarningOverlay.RequestBack())
+        {
+            e.Handled = true;
+            return;
+        }
+
+        if (DataContext is not MainViewModel vm)
+        {
+            return;
+        }
+
+        vm.OnBackRequested();
+        e.Handled = true;
+    }
+}

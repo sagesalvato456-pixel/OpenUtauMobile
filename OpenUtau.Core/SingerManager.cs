@@ -1,0 +1,205 @@
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using OpenUtau.Classic;
+using OpenUtau.Core.Ustx;
+using OpenUtau.Core.Util;
+using Serilog;
+
+namespace OpenUtau.Core {
+    public class SingerManager : SingletonBase<SingerManager> {
+        public Dictionary<string, USinger> Singers { get; private set; } = new Dictionary<string, USinger>();
+        public Dictionary<USingerType, List<USinger>> SingerGroups { get; private set; } = new Dictionary<USingerType, List<USinger>>();
+
+        private readonly ConcurrentQueue<USinger> reloadQueue = new ConcurrentQueue<USinger>();
+        private CancellationTokenSource reloadCancellation;
+
+        private HashSet<USinger> singersUsed = new HashSet<USinger>();
+
+        public void Initialize() {
+            SearchAllSingers();
+        }
+
+        public void SearchAllSingers() {
+            Log.Information("Searching singers.");
+            Directory.CreateDirectory(PathManager.Inst.SingersPath);
+            var stopWatch = Stopwatch.StartNew();
+            var oldSingers = Singers.Values.ToList();
+            var found = SafeFind("Classic", () => ClassicSingerLoader.FindAllSingers())
+                .Concat(SafeFind("Vogen", () => Vogen.VogenSingerLoader.FindAllSingers()))
+                .Concat(SafeFind("Vocaloid", () => Vocaloid.VocaloidSingerLoader.FindAllSingers()))
+                .Concat(SafeFind("DefaultLoid", () => new List<USinger> { new Vocaloid.DefaultLoidSinger() }))
+                .ToList();
+            // Singers with the same id are equal (see USinger.Equals), so this keeps the first.
+            var singers = found.Distinct().ToList();
+            Singers = singers
+                .ToLookup(s => s.Id)
+                .ToDictionary(g => g.Key, g => g.First());
+            SingerGroups = singers
+                .GroupBy(s => s.SingerType)
+                .ToDictionary(s => s.Key, s => s.LocalizedOrderBy(singer => singer.LocalizedName).ToList());
+            foreach (var old in oldSingers) {
+                (old as IDisposable)?.Dispose();
+            }
+            stopWatch.Stop();
+            Log.Information($"Search all singers: {stopWatch.Elapsed}");
+            // The id is the folder path relative to its singers root, so same-named
+            // folders under different roots collide and only the first one is used.
+            foreach (var duplicates in found.GroupBy(s => s.Id).Where(g => g.Count() > 1)) {
+                DocManager.Inst.ExecuteCmd(new WarningNotification(
+                    $"singers.duplicate:{duplicates.Key}",
+                    "warnings.singers.duplicate",
+                    "warnings.singers.duplicate.detail",
+                    duplicates.Key,
+                    duplicates.First().Location,
+                    string.Join("\n", duplicates.Skip(1).Select(s => s.Location))));
+            }
+        }
+
+        // One broken loader must not hide the singers of the others.
+        private static List<USinger> SafeFind(string loaderName, Func<IEnumerable<USinger>> find) {
+            try {
+                return find().ToList();
+            } catch (Exception e) {
+                Log.Error(e, $"Failed to search {loaderName} singers");
+                return new List<USinger>();
+            }
+        }
+
+        public USinger GetSinger(string name) {
+            Log.Information($"Attach singer to track: {name}");
+            if (string.IsNullOrEmpty(name)) {
+                return null;
+            }
+            name = name.Replace("%VOICE%", "");
+            return Singers.TryGetValue(name, out var singer) ? singer : null;
+        }
+
+        /// <summary>
+        /// 卸载歌手，并在操作结束后重新扫描已安装歌手。
+        /// </summary>
+        /// <param name="singer">要卸载的已安装歌手。</param>
+        public void UninstallSinger(USinger singer)
+        {
+            try
+            {
+                ArgumentNullException.ThrowIfNull(singer);
+                if (singer is Vocaloid.DefaultLoidSinger) {
+                    throw new InvalidOperationException("DefaultLoid is built in and cannot be uninstalled.");
+                }
+                string location = singer.Location;
+                if (string.IsNullOrWhiteSpace(location))
+                {
+                    throw new InvalidOperationException("Singer location is empty.");
+                }
+
+                singer.FreeMemory();
+                // A .vcld leaves a big extracted copy in the cache, named by its manifest:
+                // clear it while the .vcld still exists.
+                (singer as Vocaloid.VocaloidSinger)?.DeleteCache();
+                if (Directory.Exists(location))
+                {
+                    Directory.Delete(location, true);
+                }
+                else if (File.Exists(location))
+                {
+                    File.Delete(location);
+                }
+                else
+                {
+                    throw new DirectoryNotFoundException($"Singer location does not exist: {location}");
+                }
+                if (singer is Vocaloid.VocaloidSinger)
+                {
+                    // installs sit in "<archive>/<bank>/<id>/": do not leave the empty wrappers behind
+                    Vocaloid.VocaloidInstaller.PruneEmptyParents(location);
+                }
+            }
+            finally
+            {
+                SearchAllSingers();
+            }
+        }
+
+        public void ScheduleReload(USinger singer) {
+            reloadQueue.Enqueue(singer);
+            ScheduleReload();
+        }
+
+        private void ScheduleReload() {
+            var newCancellation = new CancellationTokenSource();
+            var oldCancellation = Interlocked.Exchange(ref reloadCancellation, newCancellation);
+            if (oldCancellation != null) {
+                oldCancellation.Cancel();
+                oldCancellation.Dispose();
+            }
+            Task.Run(() => {
+                Thread.Sleep(200);
+                if (newCancellation.IsCancellationRequested) {
+                    return;
+                }
+                Refresh();
+            });
+        }
+
+        private void Refresh() {
+            var singers = new HashSet<USinger>();
+            while (reloadQueue.TryDequeue(out USinger singer)) {
+                singers.Add(singer);
+            }
+            foreach (var singer in singers) {
+                Log.Information($"Reloading {singer.Id}");
+                new Task(() => {
+                    DocManager.Inst.ExecuteCmd(new ProgressBarNotification(0, $"Reloading {singer.Id}"));
+                }).Start(DocManager.Inst.MainScheduler);
+                int retries = 5;
+                while (retries > 0) {
+                    retries--;
+                    try {
+                        singer.Reload();
+                        break;
+                    } catch (Exception e) {
+                        if (retries == 0) {
+                            Log.Error(e, $"Failed to reload {singer.Id}");
+                        } else {
+                            Log.Error(e, $"Retrying reload {singer.Id}");
+                            Thread.Sleep(200);
+                        }
+                    }
+                }
+                Log.Information($"Reloaded {singer.Id}");
+                new Task(() => {
+                    DocManager.Inst.ExecuteCmd(new ProgressBarNotification(0, $"Reloaded {singer.Id}"));
+                    DocManager.Inst.ExecuteCmd(new OtoChangedNotification(external: true));
+                }).Start(DocManager.Inst.MainScheduler);
+            }
+        }
+
+        //Check which singers are in use and free memory for those that are not.
+        //UI thread only: it mutates the singer map the UI reads.
+        public void ReleaseSingersNotInUse(UProject project) {
+            Util.ThreadGuard.AssertUi();
+            //Check which singers are in use
+            var singersInUse = new HashSet<USinger>();
+            foreach (var track in project.tracks) {
+                var singer = track.Singer;
+                if (singer != null && singer.Found && !singersInUse.Contains(singer)) {
+                    singersInUse.Add(singer);
+                }
+            }
+            //Release singers that are no longer in use
+            foreach (var singer in singersUsed) {
+                if (!singersInUse.Contains(singer)) {
+                    singer.FreeMemory();
+                }
+            }
+            //Update singers used
+            singersUsed = singersInUse;
+        }
+    }
+}

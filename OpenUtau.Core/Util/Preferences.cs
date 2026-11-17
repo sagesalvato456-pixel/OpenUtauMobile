@@ -1,0 +1,530 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.Json.Serialization;
+using OpenUtau.Core.Render;
+using Serilog;
+
+namespace OpenUtau.Core.Util {
+
+    public static class Preferences {
+        public static SerializablePreferences Default { get; private set; }
+
+        static Preferences() {
+            Load();
+        }
+
+        public static void Save() {
+            try {
+                File.WriteAllText(PathManager.Inst.PrefsFilePath,
+                    Json.Serialize(Default, Json.WriteIndentedOptions),
+                    Encoding.UTF8);
+            } catch (Exception e) {
+                Log.Error(e, "Failed to save prefs.");
+            }
+        }
+
+        public static void Reset() {
+            Default = new SerializablePreferences();
+            try
+            {
+                string exePath = OperatingSystem.IsBrowser()
+                    ? AppContext.BaseDirectory
+                    : Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
+                string shippedPrefsPath = Path.Combine(exePath, "prefs-default.json");
+                if (File.Exists(shippedPrefsPath)) {
+                    var shippedPrefs = Json.Deserialize<SerializablePreferences>(
+                        File.ReadAllText(shippedPrefsPath, Encoding.UTF8));
+                    if (shippedPrefs != null) {
+                        Default = shippedPrefs;
+                    }
+                }
+            } catch(Exception e){
+                Log.Error(e, "failed to load prefs-default.json");
+            }
+            Save();
+        }
+
+        public static List<string> GetSingerSearchPaths() {
+            return new List<string>(Default.SingerSearchPaths);
+        }
+
+        public static void SetSingerSearchPaths(List<string> paths) {
+            Default.SingerSearchPaths = new List<string>(paths);
+            Save();
+        }
+
+        public static void AddRecentFileIfEnabled(string filePath){
+            //Users can choose adding .ust, .vsqx and .mid files to recent files or not
+            string ext = Path.GetExtension(filePath);
+            switch(ext){
+                case ".ustx":
+                    AddRecentFile(filePath);
+                    break;
+                case ".mid":
+                case ".midi":
+                    if(Preferences.Default.RememberMid){
+                        AddRecentFile(filePath);
+                    }
+                    break;
+                case ".ust":
+                    if(Preferences.Default.RememberUst){
+                        AddRecentFile(filePath);
+                    }
+                    break;
+                case ".vsqx":
+                    if(Preferences.Default.RememberVsqx){
+                        AddRecentFile(filePath);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private static void AddRecentFile(string filePath) {
+            if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath)) {
+                return;
+            }
+            var recent = Default.RecentFiles;
+            recent.RemoveAll(f => f == filePath);
+            recent.Insert(0, filePath);
+            recent.RemoveAll(f => string.IsNullOrEmpty(f) // 删除空的文件名
+                || !File.Exists(f) // 删除不存在的文件
+                || f.Contains(PathManager.Inst.TemplatesPath)); // 删除来自模板的
+            if (recent.Count > 16) { // 最多保留16个
+                recent.RemoveRange(16, recent.Count - 16);
+            }
+            Save();
+        }
+
+        private static void Load() {
+            if (!File.Exists(PathManager.Inst.PrefsFilePath)) {
+                Reset();
+                return;
+            }
+
+            try {
+                Default = Json.Deserialize<SerializablePreferences>(
+                    File.ReadAllText(PathManager.Inst.PrefsFilePath, Encoding.UTF8));
+                if (Default == null) {
+                    Log.Error("Failed to load prefs: deserialized prefs is null.");
+                    Default = new SerializablePreferences();
+                    return;
+                }
+            } catch (Exception e) {
+                Log.Error(e, "Failed to read or deserialize prefs.");
+                Default = new SerializablePreferences();
+                return;
+            }
+
+            ValidateLoadedPreferences();
+        }
+
+        private static void ValidateLoadedPreferences() {
+            ValidatePreference("Channel", () => {
+                if (Default.Beta) { Default.Channel = "beta"; Default.Beta = false; }
+                if (!new[] { "stable", "beta", "alpha" }.Contains(Default.Channel)) Default.Channel = "stable";
+            });
+            ValidatePreference("AudioBackEnd", () => {
+                if (Default.PreferPortAudio != null) {
+                    Default.AudioBackEnd = Default.PreferPortAudio.Value ? 1u : 0u;
+                    Default.PreferPortAudio = null;
+                }
+            });
+            ValidatePreference("RealTimePitchMode", () => Default.MigrateRealTimePitchMode());
+            ValidatePreference("RecentSingers", () => {
+                Default.RecentSingers = Default.RecentSingers?
+                    .Where(s => !string.IsNullOrWhiteSpace(s)).ToList() ?? new List<string>();
+            });
+            ValidatePreference("FavoriteSingers", () => {
+                Default.FavoriteSingers = Default.FavoriteSingers?
+                    .Where(s => !string.IsNullOrWhiteSpace(s)).ToList() ?? new List<string>();
+            });
+            ValidatePreference("Language", () => {
+                if (!ValidString(new Action(() => CultureInfo.GetCultureInfo(Default.Language)))) {
+                    Default.Language = string.Empty;
+                }
+            });
+            ValidatePreference("SortingOrder", () => {
+                if (!ValidString(new Action(() => CultureInfo.GetCultureInfo(Default.SortingOrder)))) {
+                    Default.SortingOrder = string.Empty;
+                }
+            });
+            ValidatePreference("DefaultRenderer", () => {
+                if (Default.DefaultRenderer == "Classic") Default.DefaultRenderer = Renderers.CLASSIC;
+                if (!Renderers.getRendererOptions().Contains(Default.DefaultRenderer)) {
+                    Default.DefaultRenderer = string.Empty;
+                }
+            });
+            ValidatePreference("OnnxRunner", () => {
+                if (!Onnx.getRunnerOptions().Contains(Default.OnnxRunner)) {
+                    Default.OnnxRunner = string.Empty;
+                }
+            });
+            ValidatePreference("WinePath", () =>
+            {
+                if (OS.IsWindows())
+                {
+                    Default.WinePath = string.Empty;
+                }
+            });
+            ValidatePreference("Theme", () => {
+                if (Default.Theme != null) {
+                    Default.ThemeName = Default.Theme switch {
+                        1 => "Dark",
+                        _ => "Light"
+                    };
+                    Default.Theme = null;
+                }
+            });
+        }
+
+        private static void ValidatePreference(string name, Action action) {
+            try {
+                action();
+            } catch (Exception e) {
+                Log.Error(e, "Failed to validate prefs field {Name}.", name);
+            }
+        }
+
+        private static bool ValidString(Action action) {
+            try {
+                action();
+                return true;
+            } catch {
+                return false;
+            }
+        }
+
+        [Serializable]
+        public class SerializablePreferences {
+            public WindowSize MainWindowSize = new WindowSize();
+            public WindowSize PianorollWindowSize = new WindowSize();
+            public int UndoLimit = 100;
+            public List<string> SingerSearchPaths = new List<string>();
+            public string PlaybackDevice = string.Empty;
+            public int PlaybackDeviceNumber;
+            public int? PlaybackDeviceIndex;
+            public bool ShowPrefs = true;
+            public bool ShowTips = true;
+            public string ThemeName = "System";
+            public int DegreeStyle;
+            public bool UseTrackColor = false;
+            public bool ClearCacheOnQuit = false;
+            public bool PreRender = true;
+            public int NumRenderThreads = 1;
+            public string DefaultRenderer = string.Empty;
+            public int WorldlineR = 0;
+            public string OnnxRunner = string.Empty;
+            public int OnnxGpu = 0;
+            public float MergePhrasesSec = 0;
+            /// <summary>
+            /// GAME MIDI extractor backend preference: "onnx" (default) or "ggml".
+            /// Affects which inference engine Game uses; see GameBackendFactory.
+            /// </summary>
+            public string GameBackend = "onnx";
+            public double DiffSingerDepth = 1.0;
+            public int DiffSingerSteps = 5;
+            public int DiffSingerStepsVariance = 5;
+            public int DiffSingerStepsPitch = 10;
+            public bool DiffSingerTensorCache = true;
+            public bool DiffSingerVarianceLocalPitchPatch = false;
+            public bool DiffSingerLangCodeHide = false;
+            /// <summary>
+            /// Auto-merge nearby DiffSinger phrases (piano roll toggle). Off by
+            /// default: it changes how the model segments a passage and is still
+            /// being tuned.
+            /// </summary>
+            public bool DiffSingerMergeNearbyPhrases = false;
+            public bool Metronome = false;
+            public bool SkipRenderingMutedTracks = false;
+            public string Language = "system";
+            public string? SortingOrder = null;
+            public List<string> RecentFiles = new List<string>();
+            public string SkipUpdate = string.Empty;
+            public string AdditionalSingerPath = string.Empty;
+            public bool InstallToAdditionalSingersPath = true;
+            public bool LoadDeepFolderSinger = true;
+            public bool PreferCommaSeparator = false;
+            public bool ResamplerLogging = false;
+            public List<string> RecentSingers = new List<string>();
+            public List<string> FavoriteSingers = new List<string>();
+            public Dictionary<string, string> SingerPhonemizers = new Dictionary<string, string>();
+            public List<string> RecentPhonemizers = new List<string>();
+            public uint AudioBackEnd = 0; // 0 = Automatic, 1 = MiniAudio, 2 = SDL
+            public bool UseSystemDefaultAudioDevice = true;
+            public double PlayPosMarkerMargin = 0.9;
+            public int MetronomeVolume = 60;
+            public int MetronomeHighFrequency = 2200;
+            public int MetronomeLowFrequency = 1320;
+            public int LockStartTime = 0;
+            public int PlaybackAutoScroll = 2;
+            public bool ReverseLogOrder = true;
+            public bool ShowPortrait = true;
+            public bool ShowIcon = true;
+            public bool ShowGhostNotes = true;
+            public bool NoteHoverGlow = true;
+            public bool ReduceAnimations = false;
+            public bool ShowPlaybackNoteHighlight = true;
+            public bool ShowPlaybackNoteBounce = false;
+            public EditTool EditTool = new EditTool();
+            public bool PlayTone = true;
+            /// <summary>Legacy; migrated to <see cref="RealTimePitchMode"/> on load.</summary>
+            public bool RealTimePitchGeneration = false;
+            public int RealTimePitchMode = (int)LivePitchMode.Off;
+            public bool ShowVibrato = true;
+            public bool ShowPitch = true;
+            public bool ShowFinalPitch = true;
+            public bool ShowWaveform = true;
+            public bool ShowPhoneme = true;
+            public bool ShowExpressions = true;
+            public bool ShowPhonemizerTags = true;
+            public bool ShowNoteParams = true;
+            public Dictionary<string, string> DefaultResamplers = new Dictionary<string, string>();
+            public Dictionary<string, string> DefaultWavtools = new Dictionary<string, string>();
+            public string LyricHelper = string.Empty;
+            public bool LyricsHelperBrackets = false;
+            public int OtoEditor = 0;
+            public string VLabelerPath = string.Empty;
+            public string SetParamPath = string.Empty;
+            public bool Beta = false; // deprecated, migrated to Channel
+            /// <summary>
+            /// Release channel for the auto updater: "stable", "beta" or "alpha".
+            /// </summary>
+            public string Channel = "stable";
+            public bool RememberMid = false;
+            public bool RememberUst = true;
+            public bool RememberVsqx = true;
+            public string WinePath = string.Empty;
+            public bool UseWayland  = Environment.GetEnvironmentVariable("WAYLAND_DISPLAY") != null
+                                         || Environment.GetEnvironmentVariable("XDG_SESSION_TYPE") == "wayland"; //Check for Wayland
+            public bool DefaultSnapCurve = true;
+            public string PhoneticAssistant = string.Empty;
+            public string RecentOpenSingerDirectory = string.Empty;
+            public string RecentOpenProjectDirectory = string.Empty;
+            public bool LockUnselectedNotesPitch = true;
+            public bool LockUnselectedNotesVibrato = true;
+            public bool LockUnselectedNotesExpressions = true;
+            public bool LyricLivePreview = true;
+            public bool LyricApplySelectionOnly = true;
+            public bool VoicebankPublishUseIgnore = true;
+            public string VoicebankPublishIgnores = """
+                #Adobe Audition
+                *.pkf
+
+                #UTAU Engines
+                *.ctspec
+                *.d4c
+                *.dio
+                *.frc
+                *.frt
+                #*.frq
+                *.harvest
+                *.lessaudio
+                *.llsm
+                *.mrq
+                *.pitchtier
+                *.pkf
+                *.platinum
+                *.pmk
+                *.sc.npz
+                *.star
+                *.uspec
+                *.vs4ufrq
+
+                #UTAU related tools
+                \$read
+                *.setParam-Scache
+                *.lbp
+                *.lbp.caches/*
+
+                #OpenUtau
+                errors.txt
+                """;
+            public string RecoveryPath = string.Empty;
+            public bool DetachPianoRoll = true;
+
+            #region OpenLoid-Flame 特定选项
+            /// <summary>告警悬浮球贴靠侧：0 为左侧，1 为右侧。</summary>
+            public int WarningOrbDockSide = 1;
+
+            /// <summary>告警悬浮球在可用纵向区间的相对落点，范围为零至一。</summary>
+            public double WarningOrbDockYRatio = 0.6;
+
+            /// <summary>桌面平台使用桌面界面；关闭后使用移动界面，重启后生效。</summary>
+            public bool DesktopModeEnabled = true;
+
+            /// <summary>待下次启动删除的插件文件，保存相对于插件目录的路径。</summary>
+            public List<string> PendingPluginDeletions = [];
+
+            /// <summary>各平台的界面图形后端回退顺序；空列表使用 Avalonia 默认配置，重启后生效。</summary>
+            public Dictionary<string, List<string>> GraphicsBackendFallbackOrders = new();
+
+            public double PlaybackRefreshRate = 20.0;
+
+            /// <summary>回放时钢琴卷帘纵向滚动：0 = 关闭，1 = 边界滚动，2 = 保持居中。</summary>
+            public int PlaybackVerticalScroll = 0;
+
+            /// <summary>
+            /// Android 全屏模式：0 = 始终，1 = 仅编辑页，2 = 关闭。
+            /// </summary>
+            public int AndroidFullscreenMode = 2;
+
+            /// <summary>
+            /// Android 编辑页是否阻止屏幕休眠。
+            /// </summary>
+            public bool AndroidKeepScreenAwakeWhileEditing = true;
+
+/// <summary>
+            /// Piano key behavior: 0=Silent, 1=SineWave, 2=SoundFont
+            /// </summary>
+            public int PianoKeyBehavior = 1;
+
+            /// <summary>
+            /// 钢琴键标签：0 = 音高标签，1 = 仅主音音高标签，2 = 简谱。
+            /// </summary>
+            public int PianoKeyLabelMode = 1;
+
+            /// <summary>
+            /// 钢琴卷帘顶部时间标尺是否显示渲染波形；关闭时显示渲染进度。
+            /// </summary>
+            public bool ShowRenderWaveform = false;
+
+            /// <summary>
+            /// Path to SoundFont (SF2) file for piano key playback.
+            /// If empty or file not found, falls back to SineWave.
+            /// </summary>
+            public string SoundFontPath = string.Empty;
+
+            /// <summary>
+            /// Preferred audio backend. Empty string means auto-select based on platform.
+            /// Supported values:
+            /// - "" or "Auto": Auto-select (default)
+            /// - "MiniAudio": Use MiniAudio (Windows/Linux/macOS/Android)
+            /// - "NAudio": Use NAudio (Windows only)
+            /// - "AudioTrack": Use Android AudioTrack (Android only)
+            /// - "Dummy": Use dummy audio output (all platforms, no sound)
+            /// Platform-specific availability:
+            /// - Windows: MiniAudio, NAudio, Dummy
+            /// - Linux/macOS: MiniAudio, Dummy
+            /// - Android: MiniAudio, AudioTrack, Dummy
+            /// - iOS/Browser: Dummy (future support)
+            /// </summary>
+            public string AudioBackend = string.Empty;
+
+            /// <summary>
+            /// Theme color mode: 0 = FollowSystem, 1 = Custom.
+            /// </summary>
+            public int ThemeColorMode = 0;
+
+            /// <summary>
+            /// Custom theme seed in #RRGGBB format.
+            /// </summary>
+            public string ThemeColorSeedHex = "#66CCFF";
+
+            /// <summary>
+            /// Current selected preset id; empty when manually adjusted.
+            /// </summary>
+            public string ThemeColorPresetId = "tianyi";
+            /// <summary>
+            /// 上一次打开工程文件的目录
+            /// </summary>
+            public string LastOpenProjectDirectory = string.Empty;
+            /// <summary>
+            /// 上一次保存工程文件的目录
+            /// </summary>
+            public string LastSaveProjectDirectory = string.Empty;
+            /// <summary>
+            /// 首次启动设置向导是否已完成。
+            /// </summary>
+            public bool SetupWizardCompleted = false;
+            /// <summary>
+            /// 是否启用自动保存。
+            /// </summary>
+            public bool AutoSaveEnabled = true;
+            /// <summary>
+            /// 自动保存间隔，单位秒（仅在启用时生效）。
+            /// </summary>
+            public int AutoSaveInterval = 120;
+            /// <summary>
+            /// Stop button behavior: 1 = StartTick -> SelectedPart -> 0 (default),
+            /// 2 = StartTick -> 0, 3 = Always 0.
+            /// </summary>
+            public int StopButtonBehavior = 1;
+            /// <summary>
+            /// 各批量编辑类别中置顶操作的稳定 ID，顺序为最近置顶优先。
+            /// </summary>
+            public Dictionary<string, List<string>> PinnedBatchEdits = new Dictionary<string, List<string>>();
+            /// <summary>
+            /// 是否显示全局性能监视悬浮层。
+            /// </summary>
+            public bool PerformanceMonitorEnabled = false;
+
+            /// <summary>放大镜实际采样倍率；保存连续值，不保存界面档位索引。</summary>
+            public double MagnifierMagnificationFactor = 1.0;
+
+            public const int PitchPenNoteHitTickExtensionMinimum = 0;
+            public const int PitchPenNoteHitTickExtensionMaximum = 960;
+            public const int PitchPenNoteHitTickExtensionDefault = 240;
+            public const int PitchPenNoteHitToneExtensionMinimum = 0;
+            public const int PitchPenNoteHitToneExtensionMaximum = 12;
+            public const int PitchPenNoteHitToneExtensionDefault = 1;
+
+            /// <summary>
+            /// 音高线编辑模式下是否允许从扩展音符命中范围外拖拽画布。
+            /// </summary>
+            public bool PitchPenCanvasDragEnabled = true;
+
+            /// <summary>是否淡色提示音高画笔的音符扩展命中区域。</summary>
+            public bool ShowPitchPenHitArea = false;
+
+            /// <summary>
+            /// 音高线编辑模式下音符命中范围前后扩展的 Tick 数。
+            /// </summary>
+            public int PitchPenNoteHitTickExtension = PitchPenNoteHitTickExtensionDefault;
+
+            /// <summary>
+            /// 音高线编辑模式下音符命中范围上下扩展的半音数。
+            /// </summary>
+            public int PitchPenNoteHitToneExtension = PitchPenNoteHitToneExtensionDefault;
+            #endregion
+
+            // ----- Mix FX (post-processing) -----
+            // Per-track FX state lives in UTrack.MixFx and the project ustx.
+            // Preferences only stores the global "apply on mixdown export" toggle
+            // and the user preset library (named full-rack snapshots).
+            public bool MixFxApplyOnExportMixdown = true;
+            public List<MixFxUserPreset> MixFxUserPresets = new List<MixFxUserPreset>();
+
+            // Legacy
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            public int? Theme;
+            public bool? PreferPortAudio = false;
+
+            public void MigrateRealTimePitchMode() {
+                if (RealTimePitchGeneration && RealTimePitchMode == (int)LivePitchMode.Off) {
+                    RealTimePitchMode = (int)LivePitchMode.Normal;
+                }
+                RealTimePitchGeneration = false;
+                if (RealTimePitchMode < (int)LivePitchMode.Off
+                    || RealTimePitchMode > (int)LivePitchMode.Fast) {
+                    RealTimePitchMode = (int)LivePitchMode.Off;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Named full-rack FX snapshot (EQ + Comp + Reverb together).
+        /// Persisted in Preferences so users can save and recall their own presets.
+        /// </summary>
+        public class MixFxUserPreset {
+            public string Name { get; set; } = string.Empty;
+            public Ustx.UMixFx Fx { get; set; } = new Ustx.UMixFx();
+        }
+    }
+}

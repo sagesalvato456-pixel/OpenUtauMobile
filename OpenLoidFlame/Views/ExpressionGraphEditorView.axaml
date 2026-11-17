@@ -1,0 +1,253 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:OpenLoidFlame.ViewModels"
+             xmlns:c="using:OpenLoidFlame.Controls"
+             xmlns:local="using:OpenLoidFlame"
+             xmlns:localTokens="using:OpenLoidFlame.Views.Tokens"
+             xmlns:foundation="using:OpenLoidFlame.Themes.OpenLoidFlame.Tokens.Foundation"
+             xmlns:semantic="using:OpenLoidFlame.Themes.OpenLoidFlame.Tokens.Semantic"
+             xmlns:icons="https://github.com/MahApps/IconPacks.Avalonia"
+             x:Class="OpenLoidFlame.Views.ExpressionGraphEditorView"
+             x:DataType="vm:ExpressionGraphEditorViewModel"
+             Background="{DynamicResource Sem.Color.Surface}">
+    <UserControl.Styles>
+        <Style Selector="Button.GraphTool">
+            <Setter Property="Foreground" Value="{DynamicResource Sem.Color.OnSurface}" />
+        </Style>
+        <Style Selector="Grid#InspectorHandle">
+            <Setter Property="Opacity" Value="{x:Static localTokens:EditorTokens.HandleRestOpacity}" />
+            <Setter Property="Transitions"><Transitions><DoubleTransition Property="Opacity" Duration="{x:Static foundation:MotionTokens.DurationBase}" /></Transitions></Setter>
+        </Style>
+        <Style Selector="Grid#InspectorHandle:pointerover, Grid#InspectorHandle:pressed">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+    </UserControl.Styles>
+    <Grid RowDefinitions="Auto,Auto,*">
+        <Grid>
+            <Border x:Name="NormalTopBar" Classes="TopBar" IsVisible="{Binding !IsMultiSelect}">
+                <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto">
+                    <Button x:Name="BackButton" Classes="TopBarBtn" Command="{Binding BackCommand}"
+                            ToolTip.Tip="{DynamicResource Common.Back}" AutomationProperties.Name="{DynamicResource Common.Back}">
+                        <icons:PackIconPhosphorIcons Kind="ArrowLeft" />
+                    </Button>
+                    <TextBlock Grid.Column="1" Classes="TopBarTitle" Text="{DynamicResource GraphEdit.Title}" TextTrimming="CharacterEllipsis" />
+                    <Button Grid.Column="2" Classes="TopBarBtn" Command="{Binding UndoCommand}" IsEnabled="{Binding CanUndo}"
+                            ToolTip.Tip="{DynamicResource Editor.Undo}" AutomationProperties.Name="{DynamicResource Editor.Undo}">
+                        <icons:PackIconPhosphorIcons Kind="ArrowCounterClockwise" />
+                    </Button>
+                    <Button Grid.Column="3" Classes="TopBarBtn" Command="{Binding RedoCommand}" IsEnabled="{Binding CanRedo}"
+                            ToolTip.Tip="{DynamicResource Editor.Redo}" AutomationProperties.Name="{DynamicResource Editor.Redo}">
+                        <icons:PackIconPhosphorIcons Kind="ArrowClockwise" />
+                    </Button>
+                    <Button Grid.Column="4" Classes="TopBarBtn" Command="{Binding SettingsCommand}" IsEnabled="{Binding IsAvailable}"
+                            ToolTip.Tip="{DynamicResource ExpressionGraph.Settings}"
+                            AutomationProperties.Name="{DynamicResource ExpressionGraph.Settings}">
+                        <icons:PackIconPhosphorIcons Kind="Gear" />
+                    </Button>
+                </Grid>
+            </Border>
+            <Border x:Name="SelectionTopBar" Classes="TopBar" IsVisible="{Binding IsMultiSelect}"
+                    Background="{DynamicResource Sem.Color.SurfaceContainerHigh}" Opacity="1" IsEnabled="{Binding CanInteract}">
+                <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto,Auto,Auto">
+                    <Button x:Name="ExitSelectionTool" Classes="TopBarBtn" Command="{Binding ExitMultiSelectCommand}"
+                            ToolTip.Tip="{DynamicResource GraphSelection.Exit}" AutomationProperties.Name="{DynamicResource GraphSelection.Exit}">
+                        <icons:PackIconPhosphorIcons Kind="X" />
+                    </Button>
+                    <TextBlock Grid.Column="1" Classes="TopBarTitle"
+                               Text="{Binding SelectionSummary}" AutomationProperties.LiveSetting="Polite" />
+                    <Button x:Name="SelectionUndoTool" Grid.Column="2" Classes="TopBarBtn" Command="{Binding UndoCommand}" IsEnabled="{Binding CanUndo}"
+                            ToolTip.Tip="{DynamicResource Editor.Undo}" AutomationProperties.Name="{DynamicResource Editor.Undo}">
+                        <icons:PackIconPhosphorIcons Kind="ArrowCounterClockwise" />
+                    </Button>
+                    <Button x:Name="SelectionRedoTool" Grid.Column="3" Classes="TopBarBtn" Command="{Binding RedoCommand}" IsEnabled="{Binding CanRedo}"
+                            ToolTip.Tip="{DynamicResource Editor.Redo}" AutomationProperties.Name="{DynamicResource Editor.Redo}">
+                        <icons:PackIconPhosphorIcons Kind="ArrowClockwise" />
+                    </Button>
+                    <Button x:Name="SelectAllTool" Grid.Column="4" Classes="TopBarBtn" Command="{Binding SelectAllNodesCommand}"
+                            ToolTip.Tip="{DynamicResource GraphSelection.All}" AutomationProperties.Name="{DynamicResource GraphSelection.All}">
+                        <icons:PackIconPhosphorIcons Kind="SelectionAll" />
+                    </Button>
+                    <Button x:Name="InvertSelectionTool" Grid.Column="5" Classes="TopBarBtn" Command="{Binding InvertNodeSelectionCommand}"
+                            ToolTip.Tip="{DynamicResource GraphSelection.Invert}" AutomationProperties.Name="{DynamicResource GraphSelection.Invert}">
+                        <icons:PackIconPhosphorIcons Kind="SelectionInverse" />
+                    </Button>
+                    <Button x:Name="ClearSelectionTool" Grid.Column="6" Classes="TopBarBtn" Command="{Binding ClearNodeSelectionCommand}" IsEnabled="{Binding HasSelectedNodes}"
+                            ToolTip.Tip="{DynamicResource GraphSelection.Clear}" AutomationProperties.Name="{DynamicResource GraphSelection.Clear}">
+                        <icons:PackIconPhosphorIcons Kind="Selection" />
+                    </Button>
+                    <Button x:Name="SelectionOverflowTool" Grid.Column="7" Classes="TopBarBtn" Click="SelectionOverflowClicked"
+                            ToolTip.Tip="{DynamicResource Editor.More}" AutomationProperties.Name="{DynamicResource Editor.More}">
+                        <icons:PackIconPhosphorIcons Kind="DotsThree" />
+                    </Button>
+                </Grid>
+            </Border>
+        </Grid>
+        <StackPanel Grid.Row="1" Margin="16,0,16,4" Spacing="4">
+            <Button Content="{DynamicResource GraphViewer.Diagnostic}" Command="{Binding DiagnosticCommand}" Classes="text"
+                    HorizontalAlignment="Left" Foreground="{DynamicResource Sem.Color.Warning}"
+                    IsVisible="{Binding Diagnostic, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+            <TextBlock Text="{Binding TopologyError}" TextWrapping="Wrap" Foreground="{DynamicResource Sem.Color.Error}"
+                       IsVisible="{Binding TopologyError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+        </StackPanel>
+        <Grid Grid.Row="2" x:Name="WorkArea" RowDefinitions="*,Auto" ColumnDefinitions="*,Auto" ClipToBounds="True">
+            <Grid x:Name="CanvasRegion" ClipToBounds="True">
+                <!-- 画布 -->
+                <c:ExpressionGraphCanvas x:Name="GraphCanvas" Scene="{Binding Scene}" Viewport="{Binding Viewport}"
+                                         SelectedKey="{Binding SelectedKey}" SelectedNodeIds="{Binding SelectedNodeIds}" IsMultiSelect="{Binding IsMultiSelect}"
+                                         IsEnabled="{Binding CanInteract}"
+                                         NodeBrush="{DynamicResource Sem.Color.SurfaceContainer}"
+                                         InputBrush="{DynamicResource Sem.Color.PrimaryContainer}"
+                                         OutputBrush="{DynamicResource Sem.Color.SecondaryContainer}"
+                                         Foreground="{DynamicResource Sem.Color.OnSurface}"
+                                         LineBrush="{DynamicResource Sem.Color.OnSurfaceVariant}"
+                                         SelectionBrush="{DynamicResource Sem.Color.Primary}"
+                                         AutomationProperties.Name="{DynamicResource GraphViewer.Canvas}" />
+            <TextBlock Text="{DynamicResource GraphViewer.Empty}" IsVisible="{Binding IsEmpty}" IsHitTestVisible="False"
+                       HorizontalAlignment="Center" VerticalAlignment="Center" Margin="16" TextWrapping="Wrap"
+                       Foreground="{DynamicResource Sem.Color.OnSurfaceVariant}" />
+            <TextBlock x:Name="GraphNameLabel" Text="{Binding Title}"
+                       HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16" Padding="8,4"
+                       FontSize="{x:Static semantic:TypographyTokens.TitleSSize}" FontWeight="Medium" LineHeight="20"
+                       TextTrimming="CharacterEllipsis" MaxLines="1" IsHitTestVisible="False"
+                       Foreground="{DynamicResource Sem.Color.OnSurface}" Background="{DynamicResource Sem.Color.Surface}" />
+            <!-- 操作工具栏 -->
+            <Border x:Name="CanvasToolbar" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="16"
+                    Height="64" Padding="8" CornerRadius="32" Background="{DynamicResource Sem.Color.SurfaceContainer}">
+                <StackPanel Orientation="Horizontal" Spacing="4" IsEnabled="{Binding CanInteract}">
+                    <Button x:Name="CopyTool" Classes="icon GraphTool" Command="{Binding CopyNodesCommand}" IsEnabled="{Binding HasSelectedNodes}"
+                            ToolTip.Tip="{DynamicResource GraphSelection.Copy}" AutomationProperties.Name="{DynamicResource GraphSelection.Copy}">
+                        <icons:PackIconPhosphorIcons Kind="Copy" />
+                    </Button>
+                    <Button x:Name="PasteTool" Classes="icon GraphTool" Command="{Binding PasteNodesCommand}" IsEnabled="{Binding HasClipboard}"
+                            ToolTip.Tip="{DynamicResource GraphSelection.Paste}" AutomationProperties.Name="{DynamicResource GraphSelection.Paste}">
+                        <icons:PackIconPhosphorIcons Kind="ClipboardText" />
+                    </Button>
+                    <Button x:Name="MultiSelectTool" Classes="icon GraphTool" Command="{Binding EnterMultiSelectCommand}" IsVisible="{Binding !IsMultiSelect}"
+                            ToolTip.Tip="{DynamicResource GraphSelection.Enter}" AutomationProperties.Name="{DynamicResource GraphSelection.Enter}">
+                        <icons:PackIconPhosphorIcons Kind="Selection" />
+                    </Button>
+                    <Button x:Name="DeleteSelectionTool" Classes="icon GraphTool" Command="{Binding DeleteSelectedNodesCommand}" IsVisible="{Binding IsMultiSelect}" IsEnabled="{Binding HasSelectedNodes}"
+                            ToolTip.Tip="{DynamicResource GraphSelection.Delete}" AutomationProperties.Name="{DynamicResource GraphSelection.Delete}">
+                        <icons:PackIconPhosphorIcons Kind="Trash" />
+                    </Button>
+                    <Button x:Name="AddTool" Classes="icon GraphTool" Command="{Binding AddNodeCommand}" ToolTip.Tip="{DynamicResource GraphTopology.AddNode}" AutomationProperties.Name="{DynamicResource GraphTopology.AddNode}">
+                        <icons:PackIconPhosphorIcons Kind="Plus" />
+                    </Button>
+                    <Button x:Name="SearchTool" Classes="icon GraphTool" Command="{Binding SearchCommand}" ToolTip.Tip="{DynamicResource GraphViewer.Search}" AutomationProperties.Name="{DynamicResource GraphViewer.Search}">
+                        <icons:PackIconPhosphorIcons Kind="MagnifyingGlass" />
+                    </Button>
+                    <Button x:Name="FitTool" Classes="icon GraphTool" Click="FitClicked" ToolTip.Tip="{DynamicResource GraphViewer.Fit}" AutomationProperties.Name="{DynamicResource GraphViewer.Fit}">
+                        <icons:PackIconPhosphorIcons Kind="ArrowsOut" />
+                    </Button>
+                    <Button x:Name="LocateTool" Classes="icon GraphTool" Click="LocateClicked" IsEnabled="{Binding HasSelection}" ToolTip.Tip="{DynamicResource GraphViewer.Locate}" AutomationProperties.Name="{DynamicResource GraphViewer.Locate}">
+                        <icons:PackIconPhosphorIcons Kind="Crosshair" />
+                    </Button>
+                    <Button x:Name="ZoomOutTool" Classes="icon GraphTool" Click="ZoomOutClicked" ToolTip.Tip="{DynamicResource GraphViewer.ZoomOut}" AutomationProperties.Name="{DynamicResource GraphViewer.ZoomOut}">
+                        <icons:PackIconPhosphorIcons Kind="MagnifyingGlassMinus" />
+                    </Button>
+                    <Button x:Name="ZoomInTool" Classes="icon GraphTool" Click="ZoomInClicked" ToolTip.Tip="{DynamicResource GraphViewer.ZoomIn}" AutomationProperties.Name="{DynamicResource GraphViewer.ZoomIn}">
+                        <icons:PackIconPhosphorIcons Kind="MagnifyingGlassPlus" />
+                    </Button>
+                    <Button x:Name="OverflowTool" Classes="icon GraphTool" Click="OverflowClicked" ToolTip.Tip="{DynamicResource Editor.More}" AutomationProperties.Name="{DynamicResource Editor.More}">
+                        <icons:PackIconPhosphorIcons Kind="DotsThree" />
+                    </Button>
+                </StackPanel>
+            </Border>
+            </Grid>
+            <!-- Inspector 面板 -->
+            <Border x:Name="Inspector" Grid.Row="1" Grid.Column="0"
+                    Background="{DynamicResource Sem.Color.SurfaceContainerLow}"
+                    IsVisible="{Binding ShowInspector}" Padding="16,8">
+                <Grid RowDefinitions="Auto,Auto,*" RowSpacing="8">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <TextBlock Text="{Binding SelectedNode.Title}" TextTrimming="CharacterEllipsis" FontWeight="SemiBold" VerticalAlignment="Center" />
+                        <Button Grid.Column="1" Classes="icon" Command="{Binding CloseInspectorCommand}"
+                                ToolTip.Tip="{DynamicResource Common.Close}" AutomationProperties.Name="{DynamicResource Common.Close}">
+                            <icons:PackIconPhosphorIcons Kind="X" />
+                        </Button>
+                    </Grid>
+                    <TextBox Grid.Row="1" x:Name="SearchBox" Text="{Binding Query, Mode=TwoWay}" PlaceholderText="{DynamicResource GraphViewer.SearchHint}"
+                             IsVisible="{Binding IsSearchOpen}" AutomationProperties.Name="{DynamicResource GraphViewer.Search}" />
+                    <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled">
+                        <StackPanel Spacing="8">
+                            <StackPanel IsVisible="{Binding IsSearchOpen}" Spacing="4">
+                                    <ItemsControl ItemsSource="{Binding SearchResults}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="vm:GraphSearchResult">
+                                            <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Margin="0,0,0,4"
+                                                    Command="{Binding $parent[UserControl].((vm:ExpressionGraphEditorViewModel)DataContext).LocateCommand}"
+                                                    CommandParameter="{Binding Key}">
+                                                <StackPanel Spacing="4" AutomationProperties.Name="{Binding AccessibilityLabel}">
+                                                    <TextBlock Text="{DynamicResource GraphSelection.Selected}" IsVisible="{Binding IsSelected}" Foreground="{DynamicResource Sem.Color.Primary}" />
+                                                    <TextBlock Text="{Binding Title}" TextTrimming="CharacterEllipsis" />
+                                                    <TextBlock Text="{Binding Summary}" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource Sem.Color.OnSurfaceVariant}" />
+                                                </StackPanel>
+                                            </Button>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                            <ItemsControl ItemsSource="{Binding NonInputParameters}" IsVisible="{Binding HasSelection}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:GraphParameterEdit">
+                                        <c:GraphParameterEditor />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <ItemsControl ItemsSource="{Binding Inputs}" IsVisible="{Binding HasSelection}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:GraphInputConnection">
+                                        <StackPanel Spacing="4" Margin="0,0,0,12">
+                                            <TextBlock Text="{Binding Label}" FontWeight="SemiBold" />
+                                            <TextBlock Text="{Binding Source}" TextWrapping="Wrap" Foreground="{DynamicResource Sem.Color.OnSurfaceVariant}" />
+                                            <WrapPanel>
+                                                <Button Classes="text" Content="{DynamicResource GraphTopology.ChangeSource}" IsEnabled="{Binding IsEditable}"
+                                                        Command="{Binding $parent[UserControl].((vm:ExpressionGraphEditorViewModel)DataContext).ChangeSourceCommand}" CommandParameter="{Binding}" />
+                                                <Button Classes="text" Content="{DynamicResource GraphTopology.Disconnect}" IsEnabled="{Binding IsEditable}" IsVisible="{Binding HasConnection}"
+                                                        Command="{Binding $parent[UserControl].((vm:ExpressionGraphEditorViewModel)DataContext).DisconnectCommand}" CommandParameter="{Binding}" />
+                                                <Button Classes="text" Content="{DynamicResource GraphViewer.Locate}" IsVisible="{Binding TargetKey, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                                        Command="{Binding $parent[UserControl].((vm:ExpressionGraphEditorViewModel)DataContext).LocateCommand}" CommandParameter="{Binding TargetKey}" />
+                                            </WrapPanel>
+                                            <c:GraphParameterEditor DataContext="{Binding Fallback}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <ItemsControl ItemsSource="{Binding Details}" IsVisible="{Binding HasSelection}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:GraphNodeDetail">
+                                        <StackPanel Spacing="4" Margin="0,0,0,12" IsVisible="{Binding !IsInput}">
+                                            <TextBlock Text="{Binding Label}" FontWeight="SemiBold" TextWrapping="Wrap" />
+                                            <TextBlock Text="{Binding Value}" TextWrapping="Wrap" Foreground="{DynamicResource Sem.Color.OnSurfaceVariant}" />
+                                            <Button Classes="text" Content="{DynamicResource GraphViewer.Locate}"
+                                                    HorizontalAlignment="Left" IsVisible="{Binding TargetKey, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                                    Command="{Binding $parent[UserControl].((vm:ExpressionGraphEditorViewModel)DataContext).LocateCommand}"
+                                                    CommandParameter="{Binding TargetKey}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <Button Classes="destructive" Content="{DynamicResource GraphTopology.DeleteNode}" Command="{Binding DeleteNodeCommand}"
+                                    IsVisible="{Binding HasSelection}" IsEnabled="{Binding CanDeleteNode}" HorizontalAlignment="Left" />
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+            <!-- 拖拽调整 Inspector 大小的手柄 -->
+            <Canvas x:Name="SplitOverlay" Grid.Row="0" Grid.RowSpan="2" Grid.ColumnSpan="2" Grid.Column="0"
+                    IsVisible="{Binding ShowInspector}">
+                <Grid x:Name="InspectorHandle" Width="{x:Static local:ViewConstants.EditorSplitHandleWidth}"
+                      Height="{x:Static local:ViewConstants.EditorSplitHandleHeight}" RenderTransformOrigin="50%,50%"
+                      Background="Transparent" ToolTip.Tip="{DynamicResource GraphEdit.ResizePanel}" AutomationProperties.Name="{DynamicResource GraphEdit.ResizePanel}">
+                    <Path Data="M 0,12 C 0,12 3,12 6,6 C 9,0 12,0 12,0 H 36 C 36,0 39,0 42,6 C 45,12 48,12 48,12 C 48,12 45,12 42,18 C 39,24 36,24 36,24 H 12 C 12,24 9,24 6,18 C 3,12 0,12 0,12 Z"
+                          Fill="{DynamicResource Sem.Color.Surface}" Stroke="{DynamicResource Sem.Color.Outline}" StrokeThickness="1" Stretch="Fill" />
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                Spacing="{x:Static foundation:LayoutTokens.SpaceXS}" IsHitTestVisible="False">
+                        <Rectangle Width="12" Height="2" RadiusX="1" RadiusY="1" Fill="{DynamicResource Sem.Color.OnSurfaceVariant}" Opacity="0.58" />
+                        <Rectangle Width="12" Height="2" RadiusX="1" RadiusY="1" Fill="{DynamicResource Sem.Color.OnSurfaceVariant}" Opacity="0.58" />
+                    </StackPanel>
+                </Grid>
+            </Canvas>
+        </Grid>
+    </Grid>
+</UserControl>

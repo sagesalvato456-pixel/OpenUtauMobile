@@ -1,0 +1,46 @@
+<Project>
+    <PropertyGroup>
+        <AvaloniaVersion>12.1.3</AvaloniaVersion>
+        <!-- OpenUtau.Core 及附加插件版本号 -->
+        <CoreVersion>0.1.576.1-alpha-bc194b6fe489</CoreVersion>
+        <!-- CI 传入产品版本和构建号；本地使用明显的非发布版本 -->
+        <BuildNumber Condition="'$(BuildNumber)' == ''">0</BuildNumber>
+        <Version Condition="'$(Version)' == ''">0.0.0-local</Version>
+        <!-- 不追加 Git commit hash -->
+        <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+        <!-- 包名 -->
+        <BaseApplicationId>com.openloid.flame.canary</BaseApplicationId>
+        <!-- 全平台应用标识：Android package name / Apple bundle identifier -->
+        <ApplicationId>$(BaseApplicationId)</ApplicationId>
+        <!-- CI 的 BuildNumber 已包含 20000 偏移；本地 Android 使用有效的最小整数版本号 -->
+        <ApplicationVersion Condition="'$(ApplicationVersion)' == '' and '$(BuildNumber)' == '0'">1</ApplicationVersion>
+        <ApplicationVersion Condition="'$(ApplicationVersion)' == '' and '$(BuildNumber)' != '0'">$(BuildNumber)</ApplicationVersion>
+        <!-- Android 外显版本号 -->
+        <ApplicationDisplayVersion>$(Version)</ApplicationDisplayVersion>
+        <!-- CI 构建信息；未传入的字段在关于页面显示为未知 -->
+        <BuildTimestamp Condition="'$(BuildTimestamp)' == ''">Unknown</BuildTimestamp>
+        <BuildMachine Condition="'$(BuildMachine)' == ''">Unknown</BuildMachine>
+        <SourceCommit Condition="'$(SourceCommit)' == ''">Unknown</SourceCommit>
+        <ActionRunId Condition="'$(ActionRunId)' == ''">Unknown</ActionRunId>
+    </PropertyGroup>
+    <!-- 上游程序集绑定版本独立于 OPUM 产品版本，保持第三方插件的引用身份。 -->
+    <PropertyGroup Condition="'$(MSBuildProjectName)' == 'OpenUtau.Core' Or '$(MSBuildProjectName)' == 'OpenUtau.Plugin.Builtin'">
+        <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    </PropertyGroup>
+    <!-- 启用预览语言特性 -->
+    <PropertyGroup>
+        <LangVersion>preview</LangVersion>
+        <!-- 在 SDK 推断架构和输出路径之前，为桌面入口及探针选择单一运行时。 -->
+        <_OpumPreviousBeforeMicrosoftNETSdkTargets>$(BeforeMicrosoftNETSdkTargets)</_OpumPreviousBeforeMicrosoftNETSdkTargets>
+        <BeforeMicrosoftNETSdkTargets>$(MSBuildThisFileDirectory)build/DesktopRuntime.props</BeforeMicrosoftNETSdkTargets>
+    </PropertyGroup>
+    <!-- 元数据映射 -->
+    <ItemGroup>
+        <AssemblyMetadata Include="CoreVersion" Value="$(CoreVersion)"/>
+        <AssemblyMetadata Include="BuildNumber" Value="$(BuildNumber)"/>
+        <AssemblyMetadata Include="BuildTimestamp" Value="$(BuildTimestamp)"/>
+        <AssemblyMetadata Include="BuildMachine" Value="$(BuildMachine)"/>
+        <AssemblyMetadata Include="SourceCommit" Value="$(SourceCommit)"/>
+        <AssemblyMetadata Include="ActionRunId" Value="$(ActionRunId)"/>
+    </ItemGroup>
+</Project>
