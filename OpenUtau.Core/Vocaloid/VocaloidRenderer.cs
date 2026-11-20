@@ -8,12 +8,12 @@
 // .ddb/.ddi reales son binarios propios de VOCALOID, así que el resultado era siempre
 // silencio. Además colocaba los fonemas uno tras otro en vez de en su posición.
 //
-// Ahora: cada fonema se coloca en su posición real; las vocales y nasales salen de las muestras
-// reales del banco (VocaloidSampleBank, PSOLA) y lo demás se sintetiza con FlameVoice (glotis +
+// Ahora: cada fonema se coloca en su posición real y se sintetiza con FlameVoice (glotis +
 // formantes + ruido), siguiendo la curva de pitch de la frase (vibrato y PITD incluidos),
 // DYN, GENC, BREC y TENC. El audio sale aunque el banco no se pueda leer.
-// Las consonantes oclusivas, africadas y fricativas salen de las articulaciones reales
-// (VocaloidArticulationBank); lo que el banco no tenga lo sigue sintetizando Flame.
+// La voz Flame es masculina (DefaultLoid). La expresión (cute, rapper, cold...) se elige con un
+// flame-expression.txt junto al banco o con FlameVoice.Expression.
+// Las muestras reales del .ddb necesitan un decodificador aparte (ver VOCALOID-SUPPORT.md).
 
 using System;
 using System.Collections.Generic;
@@ -66,16 +66,8 @@ namespace OpenUtau.Core.Vocaloid {
 
                 float[] samples;
                 try {
-                    FlameVoiceProfile profile = phrase.singer is DefaultLoidSinger loid
-                        ? loid.Profile
-                        : FlameVoiceProfile.Generic;
-                    VocaloidSampleBank? bank = phrase.singer is VocaloidSinger vocaloidSinger
-                        ? VocaloidSampleBank.ForSinger(vocaloidSinger)
-                        : null;
-                    VocaloidArticulationBank? art = phrase.singer is VocaloidSinger artSinger
-                        ? VocaloidArticulationBank.ForSinger(artSinger)
-                        : null;
-                    samples = FlameVoice.Synthesize(phrase, kTailMs, cancellation.Token, profile, bank, art);
+                    samples = FlameVoice.Synthesize(phrase, kTailMs, cancellation.Token,
+                        FlameVoice.ResolveExpression(phrase.singer?.Location));
                 } catch (Exception ex) {
                     Log.Error(ex, "[VocaloidRenderer] render failed");
                     samples = new float[Math.Max(1, (int)Math.Ceiling(
