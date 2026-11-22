@@ -35,7 +35,6 @@ namespace OpenUtau.Core.Vocaloid {
         private readonly Dictionary<string, string> _localizedNames = new Dictionary<string, string>();
         private readonly List<string> _searchTerms = new List<string> { "aibot", "ai bot", "flame", "male", "hard", "default" };
         private readonly List<string> _errors = new List<string>();
-        private readonly Dictionary<string, UOto> _otoCache = new Dictionary<string, UOto>(StringComparer.Ordinal);
         private readonly string _basePath;
         private byte[]? _avatar;
 
@@ -74,16 +73,7 @@ namespace OpenUtau.Core.Vocaloid {
         public override IList<UOto> Otos => emptyOtos;
 
         public override bool TryGetOto(string phoneme, out UOto oto) {
-            oto = default!;
-            if (!VocaloidPhonemeSet.Contains(phoneme)) return false;
-            lock (_otoCache) {
-                if (!_otoCache.TryGetValue(phoneme, out UOto? cached)) {
-                    cached = UOto.OfDummy(phoneme);
-                    _otoCache[phoneme] = cached;
-                }
-                oto = cached;
-            }
-            return true;
+            return VocaloidPhonemeSet.TryGetOto(phoneme, out oto);
         }
 
         public override Dictionary<string, UOto> GetSuggestions(string text, bool isAlias) {
