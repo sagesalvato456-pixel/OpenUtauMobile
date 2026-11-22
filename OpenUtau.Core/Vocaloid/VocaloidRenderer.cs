@@ -11,8 +11,6 @@
 // Ahora: cada fonema se coloca en su posición real y se sintetiza con FlameVoice (glotis +
 // formantes + ruido), siguiendo la curva de pitch de la frase (vibrato y PITD incluidos),
 // DYN, GENC, BREC y TENC. El audio sale aunque el banco no se pueda leer.
-// La voz Flame es masculina (DefaultLoid). La expresión (cute, rapper, cold...) se elige con un
-// flame-expression.txt junto al banco o con FlameVoice.Expression.
 // Las muestras reales del .ddb necesitan un decodificador aparte (ver VOCALOID-SUPPORT.md).
 
 using System;
@@ -66,8 +64,7 @@ namespace OpenUtau.Core.Vocaloid {
 
                 float[] samples;
                 try {
-                    samples = FlameVoice.Synthesize(phrase, kTailMs, cancellation.Token,
-                        FlameVoice.ResolveExpression(phrase.singer?.Location));
+                    samples = AIBotVoice.Matches(phrase.singer.Name)     ? AIBotVoice.Synthesize(phrase, kTailMs, cancellation.Token)     : FlameVoice.Synthesize(phrase, kTailMs, cancellation.Token);
                 } catch (Exception ex) {
                     Log.Error(ex, "[VocaloidRenderer] render failed");
                     samples = new float[Math.Max(1, (int)Math.Ceiling(

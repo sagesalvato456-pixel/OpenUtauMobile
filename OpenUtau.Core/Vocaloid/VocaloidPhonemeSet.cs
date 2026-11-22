@@ -9,7 +9,6 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using OpenUtau.Core.Ustx;
 
 namespace OpenUtau.Core.Vocaloid {
 
@@ -105,14 +104,10 @@ N m 250 1100 2200
 N n 250 1700 2500
 N ng,N 250 1400 2200
 N J,nj 250 2100 2900
-N m' 250 1900 2500
-N N' 250 2100 2900
-N N\ 250 1300 2200
 L l 360 1300 2800
 L L,lh 300 2100 2900
 L r 350 1300 1750
 L 4 400 1500 2500 0.85
-L 4' 400 1900 2800 0.85
 L rr 350 1400 2500 0.9
 G j 280 2200 3000
 G w,W 300 700 2200
@@ -130,8 +125,6 @@ F 1 D,dh 5800 4500 0.35
 F 0 h,H,hh 2000 3500 0.55
 F 0 F,p\ 1600 3500 0.45
 F 1 R 1500 1200 0.7
-F 1 h\ 2000 3500 0.4
-F 0 p\' 2200 3500 0.45
 F 0 ss 7200 2800 1.0
 A 0 ts 7000 2800 1.0
 A 1 dz 7000 2800 0.9
@@ -143,9 +136,6 @@ A 0 tCh 4800 2800 1.0
 A 0 jj 4800 2800 0.8
 P 0 p 900 1600 0.55 0.25
 P 1 b 900 1600 0.45 0
-P 1 g' 3000 2000 0.5 0
-P 1 d' 4800 2800 0.5 0
-P 1 b' 1200 1800 0.45 0
 P 0 t 4200 2800 0.6 0.3
 P 1 d 4200 2800 0.5 0
 P 0 k 2100 1800 0.6 0.35
@@ -157,7 +147,7 @@ P 0 kk 2100 1800 0.7 0.05
 P 0 tt 4200 2800 0.7 0.05
 P 0 pp 900 1600 0.65 0.05
 S -,sp,SP,Sil,pau,cl,Q,?,q
-B br,ap,AP,Asp,br1,br2,br3,br4,br5
+B br,ap,AP
 ";
 
         private static readonly Dictionary<string, PhonemeSpec> specs
@@ -241,22 +231,6 @@ B br,ap,AP,Asp,br1,br2,br3,br4,br5
                 }
             }
             return false;
-        }
-
-        private static readonly Dictionary<string, UOto> otoCache = new Dictionary<string, UOto>(StringComparer.Ordinal);
-
-        /// <summary>Oto sintético para un símbolo conocido (los bancos VOCALOID no tienen oto.ini).</summary>
-        internal static bool TryGetOto(string? symbol, out UOto oto) {
-            oto = default!;
-            if (symbol == null || !Contains(symbol)) return false;
-            lock (otoCache) {
-                if (!otoCache.TryGetValue(symbol, out UOto? cached)) {
-                    cached = UOto.OfDummy(symbol);
-                    otoCache[symbol] = cached;
-                }
-                oto = cached;
-            }
-            return true;
         }
 
         internal static bool Contains(string? symbol) {

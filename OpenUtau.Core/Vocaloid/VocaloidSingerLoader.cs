@@ -37,6 +37,7 @@ namespace OpenUtau.Core.Vocaloid {
                     Log.Error(ex, $"[VocaloidSingerLoader] cannot scan {root}");
                 }
             }
+            AIBotSinger.AddTo(singers);
             return singers;
         }
 
