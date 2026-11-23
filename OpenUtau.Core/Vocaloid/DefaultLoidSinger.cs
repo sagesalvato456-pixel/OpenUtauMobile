@@ -60,7 +60,7 @@ namespace OpenUtau.Core.Vocaloid {
         public override IList<UOto> Otos => emptyOtos;
 
         public override bool TryGetOto(string phoneme, out UOto oto) {
-            return VocaloidPhonemeSet.TryGetOto(phoneme, out oto);
+            return FlameOtos.TryGet(phoneme, out oto);
         }
 
         public override Dictionary<string, UOto> GetSuggestions(string text, bool isAlias) {
